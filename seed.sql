@@ -3,18 +3,18 @@ TRUNCATE notes CASCADE;
 TRUNCATE weeks CASCADE;
 
 INSERT INTO weeks (week_number, module, title, status) VALUES
-  (1,  'dev', 'Python基础 + FastAPI + AI环境搭建', 'active'),
-  (2,  'dev', 'LLM基础 + Prompt Engineering', 'pending'),
-  (3,  'dev', 'LangChain + 聊天助手V2', 'pending'),
-  (4,  'dev', 'Embedding + 向量数据库', 'pending'),
-  (5,  'dev', 'RAG基础 + 企业知识库V1', 'pending'),
-  (6,  'dev', 'RAG优化 + 金融领域知识库', 'pending'),
-  (7,  'dev', 'Function Calling + Tool Agent', 'pending'),
-  (8,  'dev', 'Agent + Excel数据分析', 'pending'),
-  (9,  'dev', 'LangGraph + Workflow', 'pending'),
-  (10, 'eng', 'AI工程化 + Docker部署', 'pending'),
-  (11, 'pm', '项目整理 + 面试冲刺', 'pending'),
-  (12, 'pm', 'AI产品能力 + 复盘', 'pending');
+  (1,  'python-llm', 'Python基础 + FastAPI + AI环境搭建', 'active'),
+  (2,  'python-llm', 'LLM基础 + Prompt Engineering', 'pending'),
+  (3,  'rag', 'LangChain + 聊天助手V2', 'pending'),
+  (4,  'rag', 'Embedding + 向量数据库', 'pending'),
+  (5,  'rag', 'RAG基础 + 企业知识库V1', 'pending'),
+  (6,  'rag', 'RAG优化 + 金融领域知识库', 'pending'),
+  (7,  'agent', 'Function Calling + Tool Agent', 'pending'),
+  (8,  'agent', 'Agent + Excel数据分析', 'pending'),
+  (9,  'agent', 'LangGraph + Workflow', 'pending'),
+  (10, 'deploy', 'AI工程化 + Docker部署', 'pending'),
+  (11, 'deploy', '项目整理 + 面试冲刺', 'pending'),
+  (12, 'deploy', 'AI产品能力 + 复盘', 'pending');
 
 INSERT INTO topics (week_id, name, completed, topic_order)
 SELECT w.id, t.name, false, t.ord

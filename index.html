@@ -174,6 +174,28 @@
       content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
       background: linear-gradient(90deg, #fbbf24, #f59e0b);
     }
+    .week-card.today-card {
+      border-color: rgba(99,102,241,0.4);
+      box-shadow: 0 0 20px rgba(99,102,241,0.1);
+    }
+
+    .week-header-right { display: flex; align-items: center; gap: 8px; }
+    .today-tag {
+      padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700;
+      background: rgba(99,102,241,0.2); color: #818cf8;
+      border: 1px solid rgba(99,102,241,0.3);
+      animation: todayPulse 2s ease-in-out infinite;
+    }
+    @keyframes todayPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    .date-range { font-size: 11px; color: #64748b; }
+
+    .topic-chip.weekend {
+      background: rgba(236,72,153,0.08); border-color: rgba(236,72,153,0.15);
+      color: #f9a8d4;
+    }
 
     .week-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     .week-badge {
@@ -452,7 +474,7 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 // ===== 课程数据 =====
 const COURSE_DATA = [
   {
-    week: 1, module: 'dev', title: 'Python基础 + FastAPI + AI环境搭建',
+    week: 1, module: 'python-llm', title: 'Python基础 + FastAPI + AI环境搭建',
     dateRange: '6.1–6.7',
     objective: '掌握Python核心、FastAPI后端、Docker、AI API调用，完成AI聊天助手V1',
     days: [
@@ -466,7 +488,7 @@ const COURSE_DATA = [
     ]
   },
   {
-    week: 2, module: 'dev', title: 'LLM基础 + Prompt Engineering',
+    week: 2, module: 'python-llm', title: 'LLM基础 + Prompt Engineering',
     dateRange: '6.8–6.14',
     objective: '理解大模型原理，掌握Prompt工程，完成Prompt体系搭建',
     days: [
@@ -480,7 +502,7 @@ const COURSE_DATA = [
     ]
   },
   {
-    week: 3, module: 'dev', title: 'LangChain + 聊天助手V2',
+    week: 3, module: 'rag', title: 'LangChain + 聊天助手V2',
     dateRange: '6.15–6.21',
     objective: '掌握LangChain核心，完成AI聊天助手V2（多轮记忆+工具调用）',
     days: [
@@ -494,7 +516,7 @@ const COURSE_DATA = [
     ]
   },
   {
-    week: 4, module: 'dev', title: 'Embedding + 向量数据库',
+    week: 4, module: 'rag', title: 'Embedding + 向量数据库',
     dateRange: '6.22–6.28',
     objective: '掌握向量检索、Chroma/pgvector，完成知识库数据预处理',
     days: [
@@ -508,7 +530,7 @@ const COURSE_DATA = [
     ]
   },
   {
-    week: 5, module: 'dev', title: 'RAG基础 + 企业知识库V1',
+    week: 5, module: 'rag', title: 'RAG基础 + 企业知识库V1',
     dateRange: '6.29–7.5',
     objective: '掌握RAG全链路，完成企业知识库可问答系统',
     days: [
@@ -522,7 +544,7 @@ const COURSE_DATA = [
     ]
   },
   {
-    week: 6, module: 'dev', title: 'RAG优化 + 金融领域知识库',
+    week: 6, module: 'rag', title: 'RAG优化 + 金融领域知识库',
     dateRange: '7.6–7.12',
     objective: 'RAG高阶优化+垂直领域落地，完成金融RAG项目',
     days: [
@@ -536,7 +558,7 @@ const COURSE_DATA = [
     ]
   },
   {
-    week: 7, module: 'dev', title: 'Function Calling + Tool Agent',
+    week: 7, module: 'agent', title: 'Function Calling + Tool Agent',
     dateRange: '7.13–7.19',
     objective: '掌握工具调用，完成天气/汇率等基础Agent',
     days: [
@@ -550,7 +572,7 @@ const COURSE_DATA = [
     ]
   },
   {
-    week: 8, module: 'dev', title: 'Agent + Excel数据分析',
+    week: 8, module: 'agent', title: 'Agent + Excel数据分析',
     dateRange: '7.20–7.26',
     objective: '掌握ReAct Agent，完成Excel数据分析Agent',
     days: [
@@ -564,7 +586,7 @@ const COURSE_DATA = [
     ]
   },
   {
-    week: 9, module: 'dev', title: 'LangGraph + Workflow',
+    week: 9, module: 'agent', title: 'LangGraph + Workflow',
     dateRange: '7.27–8.2',
     objective: '掌握工作流编排，完成企业工单/审批Agent',
     days: [
@@ -578,7 +600,7 @@ const COURSE_DATA = [
     ]
   },
   {
-    week: 10, module: 'eng', title: 'AI工程化 + Docker部署',
+    week: 10, module: 'deploy', title: 'AI工程化 + Docker部署',
     dateRange: '8.3–8.9',
     objective: '掌握云原生部署，项目全链路上线可公网访问',
     days: [
@@ -592,7 +614,7 @@ const COURSE_DATA = [
     ]
   },
   {
-    week: 11, module: 'pm', title: '项目整理 + 面试冲刺',
+    week: 11, module: 'deploy', title: '项目整理 + 面试冲刺',
     dateRange: '8.10–8.16',
     objective: '求职冲刺，完成面试+简历+作品集',
     days: [
@@ -606,7 +628,7 @@ const COURSE_DATA = [
     ]
   },
   {
-    week: 12, module: 'pm', title: 'AI产品能力 + 复盘',
+    week: 12, module: 'deploy', title: 'AI产品能力 + 复盘',
     dateRange: '8.17–8.23',
     objective: 'AI产品思维巩固，全流程复盘总结',
     days: [
@@ -622,9 +644,10 @@ const COURSE_DATA = [
 ];
 
 const MODULES = [
-  { id: 'dev', icon: '⚡', name: 'AI应用开发', weeks: [1, 2, 3, 4, 5, 6, 7, 8, 9] },
-  { id: 'eng', icon: '🔧', name: '工程化部署', weeks: [10] },
-  { id: 'pm', icon: '🎯', name: '产品+面试', weeks: [11, 12] }
+  { id: 'python-llm', icon: '🐍', name: 'Python+LLM基础', weeks: [1, 2] },
+  { id: 'rag', icon: '📚', name: 'RAG+知识库', weeks: [3, 4, 5, 6] },
+  { id: 'agent', icon: '🤖', name: 'Agent+Workflow', weeks: [7, 8, 9] },
+  { id: 'deploy', icon: '🚀', name: '工程化+面试', weeks: [10, 11, 12] }
 ];
 
 // ===== 初始化逻辑 =====
@@ -656,7 +679,17 @@ async function initDatabase() {
 let allWeeks = [];
 let allTopics = [];
 let allNotes = [];
-let currentModule = 'tech';
+let currentModule = 'python-llm';
+
+// ===== "今天"计算 =====
+function getTodayWeekNumber() {
+  const PLAN_START = new Date('2026-06-01');
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const diffDays = Math.floor((today - PLAN_START) / (1000 * 60 * 60 * 24));
+  if (diffDays < 0) return 0;
+  return Math.floor(diffDays / 7) + 1;
+}
 
 // ===== 数据加载 =====
 async function loadData() {
@@ -728,6 +761,7 @@ function renderTimeline() {
   const moduleWeeks = allWeeks.filter(w =>
     MODULES.find(m => m.id === currentModule)?.weeks.includes(w.week_number)
   );
+  const todayWeek = getTodayWeekNumber();
 
   container.innerHTML = moduleWeeks.map(week => {
     const topics = allTopics.filter(t => t.week_id === week.id).sort((a, b) => a.topic_order - b.topic_order);
@@ -735,21 +769,30 @@ function renderTimeline() {
     const total = topics.length;
     const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
     const weekNote = allNotes.find(n => n.week_id === week.id && !n.topic_id);
+    const weekData = COURSE_DATA.find(c => c.week === week.week_number);
+    const isToday = week.week_number === todayWeek;
 
     return `
     <div class="tl-node">
       <div class="tl-dot ${week.status}"></div>
-      <div class="week-card ${week.status === 'active' ? 'active-card' : ''}"
+      <div class="week-card ${week.status === 'active' ? 'active-card' : ''} ${isToday ? 'today-card' : ''}"
            onclick="toggleWeekDetail('${week.id}')">
         <div class="week-header">
           <span class="week-badge ${week.status}">
             ${week.status === 'done' ? '✓' : week.status === 'active' ? '●' : ''} 第 ${week.week_number} 周
           </span>
-          <span style="font-size:12px;color:${week.status === 'done' ? '#34d399' : week.status === 'active' ? '#fbbf24' : '#64748b'}">${pct}%</span>
+          <div class="week-header-right">
+            ${isToday ? '<span class="today-tag">今天</span>' : ''}
+            ${weekData?.dateRange ? `<span class="date-range">${weekData.dateRange}</span>` : ''}
+            <span style="font-size:12px;color:${week.status === 'done' ? '#34d399' : week.status === 'active' ? '#fbbf24' : '#64748b'}">${pct}%</span>
+          </div>
         </div>
         <div class="week-title">${week.title}</div>
         <div class="week-topics">
-          ${topics.map(t => `<span class="topic-chip">${t.name.replace(/\s*\(\d+h\)$/, '')}</span>`).join('')}
+          ${topics.map(t => {
+            const isWeekend = t.name.startsWith('周六') || t.name.startsWith('周日');
+            return `<span class="topic-chip ${isWeekend ? 'weekend' : ''}">${t.name.replace(/\s*\(\d+h\)$/, '')}</span>`;
+          }).join('')}
         </div>
         <div class="mini-progress">
           <div class="mini-bar"><div class="mini-bar-fill ${week.status}" style="width:${pct}%"></div></div>
