@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 学习计划追踪</title>
+  <link rel="stylesheet" href="lib/prism-tomorrow.min.css">
+  <style>
+    /* ===== Reset & Base ===== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, 'SF Pro Display', 'PingFang SC', sans-serif;
+      background: #0a0e1a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ===== Background Effects ===== */
+    .bg-grid {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background-image:
+        linear-gradient(rgba(99,102,241,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,102,241,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 0;
+    }
+    .bg-glow {
+      position: fixed; width: 600px; height: 600px; border-radius: 50%;
+      filter: blur(120px); opacity: 0.15; z-index: 0; pointer-events: none;
+    }
+    .bg-glow-1 { top: -200px; left: -100px; background: #6366f1; }
+    .bg-glow-2 { bottom: -200px; right: -100px; background: #ec4899; }
+
+    /* ===== Container ===== */
+    .container {
+      position: relative; z-index: 1;
+      max-width: 900px; margin: 0 auto; padding: 40px 20px;
+    }
+
+    /* ===== Hero Header ===== */
+    .hero {
+      text-align: center; padding: 50px 30px; margin-bottom: 40px;
+      background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(236,72,153,0.1));
+      border: 1px solid rgba(99,102,241,0.2);
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+      background: linear-gradient(135deg, #6366f1, #ec4899, #6366f1);
+      border-radius: 21px; z-index: -1; opacity: 0.3;
+      animation: borderGlow 4s ease-in-out infinite;
+    }
+    @keyframes borderGlow {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 0.5; }
+    }
+    .hero-tag {
+      display: inline-block; padding: 6px 16px; margin-bottom: 16px;
+      background: rgba(99,102,241,0.2); border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 20px; font-size: 12px; color: #818cf8;
+      letter-spacing: 2px; text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: 32px; font-weight: 700;
+      background: linear-gradient(135deg, #c7d2fe 0%, #f0abfc 50%, #93c5fd 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 10px;
+    }
+    .hero p { color: #94a3b8; font-size: 15px; }
+
+    /* ===== Progress Ring ===== */
+    .progress-section {
+      display: flex; align-items: center; justify-content: center;
+      gap: 40px; margin-top: 30px; flex-wrap: wrap;
+    }
+    .ring-wrap { position: relative; width: 100px; height: 100px; }
+    .ring-wrap svg { transform: rotate(-90deg); }
+    .ring-bg { fill: none; stroke: rgba(99,102,241,0.1); stroke-width: 6; }
+    .ring-fill {
+      fill: none; stroke: url(#ringGrad); stroke-width: 6;
+      stroke-linecap: round; stroke-dasharray: 264; stroke-dashoffset: 264;
+      transition: stroke-dashoffset 1s ease;
+    }
+    .ring-text {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      font-size: 22px; font-weight: 700; color: #c7d2fe;
+    }
+
+    /* ===== Stats Cards ===== */
+    .stat-cards { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .stat-card {
+      padding: 14px 20px; border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      text-align: center; min-width: 80px;
+    }
+    .stat-card .num { font-size: 22px; font-weight: 700; }
+    .stat-card .label { font-size: 11px; color: #64748b; margin-top: 2px; }
+    .stat-card.done .num { color: #34d399; }
+    .stat-card.active .num { color: #fbbf24; }
+    .stat-card.pending .num { color: #64748b; }
+
+    /* ===== Module Tabs ===== */
+    .module-tabs {
+      display: flex; gap: 8px; margin-bottom: 30px;
+      padding: 4px; background: rgba(255,255,255,0.03);
+      border-radius: 12px; border: 1px solid rgba(255,255,255,0.06);
+      overflow-x: auto;
+    }
+    .module-tab {
+      flex: 1; padding: 10px 16px; border-radius: 10px;
+      text-align: center; cursor: pointer; transition: all 0.3s;
+      font-size: 13px; color: #64748b; white-space: nowrap;
+      border: 1px solid transparent;
+    }
+    .module-tab:hover { color: #94a3b8; }
+    .module-tab.active {
+      background: linear-gradient(135deg, rgba(99,102,241,0.3), rgba(236,72,153,0.2));
+      color: #e2e8f0; border-color: rgba(99,102,241,0.3);
+    }
+    .module-tab .tab-icon { font-size: 18px; display: block; margin-bottom: 4px; }
+
+    /* ===== Timeline ===== */
+    .timeline { position: relative; padding-left: 40px; }
+    .timeline::before {
+      content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px;
+      background: linear-gradient(to bottom, #6366f1, #ec4899, rgba(99,102,241,0.1));
+    }
+
+    /* ===== Timeline Node ===== */
+    .tl-node { position: relative; margin-bottom: 20px; }
+    .tl-dot {
+      position: absolute; left: -40px; top: 18px;
+      width: 14px; height: 14px; border-radius: 50%;
+      border: 2px solid #1e1b4b; z-index: 2;
+    }
+    .tl-dot::after {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 6px; height: 6px; border-radius: 50%;
+    }
+    .tl-dot.done { background: #34d399; box-shadow: 0 0 12px rgba(52,211,153,0.4); }
+    .tl-dot.done::after { background: #fff; }
+    .tl-dot.active { background: #fbbf24; box-shadow: 0 0 12px rgba(251,191,36,0.4); animation: pulse 2s infinite; }
+    .tl-dot.active::after { background: #fff; }
+    .tl-dot.pending { background: #1e293b; }
+    .tl-dot.pending::after { background: #334155; }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 12px rgba(251,191,36,0.4); }
+      50% { box-shadow: 0 0 24px rgba(251,191,36,0.6); }
+    }
+
+    /* ===== Week Card ===== */
+    .week-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px; padding: 20px;
+      transition: all 0.3s; cursor: pointer;
+      position: relative; overflow: hidden;
+    }
+    .week-card:hover {
+      border-color: rgba(99,102,241,0.3);
+      background: rgba(255,255,255,0.05);
+      transform: translateX(4px);
+    }
+    .week-card.active-card {
+      border-color: rgba(251,191,36,0.3);
+      background: rgba(251,191,36,0.03);
+    }
+    .week-card.active-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, #fbbf24, #f59e0b);
+    }
+
+    .week-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .week-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border-radius: 8px;
+      font-size: 12px; font-weight: 600;
+    }
+    .week-badge.done { background: rgba(52,211,153,0.1); color: #34d399; border: 1px solid rgba(52,211,153,0.2); }
+    .week-badge.active { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
+    .week-badge.pending { background: rgba(100,116,139,0.1); color: #64748b; border: 1px solid rgba(100,116,139,0.2); }
+
+    .week-title { font-size: 17px; font-weight: 600; color: #e2e8f0; margin-bottom: 8px; }
+    .week-topics { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .topic-chip {
+      padding: 4px 10px; border-radius: 6px; font-size: 11px;
+      background: rgba(255,255,255,0.05); color: #94a3b8;
+      border: 1px solid rgba(255,255,255,0.06);
+      white-space: nowrap; line-height: 1.4;
+    }
+
+    /* ===== Mini Progress ===== */
+    .mini-progress { display: flex; align-items: center; gap: 10px; }
+    .mini-bar { flex: 1; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+    .mini-bar-fill { height: 100%; border-radius: 2px; transition: width 0.5s; }
+    .mini-bar-fill.done { background: linear-gradient(90deg, #34d399, #10b981); }
+    .mini-bar-fill.active { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+    .mini-pct { font-size: 12px; color: #64748b; min-width: 32px; text-align: right; }
+
+    /* ===== Note Preview ===== */
+    .note-preview {
+      margin-top: 12px; padding: 10px 14px;
+      background: rgba(251,191,36,0.05);
+      border-left: 2px solid rgba(251,191,36,0.3);
+      border-radius: 0 8px 8px 0;
+      font-size: 12px; color: #94a3b8;
+      max-height: 40px; overflow: hidden;
+    }
+    .note-preview .note-label { color: #fbbf24; font-weight: 600; margin-right: 6px; }
+
+    /* ===== Expanded Detail ===== */
+    .week-detail {
+      display: none; margin-top: 16px; padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .week-detail.open { display: block; }
+
+    .topic-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .topic-item:last-child { border-bottom: none; }
+
+    .topic-checkbox {
+      width: 18px; height: 18px; border-radius: 4px;
+      border: 2px solid #475569; background: transparent;
+      cursor: pointer; flex-shrink: 0; margin-top: 2px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .topic-checkbox:hover { border-color: #6366f1; }
+    .topic-checkbox.checked {
+      background: #6366f1; border-color: #6366f1;
+    }
+    .topic-checkbox.checked::after {
+      content: '\2713'; color: white; font-size: 11px; font-weight: bold;
+    }
+    .topic-name { font-size: 14px; color: #cbd5e1; flex: 1; }
+    .topic-name.done-text { text-decoration: line-through; color: #64748b; }
+
+    .topic-note-btn {
+      padding: 4px 10px; border-radius: 6px; font-size: 11px;
+      background: rgba(99,102,241,0.1); color: #818cf8;
+      border: 1px solid rgba(99,102,241,0.2);
+      cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .topic-note-btn:hover { background: rgba(99,102,241,0.2); }
+
+    /* ===== Note Editor ===== */
+    .note-editor {
+      display: none; margin-top: 12px; padding: 16px;
+      background: rgba(0,0,0,0.2); border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .note-editor.open { display: block; }
+
+    .note-toolbar {
+      display: flex; gap: 4px; margin-bottom: 10px; flex-wrap: wrap;
+    }
+    .note-toolbar button {
+      padding: 6px 10px; border-radius: 6px; font-size: 12px;
+      background: rgba(255,255,255,0.05); color: #94a3b8;
+      border: 1px solid rgba(255,255,255,0.08);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .note-toolbar button:hover { background: rgba(255,255,255,0.1); color: #e2e8f0; }
+
+    .note-tags { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+    .note-tag {
+      padding: 3px 10px; border-radius: 12px; font-size: 11px;
+      cursor: pointer; transition: all 0.2s;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .note-tag.selected { border-color: #6366f1; background: rgba(99,102,241,0.2); color: #818cf8; }
+    .note-tag:not(.selected) { color: #64748b; }
+
+    .note-editor-area {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    }
+    .note-editor-area.full-width { grid-template-columns: 1fr; }
+
+    .note-textarea {
+      width: 100%; min-height: 120px; padding: 12px;
+      background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; color: #e2e8f0; font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 13px; resize: vertical; outline: none;
+    }
+    .note-textarea:focus { border-color: rgba(99,102,241,0.4); }
+
+    .note-preview-pane {
+      padding: 12px; background: rgba(0,0,0,0.15);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px; min-height: 120px;
+      font-size: 14px; line-height: 1.6; color: #cbd5e1;
+      overflow-y: auto; max-height: 300px;
+    }
+    .note-preview-pane h1, .note-preview-pane h2, .note-preview-pane h3 { color: #e2e8f0; margin: 12px 0 6px; }
+    .note-preview-pane code {
+      background: rgba(99,102,241,0.1); padding: 2px 6px; border-radius: 4px;
+      font-family: 'SF Mono', monospace; font-size: 13px;
+    }
+    .note-preview-pane pre { background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; overflow-x: auto; }
+    .note-preview-pane pre code { background: none; padding: 0; }
+    .note-preview-pane img { max-width: 100%; border-radius: 8px; margin: 8px 0; }
+    .note-preview-pane a { color: #818cf8; }
+    .note-preview-pane ul, .note-preview-pane ol { padding-left: 20px; }
+    .note-preview-pane blockquote {
+      border-left: 3px solid #6366f1; padding-left: 12px; color: #94a3b8;
+    }
+
+    .note-save-status {
+      margin-top: 8px; font-size: 11px; color: #64748b;
+      text-align: right;
+    }
+    .note-save-status.saving { color: #fbbf24; }
+    .note-save-status.saved { color: #34d399; }
+
+    /* ===== Weekly Note ===== */
+    .weekly-note { margin-top: 16px; }
+    .weekly-note-title {
+      font-size: 14px; font-weight: 600; color: #94a3b8;
+      margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+    }
+
+    /* ===== Week Objective ===== */
+    .week-objective {
+      padding: 12px 16px; margin-bottom: 16px;
+      background: rgba(99,102,241,0.06);
+      border: 1px solid rgba(99,102,241,0.15);
+      border-radius: 10px;
+    }
+    .week-objective-label { font-size: 11px; color: #818cf8; font-weight: 600; margin-bottom: 4px; }
+    .week-objective-text { font-size: 13px; color: #cbd5e1; line-height: 1.5; }
+
+    /* ===== Topic Info (expanded) ===== */
+    .topic-info { flex: 1; min-width: 0; }
+    .topic-details { margin-top: 6px; }
+    .topic-detail-row {
+      font-size: 12px; color: #64748b; line-height: 1.6;
+      padding: 2px 0; display: flex; gap: 6px; align-items: baseline;
+    }
+    .detail-label {
+      font-weight: 600; color: #818cf8; white-space: nowrap; flex-shrink: 0;
+    }
+    .material-link {
+      color: #93c5fd; text-decoration: none;
+      border-bottom: 1px dashed rgba(147,197,253,0.3);
+      transition: all 0.2s;
+    }
+    .material-link:hover { color: #c7d2fe; border-bottom-color: #c7d2fe; }
+    .material-text { color: #94a3b8; }
+    .material-sep { color: #475569; }
+
+    /* ===== Image Upload ===== */
+    .image-upload-input { display: none; }
+
+    /* ===== FAB ===== */
+    .fab {
+      position: fixed; bottom: 30px; right: 30px;
+      width: 56px; height: 56px; border-radius: 16px;
+      background: linear-gradient(135deg, #6366f1, #ec4899);
+      border: none; color: white; font-size: 24px;
+      cursor: pointer; box-shadow: 0 8px 30px rgba(99,102,241,0.3);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.2s; z-index: 100;
+    }
+    .fab:hover { transform: scale(1.1); }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 640px) {
+      .container { padding: 20px 12px; }
+      .hero { padding: 30px 16px; }
+      .hero h1 { font-size: 22px; }
+      .progress-section { gap: 20px; }
+      .note-editor-area { grid-template-columns: 1fr; }
+      .module-tabs { flex-wrap: nowrap; overflow-x: auto; }
+      .hero h1 { font-size: 20px; }
+      .stat-cards { gap: 8px; }
+      .stat-card { padding: 10px 14px; min-width: 60px; }
+      .stat-card .num { font-size: 18px; }
+      .week-card { padding: 14px; }
+      .week-title { font-size: 15px; }
+      .note-preview-pane { max-height: 200px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+
+  <!-- SVG Defs -->
+  <svg width="0" height="0"><defs>
+    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+  </defs></svg>
+
+  <div class="container">
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-tag">2026.6.1 – 8.23</div>
+      <h1>AI 应用开发 + AI 产品经理</h1>
+      <p>90天完整学习计划 · 12周 · 4个项目交付</p>
+      <div class="progress-section">
+        <div>
+          <div class="ring-wrap">
+            <svg width="100" height="100" viewBox="0 0 100 100">
+              <circle class="ring-bg" cx="50" cy="50" r="42"/>
+              <circle class="ring-fill" id="progressRing" cx="50" cy="50" r="42"/>
+            </svg>
+            <div class="ring-text" id="progressText">0%</div>
+          </div>
+        </div>
+        <div class="stat-cards">
+          <div class="stat-card"><div class="num" id="statDone">0</div><div class="label">已完成</div></div>
+          <div class="stat-card active"><div class="num" id="statActive">0</div><div class="label">进行中</div></div>
+          <div class="stat-card pending"><div class="num" id="statPending">0</div><div class="label">未开始</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Module Tabs -->
+    <div class="module-tabs" id="moduleTabs"></div>
+
+    <!-- Timeline -->
+    <div class="timeline" id="timeline"></div>
+  </div>
+
+  <!-- Hidden image upload input -->
+  <input type="file" class="image-upload-input" id="imageUpload" accept="image/*">
+
+  <!-- Local Dependencies -->
+  <script src="lib/marked.min.js"></script>
+  <script src="lib/prism.min.js"></script>
+  <script src="lib/prism-javascript.min.js"></script>
+  <script src="lib/prism-python.min.js"></script>
+  <script src="lib/prism-java.min.js"></script>
+  <script src="lib/supabase.min.js"></script>
+  <script>
+// ===== Supabase 配置 =====
+const SUPABASE_URL = 'https://whiiugqnyhrnwsvmtnif.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_6ubZtWTSd8RmTs3vzqy_6w_xOkoxUw2';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ===== 课程数据 =====
+const COURSE_DATA = [
+  {
+    week: 1, module: 'dev', title: 'Python基础 + FastAPI + AI环境搭建',
+    dateRange: '6.1–6.7',
+    objective: '掌握Python核心、FastAPI后端、Docker、AI API调用，完成AI聊天助手V1',
+    days: [
+      { day: '周一', hours: 2, name: 'Python核心语法', materials: [{text:'Python官方文档',url:'https://docs.python.org/3/'},{text:'廖雪峰Python教程',url:'https://www.liaoxuefeng.com/wiki/1016959663602400'}], tasks: '变量、循环、函数、字典、文件读写' },
+      { day: '周二', hours: 2, name: 'Python面向对象+异步编程', materials: [{text:'廖雪峰Python教程',url:'https://www.liaoxuefeng.com/wiki/1016959663602400'}], tasks: '编写class、异步函数基础' },
+      { day: '周三', hours: 2, name: 'FastAPI基础', materials: [{text:'FastAPI官方文档',url:'https://fastapi.tiangolo.com/'}], tasks: '搭建FastAPI项目，实现简单接口' },
+      { day: '周四', hours: 2, name: '请求响应+流式输出', materials: [{text:'FastAPI官方文档',url:'https://fastapi.tiangolo.com/'}], tasks: '实现带参数的API接口' },
+      { day: '周五', hours: 2, name: 'Docker基础+AI API调用', materials: [{text:'Docker入门',url:'https://docs.docker.com/get-started/'},{text:'OpenAI文档',url:'https://platform.openai.com/docs'}], tasks: '用requests调用OpenAI/通义千问API' },
+      { day: '周六', hours: 6, name: 'FastAPI综合+项目搭建', materials: [], tasks: '完成AI聊天助手V1后端接口、单轮对话、流式输出' },
+      { day: '周日', hours: 6, name: '项目复盘+Docker打包+GitHub', materials: [], tasks: '项目部署打包、整理代码仓库' }
+    ]
+  },
+  {
+    week: 2, module: 'dev', title: 'LLM基础 + Prompt Engineering',
+    dateRange: '6.8–6.14',
+    objective: '理解大模型原理，掌握Prompt工程，完成Prompt体系搭建',
+    days: [
+      { day: '周一', hours: 2, name: 'Token/Embedding/语义向量', materials: [{text:'OpenAI文档',url:'https://platform.openai.com/docs'}], tasks: '计算Token数、理解Embedding作用' },
+      { day: '周二', hours: 2, name: 'Transformer+Attention机制', materials: [{text:'OpenAI文档',url:'https://platform.openai.com/docs'}], tasks: '理解大模型生成逻辑' },
+      { day: '周三', hours: 2, name: 'Prompt基础：Role/Task/Context/Output', materials: [{text:'OpenAI Prompt Guide',url:'https://platform.openai.com/docs/guides/prompt-engineering'}], tasks: '编写标准基础Prompt' },
+      { day: '周四', hours: 2, name: 'Few-shot/CoT/防御Prompt注入', materials: [{text:'OpenAI官方文档',url:'https://platform.openai.com/docs'}], tasks: '用少样本与思维链优化输出' },
+      { day: '周五', hours: 2, name: 'Structured Output+稳定JSON', materials: [{text:'OpenAI官方文档',url:'https://platform.openai.com/docs'}], tasks: '让模型固定返回JSON格式' },
+      { day: '周六', hours: 6, name: '幻觉控制+Temperature+System Prompt', materials: [], tasks: '设计客服/通用场景System Prompt、对比5种Prompt效果' },
+      { day: '周日', hours: 6, name: 'Prompt库整理+项目集成', materials: [], tasks: '将优化Prompt接入聊天助手，控制上下文长度' }
+    ]
+  },
+  {
+    week: 3, module: 'dev', title: 'LangChain + 聊天助手V2',
+    dateRange: '6.15–6.21',
+    objective: '掌握LangChain核心，完成AI聊天助手V2（多轮记忆+工具调用）',
+    days: [
+      { day: '周一', hours: 2, name: 'LangChain基础+PromptTemplate', materials: [{text:'LangChain官方文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '编写模板化Prompt' },
+      { day: '周二', hours: 2, name: 'LCEL表达式+Chains链路', materials: [{text:'LangChain官方文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '用LCEL重构对话链路' },
+      { day: '周三', hours: 2, name: 'Memory机制', materials: [{text:'LangChain官方文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '实现多轮对话记忆' },
+      { day: '周四', hours: 2, name: 'OutputParser+Function Calling', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '解析模型结构化输出' },
+      { day: '周五', hours: 2, name: '聊天助手增强+记录持久化', materials: [], tasks: '将对话存入文件/简易数据库' },
+      { day: '周六', hours: 6, name: 'Function Calling完整实现', materials: [], tasks: '实现「查询时间」简单工具调用' },
+      { day: '周日', hours: 6, name: '项目部署+GitHub整理', materials: [], tasks: '完成AI聊天助手V2，支持记忆+工具调用' }
+    ]
+  },
+  {
+    week: 4, module: 'dev', title: 'Embedding + 向量数据库',
+    dateRange: '6.22–6.28',
+    objective: '掌握向量检索、Chroma/pgvector，完成知识库数据预处理',
+    days: [
+      { day: '周一', hours: 2, name: 'Embedding原理+语义检索', materials: [{text:'Chroma文档',url:'https://docs.trychroma.com/'}], tasks: '生成文本向量' },
+      { day: '周二', hours: 2, name: '向量数据库基础CRUD', materials: [{text:'Chroma官方文档',url:'https://docs.trychroma.com/'}], tasks: 'Chroma基础操作' },
+      { day: '周三', hours: 2, name: 'Chroma实战+向量存储', materials: [{text:'Chroma官方文档',url:'https://docs.trychroma.com/'}], tasks: '文本→向量→入库' },
+      { day: '周四', hours: 2, name: 'pgvector+混合存储', materials: [{text:'Chroma文档',url:'https://docs.trychroma.com/'}], tasks: '了解PostgreSQL向量存储' },
+      { day: '周五', hours: 2, name: '文本切分策略', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '优化文档分块' },
+      { day: '周六', hours: 6, name: 'PDF/Word解析+批量处理', materials: [], tasks: '用PyMuPDF解析PDF，构建向量检索Demo' },
+      { day: '周日', hours: 6, name: '知识库数据准备+索引构建', materials: [], tasks: '完成企业知识库V1数据模块' }
+    ]
+  },
+  {
+    week: 5, module: 'dev', title: 'RAG基础 + 企业知识库V1',
+    dateRange: '6.29–7.5',
+    objective: '掌握RAG全链路，完成企业知识库可问答系统',
+    days: [
+      { day: '周一', hours: 2, name: 'RAG整体流程', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'},{text:'LlamaIndex文档',url:'https://docs.llamaindex.ai/'}], tasks: '梳理RAG链路' },
+      { day: '周二', hours: 2, name: 'PDF/多格式文档解析', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '提升复杂文档解析率' },
+      { day: '周三', hours: 2, name: 'Chunk优化+阈值过滤', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '解决不相关检索问题' },
+      { day: '周四', hours: 2, name: 'Embedding接入+向量检索', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'},{text:'LlamaIndex文档',url:'https://docs.llamaindex.ai/'}], tasks: 'Query→检索链路' },
+      { day: '周五', hours: 2, name: '检索拼装Prompt+生成回答', materials: [], tasks: '实现RAG基础问答' },
+      { day: '周六', hours: 6, name: '企业知识库V1开发+引用标注', materials: [], tasks: '上传PDF→提问→带来源回答' },
+      { day: '周日', hours: 6, name: '阶段复盘+Bad Case整理', materials: [], tasks: '优化RAG基础效果' }
+    ]
+  },
+  {
+    week: 6, module: 'dev', title: 'RAG优化 + 金融领域知识库',
+    dateRange: '7.6–7.12',
+    objective: 'RAG高阶优化+垂直领域落地，完成金融RAG项目',
+    days: [
+      { day: '周一', hours: 2, name: 'Hybrid Search混合检索', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '实现BM25+向量混合检索' },
+      { day: '周二', hours: 2, name: 'Rerank重排序', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '接入BGE-Reranker' },
+      { day: '周三', hours: 2, name: 'Query Rewrite+多轮问答', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '优化模糊问题检索' },
+      { day: '周四', hours: 2, name: '金融文档整理+术语库', materials: [], tasks: '清洗金融文档、构建术语库' },
+      { day: '周五', hours: 2, name: '金融Prompt+权限设计', materials: [], tasks: '让模型扮演金融分析师' },
+      { day: '周六', hours: 6, name: '金融RAG完善+GraphRAG', materials: [], tasks: '引入知识图谱思路优化检索' },
+      { day: '周日', hours: 6, name: '录屏演示+文档输出', materials: [], tasks: '输出项目视频+使用文档' }
+    ]
+  },
+  {
+    week: 7, module: 'dev', title: 'Function Calling + Tool Agent',
+    dateRange: '7.13–7.19',
+    objective: '掌握工具调用，完成天气/汇率等基础Agent',
+    days: [
+      { day: '周一', hours: 2, name: 'Function Calling规范', materials: [{text:'OpenAI官方文档',url:'https://platform.openai.com/docs'}], tasks: '定义工具函数' },
+      { day: '周二', hours: 2, name: 'Tool Schema+参数规范', materials: [{text:'OpenAI官方文档',url:'https://platform.openai.com/docs'}], tasks: '编写标准工具描述' },
+      { day: '周三', hours: 2, name: '稳定JSON+参数解析', materials: [{text:'OpenAI官方文档',url:'https://platform.openai.com/docs'}], tasks: '解析工具调用结果' },
+      { day: '周四', hours: 2, name: '天气API工具Agent', materials: [], tasks: '封装天气接口、实现自动调用' },
+      { day: '周五', hours: 2, name: '搜索/汇率查询工具', materials: [], tasks: '实现搜索/汇率查询工具' },
+      { day: '周六', hours: 6, name: '多工具并行/串行调用', materials: [], tasks: '实现多工具自动选择' },
+      { day: '周日', hours: 6, name: 'Agent项目整理+部署', materials: [], tasks: '完成天气/汇率Agent上线' }
+    ]
+  },
+  {
+    week: 8, module: 'dev', title: 'Agent + Excel数据分析',
+    dateRange: '7.20–7.26',
+    objective: '掌握ReAct Agent，完成Excel数据分析Agent',
+    days: [
+      { day: '周一', hours: 2, name: 'ReAct Agent', materials: [{text:'LangChain Agents',url:'https://python.langchain.com/docs/introduction/'}], tasks: '实现思考-行动-观察链路' },
+      { day: '周二', hours: 2, name: 'Agent长期Memory', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: 'Agent记忆功能' },
+      { day: '周三', hours: 2, name: 'Planning+任务拆解', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '复杂任务自动拆解' },
+      { day: '周四', hours: 2, name: 'Pandas+Excel解析', materials: [{text:'Pandas官方文档',url:'https://pandas.pydata.org/docs/'}], tasks: '读取Excel生成DataFrame' },
+      { day: '周五', hours: 2, name: 'Code Interpreter+沙箱', materials: [], tasks: '让LLM生成分析代码' },
+      { day: '周六', hours: 6, name: '数据分析Agent+自动报告', materials: [], tasks: '上传Excel→自动分析→生成图表' },
+      { day: '周日', hours: 6, name: 'Agent复盘+难点整理', materials: [], tasks: '完成AI数据分析Agent' }
+    ]
+  },
+  {
+    week: 9, module: 'dev', title: 'LangGraph + Workflow',
+    dateRange: '7.27–8.2',
+    objective: '掌握工作流编排，完成企业工单/审批Agent',
+    days: [
+      { day: '周一', hours: 2, name: 'LangGraph状态机', materials: [{text:'LangGraph官方文档',url:'https://langchain-ai.github.io/langgraph/'}], tasks: '搭建基础流程图' },
+      { day: '周二', hours: 2, name: 'Workflow设计+条件分支', materials: [{text:'LangGraph文档',url:'https://langchain-ai.github.io/langgraph/'},{text:'Dify文档',url:'https://dify.ai/'}], tasks: '设计审批流结构' },
+      { day: '周三', hours: 2, name: 'Dify低代码实践', materials: [{text:'Dify官方文档',url:'https://dify.ai/'}], tasks: '用Dify快速搭建工作流' },
+      { day: '周四', hours: 2, name: 'MCP+企业流程规范', materials: [], tasks: '适配企业场景' },
+      { day: '周五', hours: 2, name: '工单识别→分类→处理', materials: [], tasks: '企业工作流Agent自动处理' },
+      { day: '周六', hours: 6, name: '工单Agent+消息通知', materials: [], tasks: '完整工单流程上线' },
+      { day: '周日', hours: 6, name: '工作流优化+简历描述', materials: [], tasks: '整理Workflow项目亮点' }
+    ]
+  },
+  {
+    week: 10, module: 'eng', title: 'AI工程化 + Docker部署',
+    dateRange: '8.3–8.9',
+    objective: '掌握云原生部署，项目全链路上线可公网访问',
+    days: [
+      { day: '周一', hours: 2, name: 'Docker进阶+docker-compose', materials: [{text:'Docker官方文档',url:'https://docs.docker.com/'}], tasks: '多容器编排' },
+      { day: '周二', hours: 2, name: 'Redis缓存+降Token成本', materials: [], tasks: '缓存高频问答' },
+      { day: '周三', hours: 2, name: '日志系统+LangSmith', materials: [], tasks: '接入日志监控' },
+      { day: '周四', hours: 2, name: 'Token成本优化+节流', materials: [], tasks: '减少冗余请求' },
+      { day: '周五', hours: 2, name: 'Nginx反向代理+HTTPS', materials: [], tasks: '配置域名代理' },
+      { day: '周六', hours: 6, name: '云服务器上线+Linux', materials: [], tasks: '全项目Docker化、服务器部署' },
+      { day: '周日', hours: 6, name: '系统压测+并发优化', materials: [], tasks: 'JMeter压测、确保稳定运行' }
+    ]
+  },
+  {
+    week: 11, module: 'pm', title: '项目整理 + 面试冲刺',
+    dateRange: '8.10–8.16',
+    objective: '求职冲刺，完成面试+简历+作品集',
+    days: [
+      { day: '周一', hours: 2, name: '项目文档+技术方案', materials: [], tasks: '输出每个项目架构文档' },
+      { day: '周二', hours: 2, name: '架构图+流程绘图', materials: [], tasks: '绘制RAG/Agent/Workflow架构图' },
+      { day: '周三', hours: 2, name: 'AI产品案例+需求分析', materials: [], tasks: '分析主流AI产品' },
+      { day: '周四', hours: 2, name: 'AI高频面试题', materials: [], tasks: '整理背诵RAG/Agent/Prompt题库' },
+      { day: '周五', hours: 2, name: '简历优化+STAR法则', materials: [], tasks: '突出AI+项目+垂直领域亮点' },
+      { day: '周六', hours: 6, name: '模拟面试+GitHub美化', materials: [], tasks: '自我介绍、项目讲解、在线Demo整理' },
+      { day: '周日', hours: 6, name: '最终发布+求职开启', materials: [], tasks: '全项目上线、投递岗位' }
+    ]
+  },
+  {
+    week: 12, module: 'pm', title: 'AI产品能力 + 复盘',
+    dateRange: '8.17–8.23',
+    objective: 'AI产品思维巩固，全流程复盘总结',
+    days: [
+      { day: '周一', hours: 2, name: 'AI产品需求分析', materials: [], tasks: '用户研究、需求挖掘与验证' },
+      { day: '周二', hours: 2, name: 'AI产品设计+交互', materials: [], tasks: 'AI能力边界评估、原型设计' },
+      { day: '周三', hours: 2, name: 'AI产品数据+商业化', materials: [], tasks: '核心指标体系、商业模式设计' },
+      { day: '周四', hours: 2, name: 'AI产品用户体验', materials: [], tasks: '容错降级、用户信任建设' },
+      { day: '周五', hours: 2, name: '跨职能协作+技术沟通', materials: [], tasks: 'AI项目管理、不确定性应对' },
+      { day: '周六', hours: 6, name: '90天全流程复盘', materials: [], tasks: '知识图谱梳理、查漏补缺' },
+      { day: '周日', hours: 6, name: '成果整理+持续学习', materials: [], tasks: 'GitHub作品集完善、后续学习路径' }
+    ]
+  }
+];
+
+const MODULES = [
+  { id: 'dev', icon: '⚡', name: 'AI应用开发', weeks: [1, 2, 3, 4, 5, 6, 7, 8, 9] },
+  { id: 'eng', icon: '🔧', name: '工程化部署', weeks: [10] },
+  { id: 'pm', icon: '🎯', name: '产品+面试', weeks: [11, 12] }
+];
+
+// ===== 初始化逻辑 =====
+async function initDatabase() {
+  const { data: existing } = await sb.from('weeks').select('id').limit(1);
+  if (existing && existing.length > 0) return;
+
+  for (const item of COURSE_DATA) {
+    const { data: week } = await sb.from('weeks').insert({
+      week_number: item.week,
+      module: item.module,
+      title: item.title,
+      status: item.week === 1 ? 'active' : 'pending'
+    }).select().single();
+
+    for (let i = 0; i < item.days.length; i++) {
+      const d = item.days[i];
+      await sb.from('topics').insert({
+        week_id: week.id,
+        name: `${d.day} ${d.name} (${d.hours}h)`,
+        completed: false,
+        topic_order: i + 1
+      });
+    }
+  }
+}
+
+// ===== 全局状态 =====
+let allWeeks = [];
+let allTopics = [];
+let allNotes = [];
+let currentModule = 'tech';
+
+// ===== 数据加载 =====
+async function loadData() {
+  const { data: weeks } = await sb.from('weeks').select('*').order('week_number');
+  const { data: topics } = await sb.from('topics').select('*');
+  const { data: notes } = await sb.from('notes').select('*');
+  allWeeks = weeks || [];
+  allTopics = topics || [];
+  allNotes = notes || [];
+}
+
+// ===== 图片上传 =====
+let currentUploadContext = {};
+
+function triggerImageUpload(containerId, weekId, topicId) {
+  currentUploadContext = { containerId, weekId, topicId };
+  document.getElementById('imageUpload').click();
+}
+
+document.getElementById('imageUpload').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const { containerId, weekId, topicId } = currentUploadContext;
+  const status = document.getElementById('status-' + containerId);
+  status.className = 'note-save-status saving';
+  status.textContent = '上传图片中...';
+
+  const fileName = `${Date.now()}-${file.name}`;
+  const { data, error } = await sb.storage.from('note-images').upload(fileName, file);
+
+  if (error) {
+    status.className = 'note-save-status';
+    status.textContent = '上传失败: ' + error.message;
+    return;
+  }
+
+  const { data: urlData } = sb.storage.from('note-images').getPublicUrl(fileName);
+  const imageUrl = urlData.publicUrl;
+
+  const textarea = document.getElementById('textarea-' + containerId);
+  const insert = `![${file.name}](${imageUrl})\n`;
+  textarea.value = textarea.value.substring(0, textarea.selectionStart) + insert + textarea.value.substring(textarea.selectionStart);
+  onNoteInput(containerId, weekId, topicId);
+
+  e.target.value = '';
+});
+
+// ===== 模块 Tab 渲染 =====
+function renderModuleTabs() {
+  const container = document.getElementById('moduleTabs');
+  container.innerHTML = MODULES.map(m =>
+    `<div class="module-tab ${m.id === currentModule ? 'active' : ''}"
+          onclick="switchModule('${m.id}')">
+      <span class="tab-icon">${m.icon}</span>${m.name}
+    </div>`
+  ).join('');
+}
+
+function switchModule(moduleId) {
+  currentModule = moduleId;
+  renderModuleTabs();
+  renderTimeline();
+}
+
+// ===== 时间线渲染 =====
+function renderTimeline() {
+  const container = document.getElementById('timeline');
+  const moduleWeeks = allWeeks.filter(w =>
+    MODULES.find(m => m.id === currentModule)?.weeks.includes(w.week_number)
+  );
+
+  container.innerHTML = moduleWeeks.map(week => {
+    const topics = allTopics.filter(t => t.week_id === week.id).sort((a, b) => a.topic_order - b.topic_order);
+    const completed = topics.filter(t => t.completed).length;
+    const total = topics.length;
+    const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+    const weekNote = allNotes.find(n => n.week_id === week.id && !n.topic_id);
+
+    return `
+    <div class="tl-node">
+      <div class="tl-dot ${week.status}"></div>
+      <div class="week-card ${week.status === 'active' ? 'active-card' : ''}"
+           onclick="toggleWeekDetail('${week.id}')">
+        <div class="week-header">
+          <span class="week-badge ${week.status}">
+            ${week.status === 'done' ? '✓' : week.status === 'active' ? '●' : ''} 第 ${week.week_number} 周
+          </span>
+          <span style="font-size:12px;color:${week.status === 'done' ? '#34d399' : week.status === 'active' ? '#fbbf24' : '#64748b'}">${pct}%</span>
+        </div>
+        <div class="week-title">${week.title}</div>
+        <div class="week-topics">
+          ${topics.map(t => `<span class="topic-chip">${t.name.replace(/\s*\(\d+h\)$/, '')}</span>`).join('')}
+        </div>
+        <div class="mini-progress">
+          <div class="mini-bar"><div class="mini-bar-fill ${week.status}" style="width:${pct}%"></div></div>
+          <div class="mini-pct">${completed}/${total}</div>
+        </div>
+        ${weekNote ? `<div class="note-preview"><span class="note-label">📝</span>${weekNote.content.substring(0, 60)}...</div>` : ''}
+      </div>
+      <div class="week-detail" id="detail-${week.id}">
+        <!-- 子主题 + 笔记区（后续 Task 实现） -->
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===== 卡片展开/收起 =====
+function toggleWeekDetail(weekId) {
+  const detail = document.getElementById('detail-' + weekId);
+  if (detail.classList.contains('open')) {
+    detail.classList.remove('open');
+  } else {
+    document.querySelectorAll('.week-detail.open').forEach(d => d.classList.remove('open'));
+    detail.classList.add('open');
+    renderWeekDetail(weekId);
+  }
+}
+
+function renderWeekDetail(weekId) {
+  const detail = document.getElementById('detail-' + weekId);
+  const topics = allTopics.filter(t => t.week_id === weekId).sort((a, b) => a.topic_order - b.topic_order);
+  const weekData = COURSE_DATA.find(w => {
+    const dbWeek = allWeeks.find(w2 => w2.id === weekId);
+    return dbWeek && w.week === dbWeek.week_number;
+  });
+
+  detail.innerHTML = `
+    ${weekData ? `
+    <div class="week-objective">
+      <div class="week-objective-label">阶段目标</div>
+      <div class="week-objective-text">${weekData.objective}</div>
+    </div>` : ''}
+    <div class="weekly-note">
+      <div class="weekly-note-title">📝 周汇总笔记</div>
+      <div id="note-editor-week-${weekId}"></div>
+    </div>
+    <div style="margin-top: 16px;">
+      ${topics.map((t, idx) => {
+        const dayData = weekData?.days[idx];
+        const materialsHtml = dayData?.materials?.length
+          ? dayData.materials.map(m => m.url
+            ? `<a href="${m.url}" target="_blank" rel="noopener" class="material-link">${m.text}</a>`
+            : `<span class="material-text">${m.text}</span>`
+          ).join('<span class="material-sep">、</span>')
+          : '';
+        return `
+        <div class="topic-item">
+          <div class="topic-checkbox ${t.completed ? 'checked' : ''}"
+               onclick="toggleTopic('${t.id}', ${!t.completed})"></div>
+          <div class="topic-info">
+            <span class="topic-name ${t.completed ? 'done-text' : ''}">${t.name}</span>
+            ${dayData ? `
+            <div class="topic-details">
+              ${materialsHtml ? `<div class="topic-detail-row"><span class="detail-label">资料</span>${materialsHtml}</div>` : ''}
+              <div class="topic-detail-row"><span class="detail-label">实操</span>${dayData.tasks}</div>
+            </div>` : ''}
+          </div>
+          <button class="topic-note-btn" onclick="event.stopPropagation(); toggleNoteEditor('${weekId}', '${t.id}')">
+            📝
+          </button>
+        </div>
+        <div class="note-editor" id="note-editor-${t.id}"></div>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+// ===== 进度更新 =====
+function updateProgress() {
+  const total = allTopics.length;
+  const done = allTopics.filter(t => t.completed).length;
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  const ring = document.getElementById('progressRing');
+  const circumference = 2 * Math.PI * 42;
+  ring.style.strokeDashoffset = circumference - (circumference * pct / 100);
+  document.getElementById('progressText').textContent = pct + '%';
+  const doneWeeks = allWeeks.filter(w => w.status === 'done').length;
+  const activeWeeks = allWeeks.filter(w => w.status === 'active').length;
+  const pendingWeeks = allWeeks.filter(w => w.status === 'pending').length;
+  document.getElementById('statDone').textContent = doneWeeks;
+  document.getElementById('statActive').textContent = activeWeeks;
+  document.getElementById('statPending').textContent = pendingWeeks;
+}
+
+// ===== 笔记编辑器 =====
+const PRESET_TAGS = ['重点', '待复习', '已掌握', '疑问'];
+let saveTimers = {};
+
+function renderNoteEditor(containerId, weekId, topicId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  const existing = allNotes.find(n =>
+    n.week_id === weekId && (topicId ? n.topic_id === topicId : !n.topic_id)
+  );
+  const content = existing?.content || '';
+  const tags = existing?.tags || [];
+
+  container.innerHTML = `
+    <div class="note-toolbar">
+      <button onclick="insertMarkdown('${containerId}', 'bold')">加粗</button>
+      <button onclick="insertMarkdown('${containerId}', 'italic')">斜体</button>
+      <button onclick="insertMarkdown('${containerId}', 'list')">列表</button>
+      <button onclick="insertMarkdown('${containerId}', 'code')">代码</button>
+      <button onclick="insertMarkdown('${containerId}', 'link')">链接</button>
+      <button onclick="triggerImageUpload('${containerId}', '${weekId}', '${topicId}')">图片</button>
+    </div>
+    <div class="note-tags" id="tags-${containerId}">
+      ${PRESET_TAGS.map(t =>
+        `<span class="note-tag ${tags.includes(t) ? 'selected' : ''}"
+              onclick="toggleNoteTag('${containerId}', '${weekId}', '${topicId}', '${t}')">${t}</span>`
+      ).join('')}
+    </div>
+    <div class="note-editor-area">
+      <textarea class="note-textarea" id="textarea-${containerId}"
+                placeholder="用 Markdown 编写笔记..."
+                oninput="onNoteInput('${containerId}', '${weekId}', '${topicId}')">${content}</textarea>
+      <div class="note-preview-pane" id="preview-${containerId}"></div>
+    </div>
+    <div class="note-save-status" id="status-${containerId}"></div>
+  `;
+
+  renderPreview(containerId, content);
+}
+
+function renderPreview(containerId, content) {
+  const preview = document.getElementById('preview-' + containerId);
+  if (preview) {
+    preview.innerHTML = marked.parse(content || '*暂无内容*');
+    preview.querySelectorAll('pre code').forEach(block => Prism.highlightElement(block));
+  }
+}
+
+function insertMarkdown(containerId, type) {
+  const textarea = document.getElementById('textarea-' + containerId);
+  const map = {
+    bold: ['**', '**'], italic: ['*', '*'],
+    list: ['- ', ''], code: ['```\n', '\n```'],
+    link: ['[', '](url)']
+  };
+  const [before, after] = map[type];
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  const text = textarea.value;
+  textarea.value = text.substring(0, start) + before + text.substring(start, end) + after + text.substring(end);
+  textarea.focus();
+  onNoteInput(containerId, null, null);
+}
+
+function onNoteInput(containerId, weekId, topicId) {
+  const textarea = document.getElementById('textarea-' + containerId);
+  renderPreview(containerId, textarea.value);
+
+  if (saveTimers[containerId]) clearTimeout(saveTimers[containerId]);
+
+  const status = document.getElementById('status-' + containerId);
+  status.className = 'note-save-status saving';
+  status.textContent = '保存中...';
+
+  saveTimers[containerId] = setTimeout(async () => {
+    await saveNote(containerId, weekId, topicId, textarea.value);
+    status.className = 'note-save-status saved';
+    status.textContent = '已保存';
+    setTimeout(() => { status.textContent = ''; }, 2000);
+  }, 500);
+}
+
+async function saveNote(containerId, weekId, topicId, content) {
+  const existing = allNotes.find(n =>
+    n.week_id === weekId && (topicId ? n.topic_id === topicId : !n.topic_id)
+  );
+
+  if (existing) {
+    await sb.from('notes').update({ content, updated_at: new Date() }).eq('id', existing.id);
+    existing.content = content;
+  } else {
+    const { data } = await sb.from('notes').insert({
+      week_id: weekId, topic_id: topicId, content, tags: []
+    }).select().single();
+    if (data) allNotes.push(data);
+  }
+}
+
+function toggleNoteTag(containerId, weekId, topicId, tag) {
+  const existing = allNotes.find(n =>
+    n.week_id === weekId && (topicId ? n.topic_id === topicId : !n.topic_id)
+  );
+  const tags = existing?.tags || [];
+  const idx = tags.indexOf(tag);
+  if (idx >= 0) tags.splice(idx, 1);
+  else tags.push(tag);
+
+  if (existing) {
+    sb.from('notes').update({ tags }).eq('id', existing.id);
+    existing.tags = tags;
+  }
+
+  const tagsContainer = document.getElementById('tags-' + containerId);
+  tagsContainer.innerHTML = PRESET_TAGS.map(t =>
+    `<span class="note-tag ${tags.includes(t) ? 'selected' : ''}"
+          onclick="toggleNoteTag('${containerId}', '${weekId}', '${topicId}', '${t}')">${t}</span>`
+  ).join('');
+}
+
+function toggleNoteEditor(weekId, topicId) {
+  const editor = document.getElementById('note-editor-' + topicId);
+  if (editor.classList.contains('open')) {
+    editor.classList.remove('open');
+  } else {
+    editor.classList.add('open');
+    renderNoteEditor('note-editor-' + topicId, weekId, topicId);
+  }
+}
+
+// ===== 子主题勾选 =====
+async function toggleTopic(topicId, completed) {
+  await sb.from('topics').update({ completed }).eq('id', topicId);
+
+  const topic = allTopics.find(t => t.id === topicId);
+  if (topic) topic.completed = completed;
+
+  updateWeekStatus(topic.week_id);
+  updateProgress();
+  renderTimeline();
+}
+
+async function updateWeekStatus(weekId) {
+  const topics = allTopics.filter(t => t.week_id === weekId);
+  const completed = topics.filter(t => t.completed).length;
+  let status = 'pending';
+  if (completed === topics.length && topics.length > 0) status = 'done';
+  else if (completed > 0) status = 'active';
+
+  await sb.from('weeks').update({ status }).eq('id', weekId);
+  const week = allWeeks.find(w => w.id === weekId);
+  if (week) week.status = status;
+}
+
+// ===== 初始化入口 =====
+async function init() {
+  await initDatabase();
+  await loadData();
+  renderModuleTabs();
+  renderTimeline();
+  updateProgress();
+}
+
+init();
+</script>
+</body>
+</html>
