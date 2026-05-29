@@ -111,10 +111,10 @@
       overflow-x: auto;
     }
     .module-tab {
-      flex: 1; padding: 10px 16px; border-radius: 10px;
+      flex: 1; padding: 10px 12px; border-radius: 10px;
       text-align: center; cursor: pointer; transition: all 0.3s;
       font-size: 13px; color: #64748b; white-space: nowrap;
-      border: 1px solid transparent;
+      border: 1px solid transparent; min-width: 0;
     }
     .module-tab:hover { color: #94a3b8; }
     .module-tab.active {
@@ -397,11 +397,12 @@
     @media (max-width: 640px) {
       .container { padding: 20px 12px; }
       .hero { padding: 30px 16px; }
-      .hero h1 { font-size: 22px; }
+      .hero h1 { font-size: 20px; }
       .progress-section { gap: 20px; }
       .note-editor-area { grid-template-columns: 1fr; }
-      .module-tabs { flex-wrap: nowrap; overflow-x: auto; }
-      .hero h1 { font-size: 20px; }
+      .module-tabs { gap: 4px; padding: 3px; }
+      .module-tab { padding: 8px 6px; font-size: 11px; }
+      .module-tab .tab-icon { font-size: 16px; }
       .stat-cards { gap: 8px; }
       .stat-card { padding: 10px 14px; min-width: 60px; }
       .stat-card .num { font-size: 18px; }
