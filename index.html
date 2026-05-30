@@ -1339,7 +1339,7 @@ async function saveReminderSettings() {
   closeReminderPanel();
 }
 
-// 测试通知
+// 测试通知（通过 Edge Function）
 async function testNotification() {
   const feishuChannel = channels.find(c => c.type === 'feishu' && c.webhook_url);
   const wechatChannel = channels.find(c => c.type === 'wechat' && c.webhook_url);
@@ -1352,230 +1352,29 @@ async function testNotification() {
   }
 
   try {
-    let success = false;
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/send-notification`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        channel_id: channel.id,
+        title: '🎉 测试通知',
+        message: '这是一条测试通知，如果你收到了说明配置成功！'
+      })
+    });
 
-    if (channel.type === 'feishu') {
-      success = await sendFeishuNotification(
-        channel.webhook_url,
-        '🎉 测试通知',
-        '这是一条测试通知，如果你收到了说明配置成功！'
-      );
-    } else if (channel.type === 'wechat') {
-      success = await sendWechatNotification(
-        channel.webhook_url,
-        '🎉 测试通知',
-        '这是一条测试通知，如果你收到了说明配置成功！'
-      );
-    }
+    const result = await response.json();
 
-    if (success) {
+    if (result.success) {
       alert('测试通知发送成功！请检查你的飞书/微信。');
     } else {
-      alert('发送失败，请检查 Webhook URL 是否正确。');
+      alert('发送失败: ' + (result.error || '未知错误'));
     }
   } catch (error) {
     alert('发送失败: ' + error.message);
   }
-}
-
-// 发送飞书通知（直接调用 Webhook）
-async function sendFeishuNotification(webhookUrl, title, message) {
-  const payload = {
-    msg_type: 'interactive',
-    card: {
-      header: {
-        title: { tag: 'plain_text', content: title },
-        template: 'blue'
-      },
-      elements: [
-        {
-          tag: 'markdown',
-          content: message
-        }
-      ]
-    }
-  };
-
-  const response = await fetch(webhookUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-
-  return response.ok;
-}
-
-// 发送企业微信通知（直接调用 Webhook）
-async function sendWechatNotification(webhookUrl, title, message) {
-  const payload = {
-    msgtype: 'markdown',
-    markdown: {
-      content: `### ${title}\n${message}`
-    }
-  };
-
-  const response = await fetch(webhookUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-
-  return response.ok;
-}
-
-// 检查并触发提醒（浏览器端）
-async function checkAndTriggerReminders() {
-  const feishuChannel = channels.find(c => c.type === 'feishu' && c.webhook_url);
-  const wechatChannel = channels.find(c => c.type === 'wechat' && c.webhook_url);
-  const activeChannel = feishuChannel || wechatChannel;
-
-  if (!activeChannel) return;
-
-  for (const reminder of reminders) {
-    if (!reminder.enabled) continue;
-
-    let shouldTrigger = false;
-
-    switch (reminder.type) {
-      case 'daily':
-        shouldTrigger = shouldTriggerDaily(reminder);
-        break;
-      case 'weekly':
-        shouldTrigger = shouldTriggerWeekly(reminder);
-        break;
-      case 'deadline':
-        shouldTrigger = shouldTriggerDeadline(reminder);
-        break;
-    }
-
-    if (shouldTrigger) {
-      const title = reminder.title;
-      const message = reminder.message || getDefaultReminderMessage(reminder);
-
-      let success = false;
-      if (activeChannel.type === 'feishu') {
-        success = await sendFeishuNotification(activeChannel.webhook_url, title, message);
-      } else if (activeChannel.type === 'wechat') {
-        success = await sendWechatNotification(activeChannel.webhook_url, title, message);
-      }
-
-      if (success) {
-        await sb.from('reminders').update({ last_sent_at: new Date().toISOString() }).eq('id', reminder.id);
-        reminder.last_sent_at = new Date().toISOString();
-      }
-    }
-  }
-}
-
-// 检查每日提醒是否应该触发
-function shouldTriggerDaily(reminder) {
-  const config = reminder.config || {};
-  const targetTime = config.time || '09:00';
-  const [hours, minutes] = targetTime.split(':').map(Number);
-
-  const now = new Date();
-  const target = new Date();
-  target.setHours(hours, minutes, 0, 0);
-
-  // 如果已过目标时间，不触发
-  if (now < target) return false;
-
-  // 如果今天已经发送过，不触发
-  if (reminder.last_sent_at) {
-    const lastSent = new Date(reminder.last_sent_at);
-    if (lastSent.toDateString() === now.toDateString()) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-// 检查每周提醒是否应该触发
-function shouldTriggerWeekly(reminder) {
-  const config = reminder.config || {};
-  const targetDay = config.day || 'monday';
-  const targetTime = config.time || '09:00';
-
-  const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-  const [hours, minutes] = targetTime.split(':').map(Number);
-
-  const now = new Date();
-  const currentDay = days[now.getDay()];
-  const target = new Date();
-  target.setHours(hours, minutes, 0, 0);
-
-  // 检查是否是目标星期几
-  if (currentDay !== targetDay) return false;
-
-  // 如果已过目标时间，不触发
-  if (now < target) return false;
-
-  // 如果今天已经发送过，不触发
-  if (reminder.last_sent_at) {
-    const lastSent = new Date(reminder.last_sent_at);
-    if (lastSent.toDateString() === now.toDateString()) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-// 检查截止日期提醒是否应该触发
-function shouldTriggerDeadline(reminder) {
-  const config = reminder.config || {};
-  const daysBefore = config.days_before || [7, 3, 1];
-
-  // 获取课程结束日期
-  const PLAN_END = new Date('2026-08-23');
-
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
-
-  // 计算距离结束还有多少天
-  const daysUntilEnd = Math.ceil((PLAN_END.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-
-  // 检查是否在提醒天数内
-  if (!daysBefore.includes(daysUntilEnd)) return false;
-
-  // 如果今天已经发送过，不触发
-  if (reminder.last_sent_at) {
-    const lastSent = new Date(reminder.last_sent_at);
-    if (lastSent.toDateString() === now.toDateString()) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-// 获取默认提醒消息
-function getDefaultReminderMessage(reminder) {
-  const PLAN_END = new Date('2026-08-23');
-  const now = new Date();
-
-  switch (reminder.type) {
-    case 'daily':
-      return '📅 每日学习提醒\n今天也要继续加油哦！';
-    case 'weekly':
-      return '📊 每周进度提醒\n回顾一下本周的学习情况吧！';
-    case 'deadline': {
-      const daysUntilEnd = Math.ceil((PLAN_END.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-      return `⏰ 截止日期提醒\n距离课程结束还有 ${daysUntilEnd} 天，加油！`;
-    }
-    default:
-      return reminder.message || '学习提醒';
-  }
-}
-
-// 启动定时检查（每分钟检查一次）
-function startReminderChecker() {
-  // 页面加载时立即检查一次
-  checkAndTriggerReminders();
-
-  // 每分钟检查一次
-  setInterval(checkAndTriggerReminders, 60 * 1000);
 }
 
 // 打开提醒面板
@@ -1598,7 +1397,6 @@ async function init() {
   renderModuleTabs();
   renderTimeline();
   updateProgress();
-  startReminderChecker();
 }
 
 init();

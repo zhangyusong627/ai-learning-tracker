@@ -1,4 +1,4 @@
-# 提醒功能配置指南（纯前端版本）
+# 提醒功能配置指南（Edge Functions 版本）
 
 ## 功能概述
 
@@ -11,20 +11,64 @@
 
 ### 1. 数据库迁移
 
-在 Supabase Dashboard 的 SQL Editor 中执行迁移脚本：
+在 Supabase Dashboard 的 SQL Editor 中执行：
 
 ```sql
 -- 执行 supabase/setup.sql
 ```
 
-### 2. 配置飞书机器人
+### 2. 部署 Edge Functions
+
+```bash
+# 进入项目目录
+cd ai-learning-tracker
+
+# 登录 Supabase CLI
+supabase login
+
+# 部署 Edge Functions
+supabase functions deploy send-notification
+supabase functions deploy check-reminders
+```
+
+### 3. 配置 pg_cron 定时任务
+
+1. 在 Supabase Dashboard > Database > Extensions 中启用 `pg_cron`
+2. 在 Supabase Dashboard > Database > Extensions 中启用 `http`
+3. 配置 app.settings（在 SQL Editor 中执行）：
+
+```sql
+-- 替换为你的实际值
+ALTER DATABASE SET "app.settings.supabase_url" = 'https://your-project.supabase.co';
+ALTER DATABASE SET "app.settings.supabase_service_role_key" = 'your-service-role-key';
+```
+
+4. 创建定时任务：
+
+```sql
+SELECT cron.schedule(
+  'check-reminders',
+  '* * * * *',
+  $$
+  SELECT net.http_post(
+    url := current_setting('app.settings.supabase_url') || '/functions/v1/check-reminders',
+    headers := jsonb_build_object(
+      'Authorization', 'Bearer ' || current_setting('app.settings.supabase_service_role_key'),
+      'Content-Type', 'application/json'
+    )
+  );
+  $$
+);
+```
+
+### 4. 配置飞书机器人
 
 1. 在飞书中创建一个群组
 2. 添加自定义机器人
 3. 复制 Webhook URL（格式：`https://open.feishu.cn/open-apis/bot/v2/hook/xxx`）
 4. 在应用中点击左下角 🔔 按钮，粘贴 Webhook URL
 
-### 3. 配置企业微信机器人
+### 5. 配置企业微信机器人
 
 1. 在企业微信群中添加机器人
 2. 复制 Webhook URL（格式：`https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxx`）
@@ -48,13 +92,13 @@
 
 ## 工作原理
 
-- 当应用在浏览器中打开时，会每分钟检查一次提醒规则
-- 如果满足触发条件，会直接调用飞书/微信的 Webhook API 发送通知
-- **注意**：浏览器必须保持打开状态才能触发提醒
+- pg_cron 每分钟触发一次 check-reminders 函数
+- 函数检查所有启用的提醒规则，判断是否满足触发条件
+- 如果满足条件，调用 send-notification 函数发送飞书/微信消息
+- 发送记录存储在 reminder_logs 表中
 
 ## 注意事项
 
-- 飞书和企业微信的 Webhook URL 会存储在浏览器本地和 Supabase 中
-- 对于个人学习应用，安全性影响不大
-- 如果关闭浏览器，提醒将不会触发
+- 免费版 Supabase 的 Edge Functions 有调用次数限制
+- 飞书和企业微信的 Webhook URL 需要妥善保管
 - 提醒消息格式会根据渠道自动适配（飞书使用卡片消息，企业微信使用 Markdown）
