@@ -630,11 +630,10 @@
   <script src="lib/prism-python.min.js"></script>
   <script src="lib/prism-java.min.js"></script>
   <script src="lib/supabase.min.js"></script>
+  <script src="config.js"></script>
   <script>
 // ===== Supabase 配置 =====
-const SUPABASE_URL = 'https://whiiugqnyhrnwsvmtnif.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_6ubZtWTSd8RmTs3vzqy_6w_xOkoxUw2';
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const sb = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
 
 // ===== 课程数据 =====
 const COURSE_DATA = [
@@ -1352,10 +1351,10 @@ async function testNotification() {
   }
 
   try {
-    const response = await fetch(`${SUPABASE_URL}/functions/v1/send-notification`, {
+    const response = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/send-notification`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Authorization': `Bearer ${CONFIG.SUPABASE_KEY}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
