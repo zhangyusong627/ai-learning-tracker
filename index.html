@@ -410,6 +410,138 @@
       .week-title { font-size: 15px; }
       .note-preview-pane { max-height: 200px; }
     }
+
+    /* ===== Reminder Settings Panel ===== */
+    .reminder-panel {
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7); z-index: 1000;
+      backdrop-filter: blur(8px);
+      animation: fadeIn 0.2s ease;
+    }
+    .reminder-panel.open { display: flex; align-items: center; justify-content: center; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .reminder-content {
+      width: 90%; max-width: 500px; max-height: 80vh;
+      background: #1e293b; border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      overflow: hidden;
+    }
+    .reminder-header {
+      padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .reminder-header h3 {
+      font-size: 18px; font-weight: 600; color: #e2e8f0;
+      margin: 0;
+    }
+    .reminder-close {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: rgba(255,255,255,0.05); border: none;
+      color: #94a3b8; font-size: 18px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .reminder-close:hover { background: rgba(255,255,255,0.1); color: #e2e8f0; }
+
+    .reminder-body {
+      padding: 20px 24px; overflow-y: auto; max-height: 60vh;
+    }
+
+    .reminder-section {
+      margin-bottom: 24px;
+    }
+    .reminder-section-title {
+      font-size: 13px; font-weight: 600; color: #818cf8;
+      margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+    }
+
+    .channel-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px; border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 8px;
+    }
+    .channel-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .channel-icon.feishu { background: linear-gradient(135deg, #3370ff, #2b5fd9); }
+    .channel-icon.wechat { background: linear-gradient(135deg, #07c160, #06ae56); }
+    .channel-info { flex: 1; }
+    .channel-name { font-size: 14px; font-weight: 500; color: #e2e8f0; }
+    .channel-status { font-size: 12px; color: #64748b; }
+    .channel-status.connected { color: #34d399; }
+
+    .channel-input {
+      width: 100%; padding: 10px 12px; margin-top: 8px;
+      background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; color: #e2e8f0; font-size: 13px;
+      outline: none; transition: border-color 0.2s;
+    }
+    .channel-input:focus { border-color: #6366f1; }
+    .channel-input::placeholder { color: #64748b; }
+
+    .reminder-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px; border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 8px;
+    }
+    .reminder-type-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: rgba(99,102,241,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .reminder-info { flex: 1; }
+    .reminder-name { font-size: 14px; color: #e2e8f0; }
+    .reminder-desc { font-size: 12px; color: #64748b; margin-top: 2px; }
+
+    .toggle-switch {
+      position: relative; width: 44px; height: 24px;
+      background: rgba(255,255,255,0.1); border-radius: 12px;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .toggle-switch.active { background: #6366f1; }
+    .toggle-switch::after {
+      content: ''; position: absolute; top: 2px; left: 2px;
+      width: 20px; height: 20px; border-radius: 10px;
+      background: white; transition: transform 0.2s;
+    }
+    .toggle-switch.active::after { transform: translateX(20px); }
+
+    .btn-primary {
+      padding: 10px 20px; border-radius: 8px;
+      background: linear-gradient(135deg, #6366f1, #ec4899);
+      border: none; color: white; font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(99,102,241,0.3); }
+
+    .btn-test {
+      padding: 6px 12px; border-radius: 6px;
+      background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2);
+      color: #818cf8; font-size: 12px; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-test:hover { background: rgba(99,102,241,0.2); }
+
+    .reminder-fab {
+      position: fixed; bottom: 30px; left: 30px;
+      width: 48px; height: 48px; border-radius: 12px;
+      background: rgba(30,41,59,0.9);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #818cf8; font-size: 20px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; z-index: 100;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .reminder-fab:hover { transform: scale(1.05); background: rgba(99,102,241,0.2); }
   </style>
 </head>
 <body>
@@ -454,6 +586,38 @@
 
     <!-- Timeline -->
     <div class="timeline" id="timeline"></div>
+  </div>
+
+  <!-- Reminder FAB -->
+  <button class="reminder-fab" onclick="openReminderPanel()" title="提醒设置">🔔</button>
+
+  <!-- Reminder Panel -->
+  <div class="reminder-panel" id="reminderPanel">
+    <div class="reminder-content">
+      <div class="reminder-header">
+        <h3>🔔 提醒设置</h3>
+        <button class="reminder-close" onclick="closeReminderPanel()">×</button>
+      </div>
+      <div class="reminder-body">
+        <!-- 通知渠道 -->
+        <div class="reminder-section">
+          <div class="reminder-section-title">📡 通知渠道</div>
+          <div id="channelList"></div>
+        </div>
+
+        <!-- 提醒规则 -->
+        <div class="reminder-section">
+          <div class="reminder-section-title">⏰ 提醒规则</div>
+          <div id="reminderList"></div>
+        </div>
+
+        <!-- 保存按钮 -->
+        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+          <button class="btn-test" onclick="testNotification()">测试通知</button>
+          <button class="btn-primary" onclick="saveReminderSettings()">保存设置</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Hidden image upload input -->
@@ -1040,13 +1204,401 @@ async function updateWeekStatus(weekId) {
   if (week) week.status = status;
 }
 
+// ===== 提醒功能 =====
+let channels = [];
+let reminders = [];
+
+// 默认提醒规则
+const DEFAULT_REMINDERS = [
+  { type: 'daily', title: '每日学习提醒', message: '📅 每日学习提醒\n今天也要继续加油哦！', config: { time: '09:00' }, enabled: true },
+  { type: 'weekly', title: '每周进度提醒', message: '📊 每周进度提醒\n回顾一下本周的学习情况吧！', config: { day: 'monday', time: '09:00' }, enabled: true },
+  { type: 'deadline', title: '截止日期提醒', message: '⏰ 截止日期提醒\n距离课程结束还有 {{days}} 天，加油！', config: { days_before: [7, 3, 1] }, enabled: true }
+];
+
+// 加载提醒设置
+async function loadReminderSettings() {
+  const { data: channelData } = await sb.from('notification_channels').select('*');
+  channels = channelData || [];
+
+  const { data: reminderData } = await sb.from('reminders').select('*');
+  reminders = reminderData || [];
+
+  // 如果没有提醒规则，创建默认规则
+  if (reminders.length === 0) {
+    for (const defaultReminder of DEFAULT_REMINDERS) {
+      const { data } = await sb.from('reminders').insert(defaultReminder).select().single();
+      if (data) reminders.push(data);
+    }
+  }
+}
+
+// 渲染通知渠道列表
+function renderChannelList() {
+  const container = document.getElementById('channelList');
+
+  // 确保有飞书和微信渠道
+  const feishuChannel = channels.find(c => c.type === 'feishu');
+  const wechatChannel = channels.find(c => c.type === 'wechat');
+
+  container.innerHTML = `
+    <div class="channel-item">
+      <div class="channel-icon feishu">💬</div>
+      <div class="channel-info">
+        <div class="channel-name">飞书</div>
+        <div class="channel-status ${feishuChannel?.webhook_url ? 'connected' : ''}">
+          ${feishuChannel?.webhook_url ? '已连接' : '未配置'}
+        </div>
+        <input type="text" class="channel-input" id="feishuWebhook"
+               placeholder="输入飞书机器人 Webhook URL"
+               value="${feishuChannel?.webhook_url || ''}"
+               onchange="updateChannel('feishu', this.value)">
+      </div>
+    </div>
+    <div class="channel-item">
+      <div class="channel-icon wechat">📱</div>
+      <div class="channel-info">
+        <div class="channel-name">企业微信</div>
+        <div class="channel-status ${wechatChannel?.webhook_url ? 'connected' : ''}">
+          ${wechatChannel?.webhook_url ? '已连接' : '未配置'}
+        </div>
+        <input type="text" class="channel-input" id="wechatWebhook"
+               placeholder="输入企业微信机器人 Webhook URL"
+               value="${wechatChannel?.webhook_url || ''}"
+               onchange="updateChannel('wechat', this.value)">
+      </div>
+    </div>
+  `;
+}
+
+// 更新通知渠道
+async function updateChannel(type, webhookUrl) {
+  const existing = channels.find(c => c.type === type);
+
+  if (existing) {
+    await sb.from('notification_channels')
+      .update({ webhook_url: webhookUrl, enabled: !!webhookUrl })
+      .eq('id', existing.id);
+    existing.webhook_url = webhookUrl;
+    existing.enabled = !!webhookUrl;
+  } else if (webhookUrl) {
+    const { data } = await sb.from('notification_channels').insert({
+      type,
+      webhook_url: webhookUrl,
+      enabled: true
+    }).select().single();
+    if (data) channels.push(data);
+  }
+
+  renderChannelList();
+}
+
+// 渲染提醒规则列表
+function renderReminderList() {
+  const container = document.getElementById('reminderList');
+
+  const typeIcons = { daily: '📅', weekly: '📊', deadline: '⏰', custom: '⚙️' };
+  const typeNames = { daily: '每日提醒', weekly: '每周提醒', deadline: '截止提醒', custom: '自定义' };
+  const typeDescs = {
+    daily: '每天固定时间提醒学习',
+    weekly: '每周固定时间提醒进度',
+    deadline: '课程截止前 N 天提醒',
+    custom: '自定义提醒规则'
+  };
+
+  container.innerHTML = reminders.map(r => `
+    <div class="reminder-item">
+      <div class="reminder-type-icon">${typeIcons[r.type]}</div>
+      <div class="reminder-info">
+        <div class="reminder-name">${r.title}</div>
+        <div class="reminder-desc">${typeDescs[r.type]}</div>
+      </div>
+      <div class="toggle-switch ${r.enabled ? 'active' : ''}"
+           onclick="toggleReminder('${r.id}')"></div>
+    </div>
+  `).join('');
+}
+
+// 切换提醒状态
+async function toggleReminder(reminderId) {
+  const reminder = reminders.find(r => r.id === reminderId);
+  if (reminder) {
+    reminder.enabled = !reminder.enabled;
+    await sb.from('reminders').update({ enabled: reminder.enabled }).eq('id', reminderId);
+    renderReminderList();
+  }
+}
+
+// 保存提醒设置
+async function saveReminderSettings() {
+  // 保存所有提醒规则
+  for (const reminder of reminders) {
+    await sb.from('reminders').update({ enabled: reminder.enabled }).eq('id', reminder.id);
+  }
+
+  alert('提醒设置已保存！');
+  closeReminderPanel();
+}
+
+// 测试通知
+async function testNotification() {
+  const feishuChannel = channels.find(c => c.type === 'feishu' && c.webhook_url);
+  const wechatChannel = channels.find(c => c.type === 'wechat' && c.webhook_url);
+
+  const channel = feishuChannel || wechatChannel;
+
+  if (!channel) {
+    alert('请先配置至少一个通知渠道！');
+    return;
+  }
+
+  try {
+    let success = false;
+
+    if (channel.type === 'feishu') {
+      success = await sendFeishuNotification(
+        channel.webhook_url,
+        '🎉 测试通知',
+        '这是一条测试通知，如果你收到了说明配置成功！'
+      );
+    } else if (channel.type === 'wechat') {
+      success = await sendWechatNotification(
+        channel.webhook_url,
+        '🎉 测试通知',
+        '这是一条测试通知，如果你收到了说明配置成功！'
+      );
+    }
+
+    if (success) {
+      alert('测试通知发送成功！请检查你的飞书/微信。');
+    } else {
+      alert('发送失败，请检查 Webhook URL 是否正确。');
+    }
+  } catch (error) {
+    alert('发送失败: ' + error.message);
+  }
+}
+
+// 发送飞书通知（直接调用 Webhook）
+async function sendFeishuNotification(webhookUrl, title, message) {
+  const payload = {
+    msg_type: 'interactive',
+    card: {
+      header: {
+        title: { tag: 'plain_text', content: title },
+        template: 'blue'
+      },
+      elements: [
+        {
+          tag: 'markdown',
+          content: message
+        }
+      ]
+    }
+  };
+
+  const response = await fetch(webhookUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  return response.ok;
+}
+
+// 发送企业微信通知（直接调用 Webhook）
+async function sendWechatNotification(webhookUrl, title, message) {
+  const payload = {
+    msgtype: 'markdown',
+    markdown: {
+      content: `### ${title}\n${message}`
+    }
+  };
+
+  const response = await fetch(webhookUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  return response.ok;
+}
+
+// 检查并触发提醒（浏览器端）
+async function checkAndTriggerReminders() {
+  const feishuChannel = channels.find(c => c.type === 'feishu' && c.webhook_url);
+  const wechatChannel = channels.find(c => c.type === 'wechat' && c.webhook_url);
+  const activeChannel = feishuChannel || wechatChannel;
+
+  if (!activeChannel) return;
+
+  for (const reminder of reminders) {
+    if (!reminder.enabled) continue;
+
+    let shouldTrigger = false;
+
+    switch (reminder.type) {
+      case 'daily':
+        shouldTrigger = shouldTriggerDaily(reminder);
+        break;
+      case 'weekly':
+        shouldTrigger = shouldTriggerWeekly(reminder);
+        break;
+      case 'deadline':
+        shouldTrigger = shouldTriggerDeadline(reminder);
+        break;
+    }
+
+    if (shouldTrigger) {
+      const title = reminder.title;
+      const message = reminder.message || getDefaultReminderMessage(reminder);
+
+      let success = false;
+      if (activeChannel.type === 'feishu') {
+        success = await sendFeishuNotification(activeChannel.webhook_url, title, message);
+      } else if (activeChannel.type === 'wechat') {
+        success = await sendWechatNotification(activeChannel.webhook_url, title, message);
+      }
+
+      if (success) {
+        await sb.from('reminders').update({ last_sent_at: new Date().toISOString() }).eq('id', reminder.id);
+        reminder.last_sent_at = new Date().toISOString();
+      }
+    }
+  }
+}
+
+// 检查每日提醒是否应该触发
+function shouldTriggerDaily(reminder) {
+  const config = reminder.config || {};
+  const targetTime = config.time || '09:00';
+  const [hours, minutes] = targetTime.split(':').map(Number);
+
+  const now = new Date();
+  const target = new Date();
+  target.setHours(hours, minutes, 0, 0);
+
+  // 如果已过目标时间，不触发
+  if (now < target) return false;
+
+  // 如果今天已经发送过，不触发
+  if (reminder.last_sent_at) {
+    const lastSent = new Date(reminder.last_sent_at);
+    if (lastSent.toDateString() === now.toDateString()) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+// 检查每周提醒是否应该触发
+function shouldTriggerWeekly(reminder) {
+  const config = reminder.config || {};
+  const targetDay = config.day || 'monday';
+  const targetTime = config.time || '09:00';
+
+  const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  const [hours, minutes] = targetTime.split(':').map(Number);
+
+  const now = new Date();
+  const currentDay = days[now.getDay()];
+  const target = new Date();
+  target.setHours(hours, minutes, 0, 0);
+
+  // 检查是否是目标星期几
+  if (currentDay !== targetDay) return false;
+
+  // 如果已过目标时间，不触发
+  if (now < target) return false;
+
+  // 如果今天已经发送过，不触发
+  if (reminder.last_sent_at) {
+    const lastSent = new Date(reminder.last_sent_at);
+    if (lastSent.toDateString() === now.toDateString()) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+// 检查截止日期提醒是否应该触发
+function shouldTriggerDeadline(reminder) {
+  const config = reminder.config || {};
+  const daysBefore = config.days_before || [7, 3, 1];
+
+  // 获取课程结束日期
+  const PLAN_END = new Date('2026-08-23');
+
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+
+  // 计算距离结束还有多少天
+  const daysUntilEnd = Math.ceil((PLAN_END.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+
+  // 检查是否在提醒天数内
+  if (!daysBefore.includes(daysUntilEnd)) return false;
+
+  // 如果今天已经发送过，不触发
+  if (reminder.last_sent_at) {
+    const lastSent = new Date(reminder.last_sent_at);
+    if (lastSent.toDateString() === now.toDateString()) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+// 获取默认提醒消息
+function getDefaultReminderMessage(reminder) {
+  const PLAN_END = new Date('2026-08-23');
+  const now = new Date();
+
+  switch (reminder.type) {
+    case 'daily':
+      return '📅 每日学习提醒\n今天也要继续加油哦！';
+    case 'weekly':
+      return '📊 每周进度提醒\n回顾一下本周的学习情况吧！';
+    case 'deadline': {
+      const daysUntilEnd = Math.ceil((PLAN_END.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+      return `⏰ 截止日期提醒\n距离课程结束还有 ${daysUntilEnd} 天，加油！`;
+    }
+    default:
+      return reminder.message || '学习提醒';
+  }
+}
+
+// 启动定时检查（每分钟检查一次）
+function startReminderChecker() {
+  // 页面加载时立即检查一次
+  checkAndTriggerReminders();
+
+  // 每分钟检查一次
+  setInterval(checkAndTriggerReminders, 60 * 1000);
+}
+
+// 打开提醒面板
+function openReminderPanel() {
+  document.getElementById('reminderPanel').classList.add('open');
+  renderChannelList();
+  renderReminderList();
+}
+
+// 关闭提醒面板
+function closeReminderPanel() {
+  document.getElementById('reminderPanel').classList.remove('open');
+}
+
 // ===== 初始化入口 =====
 async function init() {
   await initDatabase();
   await loadData();
+  await loadReminderSettings();
   renderModuleTabs();
   renderTimeline();
   updateProgress();
+  startReminderChecker();
 }
 
 init();
