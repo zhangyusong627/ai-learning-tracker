@@ -562,7 +562,7 @@
     <div class="hero">
       <div class="hero-tag">2026.6.1 – 8.23</div>
       <h1>AI 应用开发 + AI 产品经理</h1>
-      <p>90天完整学习计划 · 12周 · 4个项目交付</p>
+      <p id="heroSubtitle">90天完整学习计划 · 12周 · 4个项目交付</p>
       <div class="progress-section">
         <div>
           <div class="ring-wrap">
@@ -1044,9 +1044,10 @@ function updateProgress() {
   const doneWeeks = allWeeks.filter(w => w.status === 'done').length;
   const activeWeeks = allWeeks.filter(w => w.status === 'active').length;
   const pendingWeeks = allWeeks.filter(w => w.status === 'pending').length;
-  document.getElementById('statDone').textContent = doneWeeks;
+  document.getElementById('statDone').textContent = done;
   document.getElementById('statActive').textContent = activeWeeks;
   document.getElementById('statPending').textContent = pendingWeeks;
+  document.getElementById('heroSubtitle').textContent = `${done}/${total}个知识点 · 90天完整学习计划 · 12周 · 4个项目交付`;
 }
 
 // ===== 笔记编辑器 =====
