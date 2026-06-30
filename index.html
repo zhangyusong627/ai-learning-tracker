@@ -680,17 +680,17 @@ const COURSE_DATA = [
     ]
   },
   {
-    week: 4, module: 'rag', title: 'Embedding + 向量数据库',
+    week: 4, module: 'rag', title: 'Embedding + 向量数据库 + 模型微调入门',
     dateRange: '6.22–6.28',
-    objective: '掌握向量检索、Chroma/pgvector，完成知识库数据预处理',
+    objective: '掌握向量检索、Chroma，理解模型微调原理，完成LoRA微调实战',
     days: [
-      { day: '周一', hours: 2, name: 'Embedding原理+语义检索', materials: [{text:'Chroma文档',url:'https://docs.trychroma.com/'}], tasks: '生成文本向量' },
+      { day: '周一', hours: 2, name: 'Embedding原理+语义检索', materials: [{text:'Chroma文档',url:'https://docs.trychroma.com/'},{text:'Hugging Face文档',url:'https://huggingface.co/docs'}], tasks: '生成文本向量' },
       { day: '周二', hours: 2, name: '向量数据库基础CRUD', materials: [{text:'Chroma官方文档',url:'https://docs.trychroma.com/'}], tasks: 'Chroma基础操作' },
       { day: '周三', hours: 2, name: 'Chroma实战+向量存储', materials: [{text:'Chroma官方文档',url:'https://docs.trychroma.com/'}], tasks: '文本→向量→入库' },
-      { day: '周四', hours: 2, name: 'pgvector+混合存储', materials: [{text:'Chroma文档',url:'https://docs.trychroma.com/'}], tasks: '了解PostgreSQL向量存储' },
-      { day: '周五', hours: 2, name: '文本切分策略', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '优化文档分块' },
+      { day: '周四', hours: 2, name: '模型微调入门：LoRA原理+Hugging Face', materials: [{text:'Hugging Face文档',url:'https://huggingface.co/docs'},{text:'LoRA论文',url:'https://arxiv.org/abs/2106.09685'}], tasks: '理解LoRA原理、Hugging Face生态、参数高效微调' },
+      { day: '周五', hours: 2, name: '文本切分策略+优化', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '优化文档分块、理解微调vs Prompt Engineering' },
       { day: '周六', hours: 6, name: 'PDF/Word解析+批量处理', materials: [], tasks: '用PyMuPDF解析PDF，构建向量检索Demo' },
-      { day: '周日', hours: 6, name: '知识库数据准备+索引构建', materials: [], tasks: '完成企业知识库V1数据模块' }
+      { day: '周日', hours: 6, name: 'LoRA微调实战：准备数据+训练模型', materials: [{text:'Hugging Face PEFT',url:'https://huggingface.co/docs/peft'}], tasks: '使用Hugging Face完成情感分析/文本生成微调' }
     ]
   },
   {
@@ -708,17 +708,17 @@ const COURSE_DATA = [
     ]
   },
   {
-    week: 6, module: 'rag', title: 'RAG优化 + 金融领域知识库',
+    week: 6, module: 'rag', title: 'RAG优化 + 评估体系 + 金融领域',
     dateRange: '7.6–7.12',
-    objective: 'RAG高阶优化+垂直领域落地，完成金融RAG项目',
+    objective: '掌握RAG评估体系，完成金融RAG项目并输出评估报告',
     days: [
       { day: '周一', hours: 2, name: 'Hybrid Search混合检索', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '实现BM25+向量混合检索' },
       { day: '周二', hours: 2, name: 'Rerank重排序', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '接入BGE-Reranker' },
       { day: '周三', hours: 2, name: 'Query Rewrite+多轮问答', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '优化模糊问题检索' },
-      { day: '周四', hours: 2, name: '金融文档整理+术语库', materials: [], tasks: '清洗金融文档、构建术语库' },
-      { day: '周五', hours: 2, name: '金融Prompt+权限设计', materials: [], tasks: '让模型扮演金融分析师' },
-      { day: '周六', hours: 6, name: '金融RAG完善+GraphRAG', materials: [], tasks: '引入知识图谱思路优化检索' },
-      { day: '周日', hours: 6, name: '录屏演示+文档输出', materials: [], tasks: '输出项目视频+使用文档' }
+      { day: '周四', hours: 2, name: 'RAG评估体系：Recall@K/MRR/Faithfulness', materials: [{text:'RAGAS文档',url:'https://docs.ragas.io/'}], tasks: '掌握RAG评估指标、实现自动化评估' },
+      { day: '周五', hours: 2, name: '金融Prompt+术语库+权限设计', materials: [], tasks: '清洗金融文档、构建术语库、设计权限' },
+      { day: '周六', hours: 6, name: '金融RAG完善+评估报告生成', materials: [], tasks: '完成金融RAG、集成评估、生成评估报告' },
+      { day: '周日', hours: 6, name: '录屏演示+性能基准+文档输出', materials: [], tasks: '输出项目视频、性能基准数据、使用文档' }
     ]
   },
   {
@@ -750,31 +750,31 @@ const COURSE_DATA = [
     ]
   },
   {
-    week: 9, module: 'agent', title: 'LangGraph + Workflow',
+    week: 9, module: 'agent', title: 'LangGraph + Workflow + 多模态',
     dateRange: '7.27–8.2',
-    objective: '掌握工作流编排，完成企业工单/审批Agent',
+    objective: '掌握工作流编排，理解多模态Agent，完成企业工单/审批Agent',
     days: [
       { day: '周一', hours: 2, name: 'LangGraph状态机', materials: [{text:'LangGraph官方文档',url:'https://langchain-ai.github.io/langgraph/'}], tasks: '搭建基础流程图' },
       { day: '周二', hours: 2, name: 'Workflow设计+条件分支', materials: [{text:'LangGraph文档',url:'https://langchain-ai.github.io/langgraph/'},{text:'Dify文档',url:'https://dify.ai/'}], tasks: '设计审批流结构' },
       { day: '周三', hours: 2, name: 'Dify低代码实践', materials: [{text:'Dify官方文档',url:'https://dify.ai/'}], tasks: '用Dify快速搭建工作流' },
       { day: '周四', hours: 2, name: 'MCP+企业流程规范', materials: [], tasks: '适配企业场景' },
-      { day: '周五', hours: 2, name: '工单识别→分类→处理', materials: [], tasks: '企业工作流Agent自动处理' },
+      { day: '周五', hours: 2, name: '多模态Agent：Vision API+图文理解', materials: [{text:'OpenAI Vision',url:'https://platform.openai.com/docs/guides/vision'},{text:'Claude Vision',url:'https://docs.anthropic.com/claude/docs/vision'}], tasks: '掌握GPT-4V/Claude Vision API、设计图文Agent' },
       { day: '周六', hours: 6, name: '工单Agent+消息通知', materials: [], tasks: '完整工单流程上线' },
-      { day: '周日', hours: 6, name: '工作流优化+简历描述', materials: [], tasks: '整理Workflow项目亮点' }
+      { day: '周日', hours: 6, name: '多模态Agent实战+简历亮点整理', materials: [], tasks: '实现图片分析Agent、整理Workflow项目亮点' }
     ]
   },
   {
-    week: 10, module: 'deploy', title: 'AI工程化 + Docker部署',
+    week: 10, module: 'deploy', title: 'AI工程化 + 企业级部署',
     dateRange: '8.3–8.9',
-    objective: '掌握云原生部署，项目全链路上线可公网访问',
+    objective: '掌握CI/CD、监控告警、成本优化，完成企业级部署全流程',
     days: [
-      { day: '周一', hours: 2, name: 'Docker基础+进阶+docker-compose', materials: [{text:'Docker官方文档',url:'https://docs.docker.com/'}], tasks: 'Docker基础、多容器编排' },
-      { day: '周二', hours: 2, name: 'Redis缓存+降Token成本', materials: [], tasks: '缓存高频问答' },
-      { day: '周三', hours: 2, name: '日志系统+LangSmith', materials: [], tasks: '接入日志监控' },
-      { day: '周四', hours: 2, name: 'Token成本优化+节流', materials: [], tasks: '减少冗余请求' },
-      { day: '周五', hours: 2, name: 'Nginx反向代理+HTTPS', materials: [], tasks: '配置域名代理' },
-      { day: '周六', hours: 6, name: '云服务器上线+Linux', materials: [], tasks: '全项目Docker化、服务器部署' },
-      { day: '周日', hours: 6, name: '系统压测+并发优化', materials: [], tasks: 'JMeter压测、确保稳定运行' }
+      { day: '周一', hours: 2, name: 'Docker基础+docker-compose', materials: [{text:'Docker官方文档',url:'https://docs.docker.com/'}], tasks: 'Docker基础、多容器编排' },
+      { day: '周二', hours: 2, name: 'CI/CD：GitHub Actions自动化', materials: [{text:'GitHub Actions',url:'https://docs.github.com/en/actions'}], tasks: '配置自动测试、自动部署流程' },
+      { day: '周三', hours: 2, name: '监控告警：LangSmith+日志+指标', materials: [{text:'LangSmith文档',url:'https://docs.smith.langchain.com/'}], tasks: '集成LangSmith、结构化日志、告警规则' },
+      { day: '周四', hours: 2, name: '成本优化：Token计量+缓存+模型选择', materials: [], tasks: 'Token消耗计量、Redis缓存、模型选择策略' },
+      { day: '周五', hours: 2, name: 'Nginx反向代理+HTTPS', materials: [], tasks: '配置域名代理、SSL证书' },
+      { day: '周六', hours: 6, name: '全链路部署：CI/CD+监控+告警', materials: [], tasks: '完整CI/CD流水线、监控面板、告警通知' },
+      { day: '周日', hours: 6, name: '压力测试+性能优化+成本报告', materials: [], tasks: 'JMeter压测、性能优化、输出成本报告' }
     ]
   },
   {
@@ -792,17 +792,17 @@ const COURSE_DATA = [
     ]
   },
   {
-    week: 12, module: 'deploy', title: 'AI产品能力 + 复盘',
+    week: 12, module: 'deploy', title: 'AI产品能力 + 安全合规 + 复盘',
     dateRange: '8.17–8.23',
-    objective: 'AI产品思维巩固，全流程复盘总结',
+    objective: '掌握AI安全合规，深入垂直领域，全流程复盘总结',
     days: [
       { day: '周一', hours: 2, name: 'AI产品需求分析', materials: [], tasks: '用户研究、需求挖掘与验证' },
       { day: '周二', hours: 2, name: 'AI产品设计+交互', materials: [], tasks: 'AI能力边界评估、原型设计' },
       { day: '周三', hours: 2, name: 'AI产品数据+商业化', materials: [], tasks: '核心指标体系、商业模式设计' },
-      { day: '周四', hours: 2, name: 'AI产品用户体验', materials: [], tasks: '容错降级、用户信任建设' },
-      { day: '周五', hours: 2, name: '跨职能协作+技术沟通', materials: [], tasks: 'AI项目管理、不确定性应对' },
-      { day: '周六', hours: 6, name: '90天全流程复盘', materials: [], tasks: '知识图谱梳理、查漏补缺' },
-      { day: '周日', hours: 6, name: '成果整理+持续学习', materials: [], tasks: 'GitHub作品集完善、后续学习路径' }
+      { day: '周四', hours: 2, name: 'AI安全合规：数据隐私+模型安全+内容审核', materials: [{text:'个人信息保护法',url:'https://www.gov.cn/xinwen/2021-08/20/content_5632486.htm'}], tasks: 'GDPR、数据脱敏、Prompt注入防御、内容审核' },
+      { day: '周五', hours: 2, name: '垂直领域深度分析+行业Know-how', materials: [], tasks: '金融/医疗/教育领域分析、行业术语、合规要求' },
+      { day: '周六', hours: 6, name: '90天全流程复盘', materials: [], tasks: '知识图谱梳理、查漏补缺、技能矩阵评估' },
+      { day: '周日', hours: 6, name: '成果整理+持续学习路径', materials: [], tasks: 'GitHub作品集完善、简历定稿、后续学习规划' }
     ]
   }
 ];
