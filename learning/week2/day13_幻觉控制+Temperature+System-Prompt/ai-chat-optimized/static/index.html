@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 聊天助手</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js?v=2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f5f5f5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: #fff;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        header h1 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: #007AFF;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.assistant {
+            align-self: flex-start;
+            background: white;
+            color: #333;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .input-container {
+            background: #fff;
+            padding: 16px 20px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 12px;
+        }
+
+        .input-container textarea {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            resize: none;
+            font-size: 16px;
+            font-family: inherit;
+            line-height: 1.5;
+        }
+
+        .input-container textarea:focus {
+            outline: none;
+            border-color: #007AFF;
+        }
+
+        .input-container button {
+            padding: 12px 24px;
+            background: #007AFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .input-container button:hover {
+            background: #0056CC;
+        }
+
+        .input-container button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Markdown 样式 */
+        .message h1, .message h2, .message h3, .message h4 {
+            margin: 10px 0 5px 0;
+            color: #333;
+        }
+
+        .message h1 { font-size: 1.4em; }
+        .message h2 { font-size: 1.2em; }
+        .message h3 { font-size: 1.1em; }
+
+        .message p {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .message ul, .message ol {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        .message li {
+            margin: 4px 0;
+        }
+
+        .message code {
+            background: rgba(0,0,0,0.05);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .message pre {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 8px 0;
+        }
+
+        .message pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .message strong {
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>AI 聊天助手</h1>
+    </header>
+
+    <div class="chat-container" id="chatContainer">
+        <div class="message assistant">你好！我是 AI 聊天助手，有什么可以帮你的？</div>
+    </div>
+
+    <div class="input-container">
+        <textarea
+            id="userInput"
+            rows="2"
+            placeholder="输入消息..."
+            onkeydown="handleKeyDown(event)"
+        ></textarea>
+        <button id="sendBtn" onclick="sendMessage()">发送</button>
+    </div>
+
+    <script>
+        let messages = [];
+        let isGenerating = false;
+
+        function handleKeyDown(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const content = input.value.trim();
+            if (!content || isGenerating) return;
+
+            // 添加用户消息
+            messages.push({ role: 'user', content });
+            addMessage('user', content);
+            input.value = '';
+
+            // 禁用输入
+            isGenerating = true;
+            document.getElementById('sendBtn').disabled = true;
+
+            // 创建助手消息容器
+            const assistantDiv = addMessage('assistant', '');
+            assistantDiv.classList.add('loading');
+            assistantDiv.innerHTML = '思考中...';
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        messages: messages,
+                        stream: true
+                    })
+                });
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let fullContent = '';
+                let firstChunk = true;
+
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+
+                    const text = decoder.decode(value);
+                    const lines = text.split('\n');
+
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const data = line.slice(6);
+                            if (data === '[DONE]') break;
+
+                            if (firstChunk) {
+                                assistantDiv.classList.remove('loading');
+                                assistantDiv.textContent = '';
+                                firstChunk = false;
+                            }
+
+                            fullContent += data;
+                            // 流式时用文本显示，避免 Markdown 解析不完整
+                            assistantDiv.textContent = fullContent;
+                        }
+                    }
+                }
+
+                // 完成后渲染 Markdown
+                assistantDiv.innerHTML = marked.parse(fullContent);
+
+                // 保存助手回复
+                messages.push({ role: 'assistant', content: fullContent });
+
+            } catch (error) {
+                assistantDiv.classList.remove('loading');
+                assistantDiv.innerHTML = '抱歉，发生错误：' + error.message;
+            }
+
+            // 恢复输入
+            isGenerating = false;
+            document.getElementById('sendBtn').disabled = false;
+            input.focus();
+        }
+
+        function addMessage(role, content) {
+            const container = document.getElementById('chatContainer');
+            const div = document.createElement('div');
+            div.className = `message ${role}`;
+            if (role === 'assistant') {
+                div.innerHTML = marked.parse(content);
+            } else {
+                div.textContent = content;
+            }
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+            return div;
+        }
+    </script>
+</body>
+</html>
