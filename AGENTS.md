@@ -47,6 +47,23 @@ Rules:
 - A day directory should contain `notes.md` plus its practice source/files. Generated output belongs in an ignored runtime directory.
 - When moving learning material, update commands and cross-links that assume repository-root `week*` paths.
 
+## Mandatory Learning Workflow
+
+All current and future course sessions under `learning/` must follow the project learning workflow defined in [`learning/LEARNING_WORKFLOW.md`](learning/LEARNING_WORKFLOW.md). It applies to every subject and is not limited to a specific day or technical domain.
+
+Core requirements:
+
+- Use a complete learning loop: goals and boundaries, prerequisite diagnosis, theory model, minimal practice, engineering extension, three-level assessment, independent decision task, notes and evidence-based evaluation, delayed review.
+- Teach required knowledge before testing it. Ask one clearly scoped question at a time; do not combine unrelated questions.
+- Keep learning mode distinct from task-completion mode. Limit each teaching step to one main concept, adapt from the learner's response, and switch to direct explanation instead of repeated questioning when confusion persists.
+- Distinguish an incorrect answer from an incomplete answer or an ambiguous question.
+- Do not treat successful execution or recall of practiced code as proof of mastery.
+- Let Codex handle repetitive mechanical edits; require the learner to explain predictions, architecture, boundaries, trade-offs, debugging conclusions, and transfer to new scenarios.
+- End every day with a retrospective. Record what worked, what failed, and one or more concrete workflow adjustments for subsequent days.
+- Evaluate mastery from observable evidence using the rubric in the workflow document; do not assign stars from intuition.
+- Schedule delayed review checkpoints for Day +1, Day +7, and Day +30.
+- Evolve the workflow from real course evidence. After enough diverse sessions have validated it, extract it into a reusable learning Skill following the Skill creation and validation process.
+
 ## Key Code Sections in index.html
 
 - `initDatabase()` (line ~655) — Seeds Supabase if empty, using `COURSE_DATA`
