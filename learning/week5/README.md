@@ -19,11 +19,15 @@ week5/
 │   ├── notes.md
 │   └── practice/
 │       └── unified_loader.py
-└── day31_Chunk优化与阈值过滤/
+├── day31_Chunk优化与阈值过滤/
     ├── notes.md
     └── practice/
         ├── chunk_comparison.py
         └── retrieval_evaluation.py
+└── day32_Embedding接入与向量检索/
+    ├── notes.md
+    └── practice/
+        └── vector_retrieval.py
 ```
 
 后续每日课程继续使用 `dayNN_主题/`，当天笔记放在 `notes.md`，可执行代码放在 `practice/`。
@@ -35,7 +39,7 @@ week5/
 | Day 29 | RAG 整体流程 | ✅ 已完成 |
 | Day 30 | PDF/多格式文档解析 | ✅ 已完成 |
 | Day 31 | Chunk 优化+阈值过滤 | ✅ 已完成 |
-| Day 32 | Embedding 接入+向量检索 | ⏳ 待学习 |
+| Day 32 | Embedding 接入+向量检索 | ✅ 已完成 |
 | Day 33 | 检索拼装 Prompt+生成回答 | ⏳ 待学习 |
 | Day 34 | 企业知识库 V1+引用标注 | ⏳ 待学习 |
 | Day 35 | 阶段复盘+Bad Case 整理 | ⏳ 待学习 |
