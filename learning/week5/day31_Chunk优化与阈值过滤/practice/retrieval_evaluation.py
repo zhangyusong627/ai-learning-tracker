@@ -26,6 +26,7 @@ EVALUATION_CASES = [
 ]
 
 MAX_DISTANCE_CANDIDATES = [0.3, 0.4, 0.5, 0.6]
+TOP_K_CANDIDATES = [1, 2, 3]
 
 
 def build_collection() -> chromadb.Collection:
@@ -47,10 +48,14 @@ def build_collection() -> chromadb.Collection:
     return collection
 
 
-def retrieve(collection: chromadb.Collection, question: str) -> list[dict]:
+def retrieve(
+    collection: chromadb.Collection,
+    question: str,
+    top_k: int,
+) -> list[dict]:
     result = collection.query(
         query_texts=[question],
-        n_results=collection.count(),
+        n_results=min(top_k, collection.count()),
         include=["documents", "distances", "metadatas"],
     )
     return [
@@ -67,8 +72,13 @@ def retrieve(collection: chromadb.Collection, question: str) -> list[dict]:
     ]
 
 
-def evaluate(collection: chromadb.Collection, max_distance: float) -> None:
+def evaluate(
+    collection: chromadb.Collection,
+    top_k: int,
+    max_distance: float,
+) -> None:
     answer_case_count = 0
+    candidate_hit_count = 0
     answer_hit_count = 0
     no_answer_case_count = 0
     no_answer_rejection_count = 0
@@ -76,10 +86,10 @@ def evaluate(collection: chromadb.Collection, max_distance: float) -> None:
     relevant_accepted_count = 0
 
     print("=" * 72)
-    print(f"候选阈值：distance <= {max_distance}")
+    print(f"生产配置：Top K = {top_k}，distance <= {max_distance}")
 
     for case in EVALUATION_CASES:
-        results = retrieve(collection, case["question"])
+        results = retrieve(collection, case["question"], top_k)
         accepted = [
             result for result in results if result["distance"] <= max_distance
         ]
@@ -92,6 +102,11 @@ def evaluate(collection: chromadb.Collection, max_distance: float) -> None:
                 no_answer_rejection_count += 1
         else:
             answer_case_count += 1
+            candidate_hit = any(
+                result["section"] == expected_section for result in results
+            )
+            if candidate_hit:
+                candidate_hit_count += 1
             passed = any(
                 result["section"] == expected_section for result in accepted
             )
@@ -112,22 +127,25 @@ def evaluate(collection: chromadb.Collection, max_distance: float) -> None:
             f"  通过阈值：{accepted_sections or '无'}"
         )
 
-    answer_hit_rate = answer_hit_count / answer_case_count
+    candidate_hit_rate = candidate_hit_count / answer_case_count
+    accepted_evidence_hit_rate = answer_hit_count / answer_case_count
     rejection_rate = no_answer_rejection_count / no_answer_case_count
     precision = (
         relevant_accepted_count / accepted_count if accepted_count else 0.0
     )
 
     print("评测汇总：")
-    print(f"  有答案命中率：{answer_hit_rate:.2%}")
+    print(f"  候选阶段命中率：{candidate_hit_rate:.2%}")
+    print(f"  证据准入阶段命中率：{accepted_evidence_hit_rate:.2%}")
     print(f"  查准率：{precision:.2%}")
     print(f"  无答案拒答率：{rejection_rate:.2%}")
 
 
 def main() -> None:
     collection = build_collection()
-    for max_distance in MAX_DISTANCE_CANDIDATES:
-        evaluate(collection, max_distance)
+    for top_k in TOP_K_CANDIDATES:
+        for max_distance in MAX_DISTANCE_CANDIDATES:
+            evaluate(collection, top_k, max_distance)
 
 
 if __name__ == "__main__":
