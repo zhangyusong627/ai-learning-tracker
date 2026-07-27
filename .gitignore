@@ -1,2 +1,36 @@
 docs/superpowers/
+
+# macOS and editor artifacts
+.DS_Store
+.idea/
+.vscode/
+
+# Python caches and test artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Python virtual environments
+venv/
+.venv/
+
+# Secrets (safe templates remain trackable)
 .env
+.env.*
+!.env.example
+
+# Local application/runtime data
+chat_history.json
+tool_chat_history.json
+my_notes_db/
+*.db
+*.sqlite
+*.sqlite3
+chroma_db/
+chroma_data/
+
+# Local tool state
+.playwright-mcp/
+.workbuddy/

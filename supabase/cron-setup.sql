@@ -1,4 +1,5 @@
 -- pg_cron 定时任务配置
+-- 已停用：仅保留为历史实现记录，不要重新执行或启用 check-reminders。
 -- 在 Supabase Dashboard 的 SQL Editor 中执行此脚本
 
 -- 1. 确保已启用 pg_cron 扩展
