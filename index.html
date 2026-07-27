@@ -411,137 +411,6 @@
       .note-preview-pane { max-height: 200px; }
     }
 
-    /* ===== Reminder Settings Panel ===== */
-    .reminder-panel {
-      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.7); z-index: 1000;
-      backdrop-filter: blur(8px);
-      animation: fadeIn 0.2s ease;
-    }
-    .reminder-panel.open { display: flex; align-items: center; justify-content: center; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    .reminder-content {
-      width: 90%; max-width: 500px; max-height: 80vh;
-      background: #1e293b; border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-      overflow: hidden;
-    }
-    .reminder-header {
-      padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.06);
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .reminder-header h3 {
-      font-size: 18px; font-weight: 600; color: #e2e8f0;
-      margin: 0;
-    }
-    .reminder-close {
-      width: 32px; height: 32px; border-radius: 8px;
-      background: rgba(255,255,255,0.05); border: none;
-      color: #94a3b8; font-size: 18px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
-    }
-    .reminder-close:hover { background: rgba(255,255,255,0.1); color: #e2e8f0; }
-
-    .reminder-body {
-      padding: 20px 24px; overflow-y: auto; max-height: 60vh;
-    }
-
-    .reminder-section {
-      margin-bottom: 24px;
-    }
-    .reminder-section-title {
-      font-size: 13px; font-weight: 600; color: #818cf8;
-      margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
-    }
-
-    .channel-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 12px; border-radius: 10px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      margin-bottom: 8px;
-    }
-    .channel-icon {
-      width: 40px; height: 40px; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px;
-    }
-    .channel-icon.feishu { background: linear-gradient(135deg, #3370ff, #2b5fd9); }
-    .channel-icon.wechat { background: linear-gradient(135deg, #07c160, #06ae56); }
-    .channel-info { flex: 1; }
-    .channel-name { font-size: 14px; font-weight: 500; color: #e2e8f0; }
-    .channel-status { font-size: 12px; color: #64748b; }
-    .channel-status.connected { color: #34d399; }
-
-    .channel-input {
-      width: 100%; padding: 10px 12px; margin-top: 8px;
-      background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px; color: #e2e8f0; font-size: 13px;
-      outline: none; transition: border-color 0.2s;
-    }
-    .channel-input:focus { border-color: #6366f1; }
-    .channel-input::placeholder { color: #64748b; }
-
-    .reminder-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 12px; border-radius: 10px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      margin-bottom: 8px;
-    }
-    .reminder-type-icon {
-      width: 36px; height: 36px; border-radius: 8px;
-      background: rgba(99,102,241,0.1);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
-    }
-    .reminder-info { flex: 1; }
-    .reminder-name { font-size: 14px; color: #e2e8f0; }
-    .reminder-desc { font-size: 12px; color: #64748b; margin-top: 2px; }
-
-    .toggle-switch {
-      position: relative; width: 44px; height: 24px;
-      background: rgba(255,255,255,0.1); border-radius: 12px;
-      cursor: pointer; transition: background 0.2s;
-    }
-    .toggle-switch.active { background: #6366f1; }
-    .toggle-switch::after {
-      content: ''; position: absolute; top: 2px; left: 2px;
-      width: 20px; height: 20px; border-radius: 10px;
-      background: white; transition: transform 0.2s;
-    }
-    .toggle-switch.active::after { transform: translateX(20px); }
-
-    .btn-primary {
-      padding: 10px 20px; border-radius: 8px;
-      background: linear-gradient(135deg, #6366f1, #ec4899);
-      border: none; color: white; font-size: 14px; font-weight: 500;
-      cursor: pointer; transition: all 0.2s;
-    }
-    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(99,102,241,0.3); }
-
-    .btn-test {
-      padding: 6px 12px; border-radius: 6px;
-      background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2);
-      color: #818cf8; font-size: 12px; cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-test:hover { background: rgba(99,102,241,0.2); }
-
-    .reminder-fab {
-      position: fixed; bottom: 30px; left: 30px;
-      width: 48px; height: 48px; border-radius: 12px;
-      background: rgba(30,41,59,0.9);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: #818cf8; font-size: 20px;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s; z-index: 100;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    }
-    .reminder-fab:hover { transform: scale(1.05); background: rgba(99,102,241,0.2); }
   </style>
 </head>
 <body>
@@ -560,9 +429,9 @@
   <div class="container">
     <!-- Hero -->
     <div class="hero">
-      <div class="hero-tag">2026.6.1 – 8.23</div>
-      <h1>AI 应用开发 + AI 产品经理</h1>
-      <p id="heroSubtitle">90天完整学习计划 · 12周 · 4个项目交付</p>
+      <div class="hero-tag">2026.6.1 – 9.15</div>
+      <h1>Java + AI 大模型应用工程</h1>
+      <p id="heroSubtitle">转型与求职冲刺 · 12阶段 · 2个独立作品集</p>
       <div class="progress-section">
         <div>
           <div class="ring-wrap">
@@ -588,38 +457,6 @@
     <div class="timeline" id="timeline"></div>
   </div>
 
-  <!-- Reminder FAB -->
-  <button class="reminder-fab" onclick="openReminderPanel()" title="提醒设置">🔔</button>
-
-  <!-- Reminder Panel -->
-  <div class="reminder-panel" id="reminderPanel">
-    <div class="reminder-content">
-      <div class="reminder-header">
-        <h3>🔔 提醒设置</h3>
-        <button class="reminder-close" onclick="closeReminderPanel()">×</button>
-      </div>
-      <div class="reminder-body">
-        <!-- 通知渠道 -->
-        <div class="reminder-section">
-          <div class="reminder-section-title">📡 通知渠道</div>
-          <div id="channelList"></div>
-        </div>
-
-        <!-- 提醒规则 -->
-        <div class="reminder-section">
-          <div class="reminder-section-title">⏰ 提醒规则</div>
-          <div id="reminderList"></div>
-        </div>
-
-        <!-- 保存按钮 -->
-        <div style="display: flex; gap: 12px; justify-content: flex-end;">
-          <button class="btn-test" onclick="testNotification()">测试通知</button>
-          <button class="btn-primary" onclick="saveReminderSettings()">保存设置</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Hidden image upload input -->
   <input type="file" class="image-upload-input" id="imageUpload" accept="image/*">
 
@@ -639,7 +476,7 @@ const sb = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY
 const COURSE_DATA = [
   {
     week: 1, module: 'python-llm', title: 'Python基础 + FastAPI + AI环境搭建',
-    dateRange: '6.1–6.7',
+    dateRange: '6.1–6.7', startDate: '2026-06-01', endDate: '2026-06-07',
     objective: '掌握Python核心、FastAPI后端、Docker、AI API调用，完成AI聊天助手V1',
     days: [
       { day: '周一', hours: 2, name: 'Python核心语法', materials: [{text:'Python官方文档',url:'https://docs.python.org/3/'},{text:'廖雪峰Python教程',url:'https://www.liaoxuefeng.com/wiki/1016959663602400'}], tasks: '变量、循环、函数、字典、文件读写' },
@@ -653,7 +490,7 @@ const COURSE_DATA = [
   },
   {
     week: 2, module: 'python-llm', title: 'LLM基础 + Prompt Engineering',
-    dateRange: '6.8–6.14',
+    dateRange: '6.8–6.14', startDate: '2026-06-08', endDate: '2026-06-14',
     objective: '理解大模型原理，掌握Prompt工程，完成Prompt体系搭建',
     days: [
       { day: '周一', hours: 2, name: 'Token/Embedding/语义向量', materials: [{text:'OpenAI文档',url:'https://platform.openai.com/docs'}], tasks: '计算Token数、理解Embedding作用' },
@@ -667,7 +504,7 @@ const COURSE_DATA = [
   },
   {
     week: 3, module: 'rag', title: 'LangChain + 聊天助手V2',
-    dateRange: '6.15–6.21',
+    dateRange: '6.15–6.21', startDate: '2026-06-15', endDate: '2026-06-21',
     objective: '掌握LangChain核心，完成AI聊天助手V2（多轮记忆+工具调用）',
     days: [
       { day: '周一', hours: 2, name: 'LangChain基础+PromptTemplate', materials: [{text:'LangChain官方文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '编写模板化Prompt' },
@@ -681,7 +518,7 @@ const COURSE_DATA = [
   },
   {
     week: 4, module: 'rag', title: 'Embedding + 向量数据库 + 模型微调入门',
-    dateRange: '6.22–6.28',
+    dateRange: '6.22–6.28', startDate: '2026-06-22', endDate: '2026-06-28',
     objective: '掌握向量检索、Chroma，理解模型微调原理，完成LoRA微调实战',
     days: [
       { day: '周一', hours: 2, name: 'Embedding原理+语义检索', materials: [{text:'Chroma文档',url:'https://docs.trychroma.com/'},{text:'Hugging Face文档',url:'https://huggingface.co/docs'}], tasks: '生成文本向量' },
@@ -695,7 +532,7 @@ const COURSE_DATA = [
   },
   {
     week: 5, module: 'rag', title: 'RAG基础 + 企业知识库V1',
-    dateRange: '6.29–7.5',
+    dateRange: '6.29–7.26（实际学习）', startDate: '2026-06-29', endDate: '2026-07-26',
     objective: '掌握RAG全链路，完成企业知识库可问答系统',
     days: [
       { day: '周一', hours: 2, name: 'RAG整体流程', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'},{text:'LlamaIndex文档',url:'https://docs.llamaindex.ai/'}], tasks: '梳理RAG链路' },
@@ -708,110 +545,111 @@ const COURSE_DATA = [
     ]
   },
   {
-    week: 6, module: 'rag', title: 'RAG优化 + 评估体系 + 金融领域',
-    dateRange: '7.6–7.12',
-    objective: '掌握RAG评估体系，完成金融RAG项目并输出评估报告',
+    week: 6, module: 'skill', title: 'RAG收口 + 金融机构接入Skill设计',
+    dateRange: '7.27–8.2', startDate: '2026-07-27', endDate: '2026-08-02',
+    objective: '完成RAG延迟复习与阶段验收，冻结金融机构接入Skill的业务边界、领域模型、数据政策和验收集',
     days: [
-      { day: '周一', hours: 2, name: 'Hybrid Search混合检索', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '实现BM25+向量混合检索' },
-      { day: '周二', hours: 2, name: 'Rerank重排序', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '接入BGE-Reranker' },
-      { day: '周三', hours: 2, name: 'Query Rewrite+多轮问答', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '优化模糊问题检索' },
-      { day: '周四', hours: 2, name: 'RAG评估体系：Recall@K/MRR/Faithfulness', materials: [{text:'RAGAS文档',url:'https://docs.ragas.io/'}], tasks: '掌握RAG评估指标、实现自动化评估' },
-      { day: '周五', hours: 2, name: '金融Prompt+术语库+权限设计', materials: [], tasks: '清洗金融文档、构建术语库、设计权限' },
-      { day: '周六', hours: 6, name: '金融RAG完善+评估报告生成', materials: [], tasks: '完成金融RAG、集成评估、生成评估报告' },
-      { day: '周日', hours: 6, name: '录屏演示+性能基准+文档输出', materials: [], tasks: '输出项目视频、性能基准数据、使用文档' }
+      { day: '周一', hours: 7, name: 'Day29/30 D+7 + RAG全链路集成', materials: [], tasks: '闭卷重建RAG链路，验证多格式解析与引用' },
+      { day: '周二', hours: 7, name: 'Day31 D+7 + 端到端检索', materials: [], tasks: '验证阈值过滤、无证据分支与检索效果' },
+      { day: '周三', hours: 7, name: 'Day32 D+7 + Bad Case', materials: [], tasks: '整理失败样例，定位数据、检索和验证问题' },
+      { day: '周四', hours: 7, name: 'Day33 D+7 + RAG阶段验收', materials: [], tasks: '完成概念、诊断、迁移三层新题' },
+      { day: '周五', hours: 7, name: 'Skill需求与业务边界', materials: [], tasks: '定义问题、输入输出、非目标和V1验收线' },
+      { day: '周六', hours: 4, name: '自造文档与标准领域模型', materials: [], tasks: '设计两个虚构机构样例与标准模型' },
+      { day: '周日', hours: 4, name: '项目规则、架构与验收冻结', materials: [], tasks: '完成AGENTS、架构、数据政策与验收矩阵' }
     ]
   },
   {
-    week: 7, module: 'agent', title: 'Function Calling + Tool Agent',
-    dateRange: '7.13–7.19',
-    objective: '掌握工具调用，完成天气/汇率等基础Agent',
+    week: 7, module: 'skill', title: '金融机构接入Skill V0.1',
+    dateRange: '8.3–8.9', startDate: '2026-08-03', endDate: '2026-08-09',
+    objective: '完成多格式解析、结构化抽取、RAG证据、字段映射和首轮评估',
     days: [
-      { day: '周一', hours: 2, name: 'Function Calling规范', materials: [{text:'OpenAI官方文档',url:'https://platform.openai.com/docs'}], tasks: '定义工具函数' },
-      { day: '周二', hours: 2, name: 'Tool Schema+参数规范', materials: [{text:'OpenAI官方文档',url:'https://platform.openai.com/docs'}], tasks: '编写标准工具描述' },
-      { day: '周三', hours: 2, name: '稳定JSON+参数解析', materials: [{text:'OpenAI官方文档',url:'https://platform.openai.com/docs'}], tasks: '解析工具调用结果' },
-      { day: '周四', hours: 2, name: '天气API工具Agent', materials: [], tasks: '封装天气接口、实现自动调用' },
-      { day: '周五', hours: 2, name: '搜索/汇率查询工具', materials: [], tasks: '实现搜索/汇率查询工具' },
-      { day: '周六', hours: 6, name: '多工具并行/串行调用', materials: [], tasks: '实现多工具自动选择' },
-      { day: '周日', hours: 6, name: 'Agent项目整理+部署', materials: [], tasks: '完成天气/汇率Agent上线' }
+      { day: '周一', hours: 7, name: 'PDF/Word/Excel统一解析', materials: [], tasks: '建立统一文档块模型与解析测试' },
+      { day: '周二', hours: 7, name: 'Structured Output + JSON Schema', materials: [], tasks: '输出可被确定性校验的抽取结果' },
+      { day: '周三', hours: 7, name: '标准领域模型 + RAG索引', materials: [], tasks: '建立标准模型、检索链路与证据定位' },
+      { day: '周四', hours: 7, name: '元数据、版本与引用', materials: [], tasks: '保留来源、页码或工作表、版本信息' },
+      { day: '周五', hours: 7, name: '字段映射与差异识别', materials: [], tasks: '生成映射表、缺失项、风险和待确认项' },
+      { day: '周六', hours: 4, name: '评估集 + V0.1集成', materials: [], tasks: '建立黄金集、指标和Bad Case记录' },
+      { day: '周日', hours: 4, name: 'README、演示与投递准备', materials: [], tasks: '整理演示脚本、项目讲法和简历条目' }
     ]
   },
   {
-    week: 8, module: 'agent', title: 'Agent + Excel数据分析',
-    dateRange: '7.20–7.26',
-    objective: '掌握ReAct Agent，完成Excel数据分析Agent',
+    week: 8, module: 'skill', title: '金融机构接入Skill V1',
+    dateRange: '8.10–8.16', startDate: '2026-08-10', endDate: '2026-08-16',
+    objective: '完成可恢复Agent工作流、人工确认、Java骨架生成、编译与契约测试，形成首个可投递作品集',
     days: [
-      { day: '周一', hours: 2, name: 'ReAct Agent', materials: [{text:'LangChain Agents',url:'https://python.langchain.com/docs/introduction/'}], tasks: '实现思考-行动-观察链路' },
-      { day: '周二', hours: 2, name: 'Agent长期Memory', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: 'Agent记忆功能' },
-      { day: '周三', hours: 2, name: 'Planning+任务拆解', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '复杂任务自动拆解' },
-      { day: '周四', hours: 2, name: 'Pandas+Excel解析', materials: [{text:'Pandas官方文档',url:'https://pandas.pydata.org/docs/'}], tasks: '读取Excel生成DataFrame' },
-      { day: '周五', hours: 2, name: 'Code Interpreter+沙箱', materials: [], tasks: '让LLM生成分析代码' },
-      { day: '周六', hours: 6, name: '数据分析Agent+自动报告', materials: [], tasks: '上传Excel→自动分析→生成图表' },
-      { day: '周日', hours: 6, name: 'Agent复盘+难点整理', materials: [], tasks: '完成AI数据分析Agent' }
+      { day: '周一', hours: 7, name: 'Skill结构与渐进式上下文', materials: [], tasks: '完成可复用SKILL.md及资源导航' },
+      { day: '周二', hours: 7, name: 'Tool Calling + LangGraph', materials: [], tasks: '实现状态、节点、条件边和失败路径' },
+      { day: '周三', hours: 7, name: 'Human-in-the-loop', materials: [], tasks: '低置信度暂停，支持确认、拒绝和恢复' },
+      { day: '周四', hours: 7, name: '配置 + Java适配器骨架生成', materials: [], tasks: '仅从已批准映射生成模板输出' },
+      { day: '周五', hours: 7, name: 'Maven编译 + 契约测试', materials: [], tasks: '用确定性验证拦截无效生成物' },
+      { day: '周六', hours: 4, name: '端到端验收 + 评估', materials: [], tasks: '完成V1报告、Bad Case和能力边界' },
+      { day: '周日', hours: 4, name: '作品集材料 + 面试投递', materials: [], tasks: '完成README、架构图、Demo和项目问答' }
     ]
   },
   {
-    week: 9, module: 'agent', title: 'LangGraph + Workflow + 多模态',
-    dateRange: '7.27–8.2',
-    objective: '掌握工作流编排，理解多模态Agent，完成企业工单/审批Agent',
+    week: 9, module: 'guardian', title: 'AI智能守护 V0.1',
+    dateRange: '8.17–8.23', startDate: '2026-08-17', endDate: '2026-08-23',
+    objective: '用模拟指标和专家规则完成智能守护基线、策略校验、人工审批与审计链路',
     days: [
-      { day: '周一', hours: 2, name: 'LangGraph状态机', materials: [{text:'LangGraph官方文档',url:'https://langchain-ai.github.io/langgraph/'}], tasks: '搭建基础流程图' },
-      { day: '周二', hours: 2, name: 'Workflow设计+条件分支', materials: [{text:'LangGraph文档',url:'https://langchain-ai.github.io/langgraph/'},{text:'Dify文档',url:'https://dify.ai/'}], tasks: '设计审批流结构' },
-      { day: '周三', hours: 2, name: 'Dify低代码实践', materials: [{text:'Dify官方文档',url:'https://dify.ai/'}], tasks: '用Dify快速搭建工作流' },
-      { day: '周四', hours: 2, name: 'MCP+企业流程规范', materials: [], tasks: '适配企业场景' },
-      { day: '周五', hours: 2, name: '多模态Agent：Vision API+图文理解', materials: [{text:'OpenAI Vision',url:'https://platform.openai.com/docs/guides/vision'},{text:'Claude Vision',url:'https://docs.anthropic.com/claude/docs/vision'}], tasks: '掌握GPT-4V/Claude Vision API、设计图文Agent' },
-      { day: '周六', hours: 6, name: '工单Agent+消息通知', materials: [], tasks: '完整工单流程上线' },
-      { day: '周日', hours: 6, name: '多模态Agent实战+简历亮点整理', materials: [], tasks: '实现图片分析Agent、整理Workflow项目亮点' }
+      { day: '周一', hours: 7, name: '指标与决策模型', materials: [], tasks: '定义QPS、延迟、错误率和并发状态模型' },
+      { day: '周二', hours: 7, name: 'Sentinel/Hippo4j与安全边界', materials: [], tasks: '明确可调整项、不可调整项和硬限制' },
+      { day: '周三', hours: 7, name: '指标模拟与历史回放', materials: [], tasks: '构造可复现的时序样本和异常事件' },
+      { day: '周四', hours: 7, name: '专家规则引擎', materials: [], tasks: '实现规则匹配、优先级和冲突处理' },
+      { day: '周五', hours: 7, name: '策略校验与审计', materials: [], tasks: '记录输入、原因、建议、校验与版本' },
+      { day: '周六', hours: 4, name: '模拟控制面 V0.1', materials: [], tasks: '串联建议、审批和模拟执行链路' },
+      { day: '周日', hours: 4, name: 'V0.1复盘 + 项目面试', materials: [], tasks: '完成架构讲解和失败场景问答' }
     ]
   },
   {
-    week: 10, module: 'deploy', title: 'AI工程化 + 企业级部署',
-    dateRange: '8.3–8.9',
-    objective: '掌握CI/CD、监控告警、成本优化，完成企业级部署全流程',
+    week: 10, module: 'guardian', title: 'AI智能守护 V1',
+    dateRange: '8.24–8.30', startDate: '2026-08-24', endDate: '2026-08-30',
+    objective: '完成治理RAG、策略建议Agent、安全闸门、人工审批、灰度回滚和评估报告',
     days: [
-      { day: '周一', hours: 2, name: 'Docker基础+docker-compose', materials: [{text:'Docker官方文档',url:'https://docs.docker.com/'}], tasks: 'Docker基础、多容器编排' },
-      { day: '周二', hours: 2, name: 'CI/CD：GitHub Actions自动化', materials: [{text:'GitHub Actions',url:'https://docs.github.com/en/actions'}], tasks: '配置自动测试、自动部署流程' },
-      { day: '周三', hours: 2, name: '监控告警：LangSmith+日志+指标', materials: [{text:'LangSmith文档',url:'https://docs.smith.langchain.com/'}], tasks: '集成LangSmith、结构化日志、告警规则' },
-      { day: '周四', hours: 2, name: '成本优化：Token计量+缓存+模型选择', materials: [], tasks: 'Token消耗计量、Redis缓存、模型选择策略' },
-      { day: '周五', hours: 2, name: 'Nginx反向代理+HTTPS', materials: [], tasks: '配置域名代理、SSL证书' },
-      { day: '周六', hours: 6, name: '全链路部署：CI/CD+监控+告警', materials: [], tasks: '完整CI/CD流水线、监控面板、告警通知' },
-      { day: '周日', hours: 6, name: '压力测试+性能优化+成本报告', materials: [], tasks: 'JMeter压测、性能优化、输出成本报告' }
+      { day: '周一', hours: 7, name: '治理RAG知识库', materials: [], tasks: '构建规则、案例、边界的可追溯检索' },
+      { day: '周二', hours: 7, name: '策略建议Agent + LangGraph', materials: [], tasks: '输出策略建议、证据和状态流' },
+      { day: '周三', hours: 7, name: '硬性安全闸门', materials: [], tasks: '实现最大幅度、冷却时间和审批限制' },
+      { day: '周四', hours: 7, name: '模拟执行 + Human-in-the-loop', materials: [], tasks: '支持暂停、批准、拒绝和恢复' },
+      { day: '周五', hours: 7, name: '灰度、观测与回滚', materials: [], tasks: '定义回滚条件并完成演练' },
+      { day: '周六', hours: 4, name: '评估集与Bad Case', materials: [], tasks: '覆盖风险建议、规则冲突和无证据场景' },
+      { day: '周日', hours: 4, name: '文档、演示与面试', materials: [], tasks: '完成V1 README、架构图、Demo和题库' }
     ]
   },
   {
-    week: 11, module: 'deploy', title: '项目整理 + 面试冲刺',
-    dateRange: '8.10–8.16',
-    objective: '求职冲刺，完成面试+简历+作品集',
+    week: 11, module: 'career', title: 'Java + AI面试冲刺',
+    dateRange: '8.31–9.6', startDate: '2026-08-31', endDate: '2026-09-06',
+    objective: '把Java能力、资金网关经验与两个AI作品集组织为稳定、可追问、可验证的面试表达',
     days: [
-      { day: '周一', hours: 2, name: '项目文档+技术方案', materials: [], tasks: '输出每个项目架构文档' },
-      { day: '周二', hours: 2, name: '架构图+流程绘图', materials: [], tasks: '绘制RAG/Agent/Workflow架构图' },
-      { day: '周三', hours: 2, name: 'AI产品案例+需求分析', materials: [], tasks: '分析主流AI产品' },
-      { day: '周四', hours: 2, name: 'AI高频面试题', materials: [], tasks: '整理背诵RAG/Agent/Prompt题库' },
-      { day: '周五', hours: 2, name: '简历优化+STAR法则', materials: [], tasks: '突出AI+项目+垂直领域亮点' },
-      { day: '周六', hours: 6, name: '模拟面试+GitHub美化', materials: [], tasks: '自我介绍、项目讲解、在线Demo整理' },
-      { day: '周日', hours: 6, name: '最终发布+求职开启', materials: [], tasks: '全项目上线、投递岗位' }
+      { day: '周一', hours: 7, name: 'Java核心、JVM、并发', materials: [], tasks: '完成口述题、手写题和故障诊断' },
+      { day: '周二', hours: 7, name: 'Spring、MySQL、Redis、MQ', materials: [], tasks: '完成框架、存储和分布式场景题' },
+      { day: '周三', hours: 7, name: 'RAG、Skill与评估', materials: [], tasks: '完成第一个作品集深挖题' },
+      { day: '周四', hours: 7, name: 'Agent、智能守护与系统设计', materials: [], tasks: '完成白板架构和安全边界追问' },
+      { day: '周五', hours: 7, name: '算法、编码与故障定位', materials: [], tasks: '完成限时编码和复盘' },
+      { day: '周六', hours: 4, name: 'Java + AI综合模拟面试', materials: [], tasks: '录音、评分并形成缺口清单' },
+      { day: '周日', hours: 4, name: '简历、GitHub与投递复盘', materials: [], tasks: '根据漏斗调整项目讲法和岗位策略' }
     ]
   },
   {
-    week: 12, module: 'deploy', title: 'AI产品能力 + 安全合规 + 复盘',
-    dateRange: '8.17–8.23',
-    objective: '掌握AI安全合规，深入垂直领域，全流程复盘总结',
+    week: 12, module: 'career', title: '面试反馈 + Offer冲刺',
+    dateRange: '9.7–9.15', startDate: '2026-09-07', endDate: '2026-09-15',
+    objective: '围绕真实面试反馈定向补缺，保障复试、岗位跟进和Offer决策，不再横向扩展新技术',
     days: [
-      { day: '周一', hours: 2, name: 'AI产品需求分析', materials: [], tasks: '用户研究、需求挖掘与验证' },
-      { day: '周二', hours: 2, name: 'AI产品设计+交互', materials: [], tasks: 'AI能力边界评估、原型设计' },
-      { day: '周三', hours: 2, name: 'AI产品数据+商业化', materials: [], tasks: '核心指标体系、商业模式设计' },
-      { day: '周四', hours: 2, name: 'AI安全合规：数据隐私+模型安全+内容审核', materials: [{text:'个人信息保护法',url:'https://www.gov.cn/xinwen/2021-08/20/content_5632486.htm'}], tasks: 'GDPR、数据脱敏、Prompt注入防御、内容审核' },
-      { day: '周五', hours: 2, name: '垂直领域深度分析+行业Know-how', materials: [], tasks: '金融/医疗/教育领域分析、行业术语、合规要求' },
-      { day: '周六', hours: 6, name: '90天全流程复盘', materials: [], tasks: '知识图谱梳理、查漏补缺、技能矩阵评估' },
-      { day: '周日', hours: 6, name: '成果整理+持续学习路径', materials: [], tasks: 'GitHub作品集完善、简历定稿、后续学习规划' }
+      { day: '周一', hours: 7, name: '面试反馈定向复习', materials: [], tasks: '排序缺口并使用新题补测' },
+      { day: '周二', hours: 7, name: '限时编码 + 系统设计', materials: [], tasks: '完成两轮完整演练' },
+      { day: '周三', hours: 7, name: '两个作品集深挖', materials: [], tasks: '复盘取舍、失败路径和评估指标' },
+      { day: '周四', hours: 7, name: 'Java + AI综合模拟', materials: [], tasks: '完成压力追问和表达修正' },
+      { day: '周五', hours: 7, name: '投递跟进与岗位定向准备', materials: [], tasks: '形成公司和岗位问题清单' },
+      { day: '周末', hours: 8, name: '真实面试、反馈与修正', materials: [], tasks: '完成面试复盘和次轮准备' },
+      { day: '9.14–9.15', hours: 11, name: '最终跟进、Offer比较与总复盘', materials: [], tasks: '完成决策矩阵和后续30天计划' }
     ]
   }
 ];
 
 const MODULES = [
   { id: 'python-llm', icon: '🐍', name: 'Python+LLM基础', weeks: [1, 2] },
-  { id: 'rag', icon: '📚', name: 'RAG+知识库', weeks: [3, 4, 5, 6] },
-  { id: 'agent', icon: '🤖', name: 'Agent+Workflow', weeks: [7, 8, 9] },
-  { id: 'deploy', icon: '🚀', name: '工程化+面试', weeks: [10, 11, 12] }
+  { id: 'rag', icon: '📚', name: 'RAG基础', weeks: [3, 4, 5] },
+  { id: 'skill', icon: '🧩', name: '机构接入Skill', weeks: [6, 7, 8] },
+  { id: 'guardian', icon: '🛡️', name: 'AI智能守护', weeks: [9, 10] },
+  { id: 'career', icon: '🎯', name: '面试+Offer', weeks: [11, 12] }
 ];
 
 // ===== 初始化逻辑 =====
@@ -846,13 +684,19 @@ let allNotes = [];
 let currentModule = 'python-llm';
 
 // ===== "今天"计算 =====
+function parseLocalDate(isoDate) {
+  const [year, month, day] = isoDate.split('-').map(Number);
+  return new Date(year, month - 1, day);
+}
+
 function getTodayWeekNumber() {
-  const PLAN_START = new Date('2026-06-01');
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const diffDays = Math.floor((today - PLAN_START) / (1000 * 60 * 60 * 24));
-  if (diffDays < 0) return 0;
-  return Math.floor(diffDays / 7) + 1;
+  const activePlan = COURSE_DATA.find(item =>
+    today >= parseLocalDate(item.startDate) &&
+    today <= parseLocalDate(item.endDate)
+  );
+  return activePlan?.week || 0;
 }
 
 // ===== 数据加载 =====
@@ -863,6 +707,10 @@ async function loadData() {
   allWeeks = weeks || [];
   allTopics = topics || [];
   allNotes = notes || [];
+
+  const todayWeek = getTodayWeekNumber();
+  const todayModule = MODULES.find(module => module.weeks.includes(todayWeek));
+  if (todayModule) currentModule = todayModule.id;
 }
 
 // ===== 图片上传 =====
@@ -1047,7 +895,7 @@ function updateProgress() {
   document.getElementById('statDone').textContent = done;
   document.getElementById('statActive').textContent = activeWeeks;
   document.getElementById('statPending').textContent = pendingWeeks;
-  document.getElementById('heroSubtitle').textContent = `${done}/${total}个知识点 · 90天完整学习计划 · 12周 · 4个项目交付`;
+  document.getElementById('heroSubtitle').textContent = `${done}/${total}个知识点 · Java + AI转型 · 2个独立作品集 · 9月Offer冲刺`;
 }
 
 // ===== 笔记编辑器 =====
@@ -1204,197 +1052,10 @@ async function updateWeekStatus(weekId) {
   if (week) week.status = status;
 }
 
-// ===== 提醒功能 =====
-let channels = [];
-let reminders = [];
-
-// 默认提醒规则
-const DEFAULT_REMINDERS = [
-  { type: 'daily', title: '每日学习提醒', message: '📅 每日学习提醒\n今天也要继续加油哦！', config: { time: '09:00' }, enabled: true },
-  { type: 'weekly', title: '每周进度提醒', message: '📊 每周进度提醒\n回顾一下本周的学习情况吧！', config: { day: 'monday', time: '09:00' }, enabled: true },
-  { type: 'deadline', title: '截止日期提醒', message: '⏰ 截止日期提醒\n距离课程结束还有 {{days}} 天，加油！', config: { days_before: [7, 3, 1] }, enabled: true }
-];
-
-// 加载提醒设置
-async function loadReminderSettings() {
-  const { data: channelData } = await sb.from('notification_channels').select('*');
-  channels = channelData || [];
-
-  const { data: reminderData } = await sb.from('reminders').select('*');
-  reminders = reminderData || [];
-
-  // 如果没有提醒规则，创建默认规则
-  if (reminders.length === 0) {
-    for (const defaultReminder of DEFAULT_REMINDERS) {
-      const { data } = await sb.from('reminders').insert(defaultReminder).select().single();
-      if (data) reminders.push(data);
-    }
-  }
-}
-
-// 渲染通知渠道列表
-function renderChannelList() {
-  const container = document.getElementById('channelList');
-
-  // 确保有飞书和微信渠道
-  const feishuChannel = channels.find(c => c.type === 'feishu');
-  const wechatChannel = channels.find(c => c.type === 'wechat');
-
-  container.innerHTML = `
-    <div class="channel-item">
-      <div class="channel-icon feishu">💬</div>
-      <div class="channel-info">
-        <div class="channel-name">飞书</div>
-        <div class="channel-status ${feishuChannel?.webhook_url ? 'connected' : ''}">
-          ${feishuChannel?.webhook_url ? '已连接' : '未配置'}
-        </div>
-        <input type="text" class="channel-input" id="feishuWebhook"
-               placeholder="输入飞书机器人 Webhook URL"
-               value="${feishuChannel?.webhook_url || ''}"
-               onchange="updateChannel('feishu', this.value)">
-      </div>
-    </div>
-    <div class="channel-item">
-      <div class="channel-icon wechat">📱</div>
-      <div class="channel-info">
-        <div class="channel-name">企业微信</div>
-        <div class="channel-status ${wechatChannel?.webhook_url ? 'connected' : ''}">
-          ${wechatChannel?.webhook_url ? '已连接' : '未配置'}
-        </div>
-        <input type="text" class="channel-input" id="wechatWebhook"
-               placeholder="输入企业微信机器人 Webhook URL"
-               value="${wechatChannel?.webhook_url || ''}"
-               onchange="updateChannel('wechat', this.value)">
-      </div>
-    </div>
-  `;
-}
-
-// 更新通知渠道
-async function updateChannel(type, webhookUrl) {
-  const existing = channels.find(c => c.type === type);
-
-  if (existing) {
-    await sb.from('notification_channels')
-      .update({ webhook_url: webhookUrl, enabled: !!webhookUrl })
-      .eq('id', existing.id);
-    existing.webhook_url = webhookUrl;
-    existing.enabled = !!webhookUrl;
-  } else if (webhookUrl) {
-    const { data } = await sb.from('notification_channels').insert({
-      type,
-      webhook_url: webhookUrl,
-      enabled: true
-    }).select().single();
-    if (data) channels.push(data);
-  }
-
-  renderChannelList();
-}
-
-// 渲染提醒规则列表
-function renderReminderList() {
-  const container = document.getElementById('reminderList');
-
-  const typeIcons = { daily: '📅', weekly: '📊', deadline: '⏰', custom: '⚙️' };
-  const typeNames = { daily: '每日提醒', weekly: '每周提醒', deadline: '截止提醒', custom: '自定义' };
-  const typeDescs = {
-    daily: '每天固定时间提醒学习',
-    weekly: '每周固定时间提醒进度',
-    deadline: '课程截止前 N 天提醒',
-    custom: '自定义提醒规则'
-  };
-
-  container.innerHTML = reminders.map(r => `
-    <div class="reminder-item">
-      <div class="reminder-type-icon">${typeIcons[r.type]}</div>
-      <div class="reminder-info">
-        <div class="reminder-name">${r.title}</div>
-        <div class="reminder-desc">${typeDescs[r.type]}</div>
-      </div>
-      <div class="toggle-switch ${r.enabled ? 'active' : ''}"
-           onclick="toggleReminder('${r.id}')"></div>
-    </div>
-  `).join('');
-}
-
-// 切换提醒状态
-async function toggleReminder(reminderId) {
-  const reminder = reminders.find(r => r.id === reminderId);
-  if (reminder) {
-    reminder.enabled = !reminder.enabled;
-    await sb.from('reminders').update({ enabled: reminder.enabled }).eq('id', reminderId);
-    renderReminderList();
-  }
-}
-
-// 保存提醒设置
-async function saveReminderSettings() {
-  // 保存所有提醒规则
-  for (const reminder of reminders) {
-    await sb.from('reminders').update({ enabled: reminder.enabled }).eq('id', reminder.id);
-  }
-
-  alert('提醒设置已保存！');
-  closeReminderPanel();
-}
-
-// 测试通知（通过 Edge Function）
-async function testNotification() {
-  const feishuChannel = channels.find(c => c.type === 'feishu' && c.webhook_url);
-  const wechatChannel = channels.find(c => c.type === 'wechat' && c.webhook_url);
-
-  const channel = feishuChannel || wechatChannel;
-
-  if (!channel) {
-    alert('请先配置至少一个通知渠道！');
-    return;
-  }
-
-  try {
-    const response = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/send-notification`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${CONFIG.SUPABASE_KEY}`,
-        'apikey': CONFIG.SUPABASE_KEY,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        channel_id: channel.id,
-        title: '🎉 测试通知',
-        message: '这是一条测试通知，如果你收到了说明配置成功！'
-      })
-    });
-
-    const result = await response.json();
-
-    if (result.success) {
-      alert('测试通知发送成功！请检查你的飞书/微信。');
-    } else {
-      alert('发送失败: ' + (result.error || '未知错误'));
-    }
-  } catch (error) {
-    alert('发送失败: ' + error.message);
-  }
-}
-
-// 打开提醒面板
-function openReminderPanel() {
-  document.getElementById('reminderPanel').classList.add('open');
-  renderChannelList();
-  renderReminderList();
-}
-
-// 关闭提醒面板
-function closeReminderPanel() {
-  document.getElementById('reminderPanel').classList.remove('open');
-}
-
 // ===== 初始化入口 =====
 async function init() {
   await initDatabase();
   await loadData();
-  await loadReminderSettings();
   renderModuleTabs();
   renderTimeline();
   updateProgress();

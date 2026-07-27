@@ -16,9 +16,7 @@ AI 学习计划追踪 (AI Learning Tracker) — a standalone single-page web app
 - `weeks` — 12 weekly entries with module assignment and status (pending/active/done)
 - `topics` — daily sub-items under each week (checkbox-completed)
 - `notes` — Markdown notes attached to weeks or individual topics
-- `notification_channels` — 飞书/微信通知渠道配置
-- `reminders` — 提醒规则配置
-- `reminder_logs` — 提醒发送记录
+- `notification_channels` / `reminders` / `reminder_logs` — 已停用提醒功能的遗留表；暂时保留以便回滚，不再由前端访问
 
 **Data seeding**: `seed.sql` truncates and re-inserts all weeks/topics. Use it to reset the database to initial state.
 
@@ -73,8 +71,6 @@ Core requirements:
 - `renderNoteEditor()` (line ~893) — Markdown editor with toolbar, tags, image upload, auto-save (500ms debounce)
 - `toggleTopic()` / `updateWeekStatus()` — Checkbox logic that cascades week status (pending→active→done)
 - `getTodayWeekNumber()` (line ~686) — Calculates which week the current date falls in, based on `PLAN_START = 2026-06-01`
-- `loadReminderSettings()` — 加载通知渠道和提醒规则
-- `openReminderPanel()` — 打开提醒设置面板
 - `testNotification()` — 测试发送通知
 
 ## Development
@@ -85,7 +81,7 @@ To reset the database, run `seed.sql` against the Supabase SQL editor.
 
 To change the curriculum, edit the `COURSE_DATA` array in `index.html` and run `seed.sql` to resync the database.
 
-To setup reminders, run `supabase/setup.sql` against the Supabase SQL editor.
+提醒功能已于 2026-07-27 停用。`supabase/setup.sql`、`supabase/cron-setup.sql` 和相关 Edge Functions 仅作为遗留实现保留，不得重新部署或执行。
 
 Learning examples use project-local Python virtual environments. Recreate them from the relevant dependency manifest; never commit the environment directory itself.
 
@@ -97,4 +93,4 @@ Learning examples use project-local Python virtual environments. Recreate them f
 - Status values: `pending`, `active`, `done`.
 - Notes use Markdown with preset tags: 重点, 待复习, 已掌握, 疑问.
 - Images are uploaded to Supabase Storage bucket `note-images` and inserted as Markdown `![](url)`.
-- 提醒功能使用纯前端方案，直接调用飞书/微信 Webhook API。
+- 提醒入口与前端逻辑已移除；数据库规则、通知渠道和 `check-reminders` Cron 均已停用。
