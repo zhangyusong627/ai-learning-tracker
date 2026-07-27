@@ -13,11 +13,11 @@
 | Week 1 | Python 基础、FastAPI、AI API | [week1-python/README.md](week1-python/README.md) |
 | Week 2 | 大模型基础与 Prompt Engineering | [week2/README.md](week2/README.md) |
 | Week 3 | LangChain 与聊天助手 V2 | [week3/README.md](week3/README.md) |
-| Week 4 | Embedding、向量数据库、微调与文档处理 | [week4/README.md](week4/README.md) |
-| Week 5 | RAG 基础与企业知识库 V1 | [week5/README.md](week5/README.md) |
-| Week 6 | RAG 收口与金融机构接入 Skill 设计 | [week6/README.md](week6/README.md) |
+| Week 4 | Embedding、向量数据库与文档处理基础 | [week4/README.md](week4/README.md) |
+| Week 5 | RAG 工程基础（已完成） | [week5/README.md](week5/README.md) |
+| Week 6 | 金融机构接入 Skill 最小业务闭环 | [week6/README.md](week6/README.md) |
 | Week 7 | 金融机构接入 Skill V0.1 | [week7/README.md](week7/README.md) |
-| Week 8 | 金融机构接入 Skill V1 | [week8/README.md](week8/README.md) |
+| Week 8 | 金融机构接入 Skill V1 发布与首批投递 | [week8/README.md](week8/README.md) |
 | Week 9 | AI 智能守护 V0.1 | [week9/README.md](week9/README.md) |
 | Week 10 | AI 智能守护 V1 | [week10/README.md](week10/README.md) |
 | Week 11 | Java + AI 面试冲刺 | [week11/README.md](week11/README.md) |

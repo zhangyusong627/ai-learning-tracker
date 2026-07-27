@@ -88,7 +88,7 @@ Learning examples use project-local Python virtual environments. Recreate them f
 ## Conventions
 
 - All UI text is in Chinese (zh-CN).
-- Date range header: `2026.6.1 – 8.23` (90 days).
+- Date range header: `2026.6.1 – 9.15`（基于实际进度延长到求职收口）。
 - Four modules: `python-llm`, `rag`, `agent`, `deploy`.
 - Status values: `pending`, `active`, `done`.
 - Notes use Markdown with preset tags: 重点, 待复习, 已掌握, 疑问.

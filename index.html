@@ -477,7 +477,7 @@ const COURSE_DATA = [
   {
     week: 1, module: 'python-llm', title: 'Python基础 + FastAPI + AI环境搭建',
     dateRange: '6.1–6.7', startDate: '2026-06-01', endDate: '2026-06-07',
-    objective: '掌握Python核心、FastAPI后端、Docker、AI API调用，完成AI聊天助手V1',
+    objective: '历史阶段：Python、FastAPI与AI API核心实践已完成；未单独完成的仓库整理并入作品集发布，不再作为补课任务',
     days: [
       { day: '周一', hours: 2, name: 'Python核心语法', materials: [{text:'Python官方文档',url:'https://docs.python.org/3/'},{text:'廖雪峰Python教程',url:'https://www.liaoxuefeng.com/wiki/1016959663602400'}], tasks: '变量、循环、函数、字典、文件读写' },
       { day: '周二', hours: 2, name: 'Python面向对象+异步编程', materials: [{text:'廖雪峰Python教程',url:'https://www.liaoxuefeng.com/wiki/1016959663602400'}], tasks: '编写class、异步函数基础' },
@@ -485,13 +485,13 @@ const COURSE_DATA = [
       { day: '周四', hours: 2, name: '请求响应+流式输出', materials: [{text:'FastAPI官方文档',url:'https://fastapi.tiangolo.com/'}], tasks: '实现带参数的API接口' },
       { day: '周五', hours: 2, name: 'AI API调用', materials: [{text:'OpenAI文档',url:'https://platform.openai.com/docs'}], tasks: '用requests调用OpenAI/通义千问API' },
       { day: '周六', hours: 6, name: 'FastAPI综合+项目搭建', materials: [], tasks: '完成AI聊天助手V1后端接口、单轮对话、流式输出' },
-      { day: '周日', hours: 6, name: '项目复盘+GitHub整理', materials: [], tasks: '整理代码仓库' }
+      { day: '阶段收口', hours: 0, name: '仓库整理并入作品集发布', materials: [], tasks: '不再单独补课，在作品集发布时统一完成仓库整理' }
     ]
   },
   {
     week: 2, module: 'python-llm', title: 'LLM基础 + Prompt Engineering',
     dateRange: '6.8–6.14', startDate: '2026-06-08', endDate: '2026-06-14',
-    objective: '理解大模型原理，掌握Prompt工程，完成Prompt体系搭建',
+    objective: '历史阶段：大模型与提示词工程核心内容已完成；提示词资产在作品集中按实际业务需要沉淀',
     days: [
       { day: '周一', hours: 2, name: 'Token/Embedding/语义向量', materials: [{text:'OpenAI文档',url:'https://platform.openai.com/docs'}], tasks: '计算Token数、理解Embedding作用' },
       { day: '周二', hours: 2, name: 'Transformer+Attention机制', materials: [{text:'OpenAI文档',url:'https://platform.openai.com/docs'}], tasks: '理解大模型生成逻辑' },
@@ -499,13 +499,13 @@ const COURSE_DATA = [
       { day: '周四', hours: 2, name: 'Few-shot/CoT/防御Prompt注入', materials: [{text:'OpenAI官方文档',url:'https://platform.openai.com/docs'}], tasks: '用少样本与思维链优化输出' },
       { day: '周五', hours: 2, name: 'Structured Output+稳定JSON', materials: [{text:'OpenAI官方文档',url:'https://platform.openai.com/docs'}], tasks: '让模型固定返回JSON格式' },
       { day: '周六', hours: 6, name: '幻觉控制+Temperature+System Prompt', materials: [], tasks: '设计客服/通用场景System Prompt、对比5种Prompt效果' },
-      { day: '周日', hours: 6, name: 'Prompt库整理+项目集成', materials: [], tasks: '将优化Prompt接入聊天助手，控制上下文长度' }
+      { day: '阶段收口', hours: 0, name: '提示词资产并入作品集', materials: [], tasks: '不建立脱离项目的通用提示词库，随作品集保留版本和评估证据' }
     ]
   },
   {
     week: 3, module: 'rag', title: 'LangChain + 聊天助手V2',
     dateRange: '6.15–6.21', startDate: '2026-06-15', endDate: '2026-06-21',
-    objective: '掌握LangChain核心，完成AI聊天助手V2（多轮记忆+工具调用）',
+    objective: '历史阶段：已掌握LangChain核心、对话记忆和工具调用；部署任务不再单独补做',
     days: [
       { day: '周一', hours: 2, name: 'LangChain基础+PromptTemplate', materials: [{text:'LangChain官方文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '编写模板化Prompt' },
       { day: '周二', hours: 2, name: 'LCEL表达式+Chains链路', materials: [{text:'LangChain官方文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '用LCEL重构对话链路' },
@@ -513,13 +513,13 @@ const COURSE_DATA = [
       { day: '周四', hours: 2, name: 'OutputParser+Function Calling', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '解析模型结构化输出' },
       { day: '周五', hours: 2, name: '聊天助手增强+记录持久化', materials: [], tasks: '将对话存入文件/简易数据库' },
       { day: '周六', hours: 6, name: 'Function Calling完整实现', materials: [], tasks: '实现「查询时间」简单工具调用' },
-      { day: '周日', hours: 6, name: '项目部署+GitHub整理', materials: [], tasks: '完成AI聊天助手V2，支持记忆+工具调用' }
+      { day: '阶段收口', hours: 0, name: '部署任务取消', materials: [], tasks: '聊天助手仅作为学习实践保留，部署时间投入到两个正式作品集' }
     ]
   },
   {
-    week: 4, module: 'rag', title: 'Embedding + 向量数据库 + 模型微调入门',
+    week: 4, module: 'rag', title: 'Embedding + 向量数据库 + 文档处理基础',
     dateRange: '6.22–6.28', startDate: '2026-06-22', endDate: '2026-06-28',
-    objective: '掌握向量检索、Chroma，理解模型微调原理，完成LoRA微调实战',
+    objective: '历史阶段：向量检索、Chroma、文本切分和文档解析已完成；LoRA只保留概念，实战暂缓且不是待办',
     days: [
       { day: '周一', hours: 2, name: 'Embedding原理+语义检索', materials: [{text:'Chroma文档',url:'https://docs.trychroma.com/'},{text:'Hugging Face文档',url:'https://huggingface.co/docs'}], tasks: '生成文本向量' },
       { day: '周二', hours: 2, name: '向量数据库基础CRUD', materials: [{text:'Chroma官方文档',url:'https://docs.trychroma.com/'}], tasks: 'Chroma基础操作' },
@@ -527,126 +527,125 @@ const COURSE_DATA = [
       { day: '周四', hours: 2, name: '模型微调入门：LoRA原理+Hugging Face', materials: [{text:'Hugging Face文档',url:'https://huggingface.co/docs'},{text:'LoRA论文',url:'https://arxiv.org/abs/2106.09685'}], tasks: '理解LoRA原理、Hugging Face生态、参数高效微调' },
       { day: '周五', hours: 2, name: '文本切分策略+优化', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '优化文档分块、理解微调vs Prompt Engineering' },
       { day: '周六', hours: 6, name: 'PDF/Word解析+批量处理', materials: [], tasks: '用PyMuPDF解析PDF，构建向量检索Demo' },
-      { day: '周日', hours: 6, name: 'LoRA微调实战：准备数据+训练模型', materials: [{text:'Hugging Face PEFT',url:'https://huggingface.co/docs/peft'}], tasks: '使用Hugging Face完成情感分析/文本生成微调' }
+      { day: '阶段收口', hours: 0, name: 'LoRA实战暂缓（非待办）', materials: [{text:'Hugging Face PEFT',url:'https://huggingface.co/docs/peft'}], tasks: '只有出现明确业务需求、合格数据和量化基线后才重新评估' }
     ]
   },
   {
-    week: 5, module: 'rag', title: 'RAG基础 + 企业知识库V1',
+    week: 5, module: 'rag', title: 'RAG工程基础（已完成）',
     dateRange: '6.29–7.26（实际学习）', startDate: '2026-06-29', endDate: '2026-07-26',
-    objective: '掌握RAG全链路，完成企业知识库可问答系统',
+    objective: '历史阶段：Day 29–33完成RAG分段实践，Day 36完成全链路集成与阶段验收；不再补做重复的企业知识库课程',
     days: [
       { day: '周一', hours: 2, name: 'RAG整体流程', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'},{text:'LlamaIndex文档',url:'https://docs.llamaindex.ai/'}], tasks: '梳理RAG链路' },
       { day: '周二', hours: 2, name: 'PDF/多格式文档解析', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '提升复杂文档解析率' },
       { day: '周三', hours: 2, name: 'Chunk优化+阈值过滤', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'}], tasks: '解决不相关检索问题' },
       { day: '周四', hours: 2, name: 'Embedding接入+向量检索', materials: [{text:'LangChain文档',url:'https://python.langchain.com/docs/introduction/'},{text:'LlamaIndex文档',url:'https://docs.llamaindex.ai/'}], tasks: 'Query→检索链路' },
       { day: '周五', hours: 2, name: '检索拼装Prompt+生成回答', materials: [], tasks: '实现RAG基础问答' },
-      { day: '周六', hours: 6, name: '企业知识库V1开发+引用标注', materials: [], tasks: '上传PDF→提问→带来源回答' },
-      { day: '周日', hours: 6, name: '阶段复盘+Bad Case整理', materials: [], tasks: '优化RAG基础效果' }
+      { day: '阶段验收', hours: 7, name: 'Day36 RAG全链路集成', materials: [], tasks: '完成质量门禁、版本与权限过滤、证据准入、引用校验和纠错重试' }
     ]
   },
   {
-    week: 6, module: 'skill', title: 'RAG收口 + 金融机构接入Skill设计',
+    week: 6, module: 'skill', title: '金融机构接入Skill：最小业务闭环',
     dateRange: '7.27–8.2', startDate: '2026-07-27', endDate: '2026-08-02',
-    objective: '完成RAG延迟复习与阶段验收，冻结金融机构接入Skill的业务边界、领域模型、数据政策和验收集',
+    objective: '从现有项目脚手架继续，实现自造文档、统一解析、标准文档块、结构化抽取和最小纵向闭环；RAG只做每日短时延迟复习',
     days: [
-      { day: '周一', hours: 7, name: 'Day29/30 D+7 + RAG全链路集成', materials: [], tasks: '闭卷重建RAG链路，验证多格式解析与引用' },
-      { day: '周二', hours: 7, name: 'Day31 D+7 + 端到端检索', materials: [], tasks: '验证阈值过滤、无证据分支与检索效果' },
-      { day: '周三', hours: 7, name: 'Day32 D+7 + Bad Case', materials: [], tasks: '整理失败样例，定位数据、检索和验证问题' },
-      { day: '周四', hours: 7, name: 'Day33 D+7 + RAG阶段验收', materials: [], tasks: '完成概念、诊断、迁移三层新题' },
-      { day: '周五', hours: 7, name: 'Skill需求与业务边界', materials: [], tasks: '定义问题、输入输出、非目标和V1验收线' },
-      { day: '周六', hours: 4, name: '自造文档与标准领域模型', materials: [], tasks: '设计两个虚构机构样例与标准模型' },
-      { day: '周日', hours: 4, name: '项目规则、架构与验收冻结', materials: [], tasks: '完成AGENTS、架构、数据政策与验收矩阵' }
+      { day: '周一', hours: 7, name: 'Day36 RAG全链路验收（已完成）', materials: [], tasks: '保留全链路代码和评估证据，作为RAG阶段结业实践' },
+      { day: '周二', hours: 7, name: '脚手架审查 + V0.1验收冻结', materials: [], tasks: '核对现有AGENTS、架构、数据政策、领域模型和脚本，形成缺口清单' },
+      { day: '周三', hours: 7, name: '两个虚构机构的多格式文档', materials: [], tasks: '制作PDF、Word、Excel自造资料，覆盖机构、产品、版本和差异字段' },
+      { day: '周四', hours: 7, name: '统一解析器 + ParseResult', materials: [], tasks: '支持成功、部分成功、失败、解析警告和需要OCR的状态' },
+      { day: '周五', hours: 7, name: '标准文档块 + 数据质量门禁', materials: [], tasks: '保留机构、产品、版本、章节、页码或工作表，并执行数量与完整性校验' },
+      { day: '周六', hours: 4, name: '结构化抽取契约', materials: [], tasks: '区分candidate、unresolved和approved，所有业务事实绑定证据' },
+      { day: '周日', hours: 4, name: '最小纵向闭环 + 自动测试', materials: [], tasks: '跑通文档→解析→标准模型并记录失败样例和修正结论' }
     ]
   },
   {
     week: 7, module: 'skill', title: '金融机构接入Skill V0.1',
     dateRange: '8.3–8.9', startDate: '2026-08-03', endDate: '2026-08-09',
-    objective: '完成多格式解析、结构化抽取、RAG证据、字段映射和首轮评估',
+    objective: '在最小解析闭环上实现字段映射、差异识别、检索证据、人工确认、Java骨架生成和确定性验证',
     days: [
-      { day: '周一', hours: 7, name: 'PDF/Word/Excel统一解析', materials: [], tasks: '建立统一文档块模型与解析测试' },
-      { day: '周二', hours: 7, name: 'Structured Output + JSON Schema', materials: [], tasks: '输出可被确定性校验的抽取结果' },
-      { day: '周三', hours: 7, name: '标准领域模型 + RAG索引', materials: [], tasks: '建立标准模型、检索链路与证据定位' },
-      { day: '周四', hours: 7, name: '元数据、版本与引用', materials: [], tasks: '保留来源、页码或工作表、版本信息' },
-      { day: '周五', hours: 7, name: '字段映射与差异识别', materials: [], tasks: '生成映射表、缺失项、风险和待确认项' },
-      { day: '周六', hours: 4, name: '评估集 + V0.1集成', materials: [], tasks: '建立黄金集、指标和Bad Case记录' },
-      { day: '周日', hours: 4, name: 'README、演示与投递准备', materials: [], tasks: '整理演示脚本、项目讲法和简历条目' }
+      { day: '周一', hours: 7, name: '标准字段映射', materials: [], tasks: '识别公共字段，输出来源字段、转换规则、证据和状态' },
+      { day: '周二', hours: 7, name: '差异、冲突与待确认项', materials: [], tasks: '处理缺失字段、枚举差异、流程差异、冲突版本和低置信度结果' },
+      { day: '周三', hours: 7, name: '带范围过滤的RAG证据检索', materials: [], tasks: '在Top-K前应用机构、产品、版本和权限过滤，并保留证据定位' },
+      { day: '周四', hours: 7, name: '证据编号 + 人工确认状态流', materials: [], tasks: '只有引用合法且人工批准的映射才能进入生成阶段' },
+      { day: '周五', hours: 7, name: 'Java适配器骨架生成', materials: [], tasks: '仅从approved结构化数据生成Java模板，不进行第二次自由生成' },
+      { day: '周六', hours: 4, name: 'Maven编译 + 契约测试', materials: [], tasks: '定位输入、模板、编译或契约失败，禁止用绕过方式通过' },
+      { day: '周日', hours: 4, name: 'V0.1集成 + 黄金集评估', materials: [], tasks: '跑通映射到验证闭环，建立正常、缺失、冲突和拒绝样例' }
     ]
   },
   {
-    week: 8, module: 'skill', title: '金融机构接入Skill V1',
+    week: 8, module: 'skill', title: '金融机构接入Skill V1发布 + 首批投递',
     dateRange: '8.10–8.16', startDate: '2026-08-10', endDate: '2026-08-16',
-    objective: '完成可恢复Agent工作流、人工确认、Java骨架生成、编译与契约测试，形成首个可投递作品集',
+    objective: '完成作品集一的集成、评估、错误恢复、文档和面试材料；不为展示框架而强行加入Agent，并于8月12日启动首批投递',
     days: [
-      { day: '周一', hours: 7, name: 'Skill结构与渐进式上下文', materials: [], tasks: '完成可复用SKILL.md及资源导航' },
-      { day: '周二', hours: 7, name: 'Tool Calling + LangGraph', materials: [], tasks: '实现状态、节点、条件边和失败路径' },
-      { day: '周三', hours: 7, name: 'Human-in-the-loop', materials: [], tasks: '低置信度暂停，支持确认、拒绝和恢复' },
-      { day: '周四', hours: 7, name: '配置 + Java适配器骨架生成', materials: [], tasks: '仅从已批准映射生成模板输出' },
-      { day: '周五', hours: 7, name: 'Maven编译 + 契约测试', materials: [], tasks: '用确定性验证拦截无效生成物' },
-      { day: '周六', hours: 4, name: '端到端验收 + 评估', materials: [], tasks: '完成V1报告、Bad Case和能力边界' },
-      { day: '周日', hours: 4, name: '作品集材料 + 面试投递', materials: [], tasks: '完成README、架构图、Demo和项目问答' }
+      { day: '周一', hours: 7, name: '完整链路集成 + 错误恢复', materials: [], tasks: '覆盖解析失败、证据不足、人工拒绝、生成失败和验证失败路径' },
+      { day: '周二', hours: 7, name: '黄金集 + 量化评估', materials: [], tasks: '评估解析完整性、字段映射、证据引用、拒绝和生成验证' },
+      { day: '周三', hours: 7, name: 'Bad Case修复 + 首批投递', materials: [], tasks: '修复高风险错误，并投递第一批高匹配Java+AI岗位' },
+      { day: '周四', hours: 7, name: 'README + 架构图 + 演示脚本', materials: [], tasks: '讲清业务价值、技术取舍、数据边界、验证证据和已知局限' },
+      { day: '周五', hours: 7, name: 'V1候选版本验收', materials: [], tasks: '执行全量测试，冻结可演示版本和复现命令' },
+      { day: '周六', hours: 4, name: '项目演示 + 简历项目描述', materials: [], tasks: '形成3分钟和10分钟讲法，准备面试追问' },
+      { day: '周日', hours: 4, name: '发布复盘 + 定向投递', materials: [], tasks: '修正材料并继续投递，不扩展低优先级功能' }
     ]
   },
   {
     week: 9, module: 'guardian', title: 'AI智能守护 V0.1',
     dateRange: '8.17–8.23', startDate: '2026-08-17', endDate: '2026-08-23',
-    objective: '用模拟指标和专家规则完成智能守护基线、策略校验、人工审批与审计链路',
+    objective: '创建独立作品集二，用模拟指标、事件回放和专家规则建立无大模型也能运行的确定性治理基线',
     days: [
-      { day: '周一', hours: 7, name: '指标与决策模型', materials: [], tasks: '定义QPS、延迟、错误率和并发状态模型' },
-      { day: '周二', hours: 7, name: 'Sentinel/Hippo4j与安全边界', materials: [], tasks: '明确可调整项、不可调整项和硬限制' },
-      { day: '周三', hours: 7, name: '指标模拟与历史回放', materials: [], tasks: '构造可复现的时序样本和异常事件' },
-      { day: '周四', hours: 7, name: '专家规则引擎', materials: [], tasks: '实现规则匹配、优先级和冲突处理' },
-      { day: '周五', hours: 7, name: '策略校验与审计', materials: [], tasks: '记录输入、原因、建议、校验与版本' },
-      { day: '周六', hours: 4, name: '模拟控制面 V0.1', materials: [], tasks: '串联建议、审批和模拟执行链路' },
-      { day: '周日', hours: 4, name: 'V0.1复盘 + 项目面试', materials: [], tasks: '完成架构讲解和失败场景问答' }
+      { day: '周一', hours: 7, name: '独立仓库 + 指标决策模型', materials: [], tasks: '先建立AGENTS和目录规范，再定义机构、接口、QPS、延迟、错误率、并发与线程池模型' },
+      { day: '周二', hours: 7, name: '模拟指标 + 事件回放', materials: [], tasks: '构造可复现的正常、突发流量、超时和错误率异常事件' },
+      { day: '周三', hours: 7, name: '专家规则引擎', materials: [], tasks: '实现规则匹配、动作建议和确定性结果' },
+      { day: '周四', hours: 7, name: '优先级、冲突、冷却与防抖', materials: [], tasks: '解决多规则同时命中、频繁调整和状态震荡' },
+      { day: '周五', hours: 7, name: '安全校验 + 审计状态', materials: [], tasks: '记录指标、命中规则、建议、原因、版本和拒绝结果' },
+      { day: '周六', hours: 4, name: '命令行或API演示', materials: [], tasks: '串联事件输入、规则判断、建议输出和审计记录' },
+      { day: '周日', hours: 4, name: '确定性基线评估', materials: [], tasks: '形成V0.1测试、失败样例、架构讲解和面试问答' }
     ]
   },
   {
     week: 10, module: 'guardian', title: 'AI智能守护 V1',
     dateRange: '8.24–8.30', startDate: '2026-08-24', endDate: '2026-08-30',
-    objective: '完成治理RAG、策略建议Agent、安全闸门、人工审批、灰度回滚和评估报告',
+    objective: '在确定性基线上增加治理知识检索和策略建议Agent；模型只分析与建议，硬规则和人工审批掌握最终控制权',
     days: [
-      { day: '周一', hours: 7, name: '治理RAG知识库', materials: [], tasks: '构建规则、案例、边界的可追溯检索' },
-      { day: '周二', hours: 7, name: '策略建议Agent + LangGraph', materials: [], tasks: '输出策略建议、证据和状态流' },
-      { day: '周三', hours: 7, name: '硬性安全闸门', materials: [], tasks: '实现最大幅度、冷却时间和审批限制' },
-      { day: '周四', hours: 7, name: '模拟执行 + Human-in-the-loop', materials: [], tasks: '支持暂停、批准、拒绝和恢复' },
-      { day: '周五', hours: 7, name: '灰度、观测与回滚', materials: [], tasks: '定义回滚条件并完成演练' },
-      { day: '周六', hours: 4, name: '评估集与Bad Case', materials: [], tasks: '覆盖风险建议、规则冲突和无证据场景' },
-      { day: '周日', hours: 4, name: '文档、演示与面试', materials: [], tasks: '完成V1 README、架构图、Demo和题库' }
+      { day: '周一', hours: 7, name: 'Agent边界 + 状态流', materials: [], tasks: '定义观察、分析、建议、校验、审批、模拟执行和终止状态' },
+      { day: '周二', hours: 7, name: '指标、规则与历史事件工具', materials: [], tasks: '实现只读工具契约、参数校验、错误返回和调用审计' },
+      { day: '周三', hours: 7, name: '专家经验RAG知识库', materials: [], tasks: '对规则、案例和边界做可追溯检索，为建议提供证据' },
+      { day: '周四', hours: 7, name: '分析→建议→解释Agent', materials: [], tasks: '输出结构化建议、原因、证据、风险和待确认项' },
+      { day: '周五', hours: 7, name: '硬闸门 + 人工审批 + 回滚', materials: [], tasks: '超限建议直接拒绝，合法建议仍需人工批准，并支持模拟回滚' },
+      { day: '周六', hours: 4, name: '事件回放 + 对比评估', materials: [], tasks: '比较专家规则基线与Agent建议，覆盖正常、冲突、无证据和高风险场景' },
+      { day: '周日', hours: 4, name: 'V1文档、演示与发布', materials: [], tasks: '完成README、架构图、演示、评估报告和已知局限' }
     ]
   },
   {
     week: 11, module: 'career', title: 'Java + AI面试冲刺',
     dateRange: '8.31–9.6', startDate: '2026-08-31', endDate: '2026-09-06',
-    objective: '把Java能力、资金网关经验与两个AI作品集组织为稳定、可追问、可验证的面试表达',
+    objective: '在前六周每日面试训练的基础上进行集中冲刺；真实面试优先于课程，不再扩展作品集功能',
     days: [
-      { day: '周一', hours: 7, name: 'Java核心、JVM、并发', materials: [], tasks: '完成口述题、手写题和故障诊断' },
-      { day: '周二', hours: 7, name: 'Spring、MySQL、Redis、MQ', materials: [], tasks: '完成框架、存储和分布式场景题' },
-      { day: '周三', hours: 7, name: 'RAG、Skill与评估', materials: [], tasks: '完成第一个作品集深挖题' },
-      { day: '周四', hours: 7, name: 'Agent、智能守护与系统设计', materials: [], tasks: '完成白板架构和安全边界追问' },
-      { day: '周五', hours: 7, name: '算法、编码与故障定位', materials: [], tasks: '完成限时编码和复盘' },
-      { day: '周六', hours: 4, name: 'Java + AI综合模拟面试', materials: [], tasks: '录音、评分并形成缺口清单' },
-      { day: '周日', hours: 4, name: '简历、GitHub与投递复盘', materials: [], tasks: '根据漏斗调整项目讲法和岗位策略' }
+      { day: '周一', hours: 7, name: '简历反馈 + 两个项目叙事', materials: [], tasks: '根据投递和面试结果修正自我介绍、3分钟讲法和10分钟讲法' },
+      { day: '周二', hours: 7, name: 'Java核心、JVM与并发', materials: [], tasks: '完成新口述题、手写题、线程池和故障诊断' },
+      { day: '周三', hours: 7, name: 'Spring、事务与数据中间件', materials: [], tasks: '完成Spring、MySQL、Redis和消息队列场景题' },
+      { day: '周四', hours: 7, name: '资金网关 + AI系统设计', materials: [], tasks: '完成机构接入、稳定性治理和两个作品集的白板设计' },
+      { day: '周五', hours: 7, name: 'RAG、Agent、评估与安全', materials: [], tasks: '完成AI应用工程深挖题和失败路径追问' },
+      { day: '周六', hours: 4, name: '编码题 + 综合模拟面试', materials: [], tasks: '限时完成并录音评分，形成具体缺口清单' },
+      { day: '周日', hours: 4, name: '简历、作品集与投递漏斗修正', materials: [], tasks: '只修正真实反馈暴露的问题' }
     ]
   },
   {
     week: 12, module: 'career', title: '面试反馈 + Offer冲刺',
     dateRange: '9.7–9.15', startDate: '2026-09-07', endDate: '2026-09-15',
-    objective: '围绕真实面试反馈定向补缺，保障复试、岗位跟进和Offer决策，不再横向扩展新技术',
+    objective: '围绕真实面试反馈定向补缺和推进在途机会；9月15日以进入录用决策或确定录用结果为目标，不再横向扩展新技术',
     days: [
-      { day: '周一', hours: 7, name: '面试反馈定向复习', materials: [], tasks: '排序缺口并使用新题补测' },
-      { day: '周二', hours: 7, name: '限时编码 + 系统设计', materials: [], tasks: '完成两轮完整演练' },
-      { day: '周三', hours: 7, name: '两个作品集深挖', materials: [], tasks: '复盘取舍、失败路径和评估指标' },
-      { day: '周四', hours: 7, name: 'Java + AI综合模拟', materials: [], tasks: '完成压力追问和表达修正' },
-      { day: '周五', hours: 7, name: '投递跟进与岗位定向准备', materials: [], tasks: '形成公司和岗位问题清单' },
-      { day: '周末', hours: 8, name: '真实面试、反馈与修正', materials: [], tasks: '完成面试复盘和次轮准备' },
-      { day: '9.14–9.15', hours: 11, name: '最终跟进、Offer比较与总复盘', materials: [], tasks: '完成决策矩阵和后续30天计划' }
+      { day: '周一', hours: 7, name: '真实反馈分类 + 缺口排序', materials: [], tasks: '区分知识、代码、项目证据、表达和岗位匹配问题' },
+      { day: '周二', hours: 7, name: '最高优先级短板补强', materials: [], tasks: '只补最影响录用的一项，并使用新题验证' },
+      { day: '周三', hours: 7, name: '定向模拟面试', materials: [], tasks: '围绕目标岗位和真实失分点进行压力追问' },
+      { day: '周四', hours: 7, name: '在途流程跟进 + 定向补投', materials: [], tasks: '跟进复试和录用流程，补充高匹配岗位' },
+      { day: '周五', hours: 7, name: '系统设计 + 项目终面表达', materials: [], tasks: '练习技术负责人视角的取舍、风险和业务价值' },
+      { day: '周末', hours: 8, name: '真实面试 + 24小时复盘', materials: [], tasks: '真实流程优先，及时形成下一轮修正任务' },
+      { day: '9.14–9.15', hours: 11, name: '最终流程推进 + 决策复盘', materials: [], tasks: '完成在途机会跟进、录用比较或下一阶段明确策略' }
     ]
   }
 ];
 
 const MODULES = [
   { id: 'python-llm', icon: '🐍', name: 'Python+LLM基础', weeks: [1, 2] },
-  { id: 'rag', icon: '📚', name: 'RAG基础', weeks: [3, 4, 5] },
+  { id: 'rag', icon: '📚', name: 'RAG工程基础', weeks: [3, 4, 5] },
   { id: 'skill', icon: '🧩', name: '机构接入Skill', weeks: [6, 7, 8] },
   { id: 'guardian', icon: '🛡️', name: 'AI智能守护', weeks: [9, 10] },
   { id: 'career', icon: '🎯', name: '面试+Offer', weeks: [11, 12] }
@@ -662,7 +661,7 @@ async function initDatabase() {
       week_number: item.week,
       module: item.module,
       title: item.title,
-      status: item.week === 1 ? 'active' : 'pending'
+      status: item.week <= 5 ? 'done' : item.week === 6 ? 'active' : 'pending'
     }).select().single();
 
     for (let i = 0; i < item.days.length; i++) {
@@ -670,7 +669,7 @@ async function initDatabase() {
       await sb.from('topics').insert({
         week_id: week.id,
         name: `${d.day} ${d.name} (${d.hours}h)`,
-        completed: false,
+        completed: item.week <= 5 || (item.week === 6 && i === 0),
         topic_order: i + 1
       });
     }
@@ -682,6 +681,31 @@ let allWeeks = [];
 let allTopics = [];
 let allNotes = [];
 let currentModule = 'python-llm';
+
+function applyLocalCoursePlan(weeks, topics) {
+  const courseByWeek = new Map(COURSE_DATA.map(item => [item.week, item]));
+  const weekNumberById = new Map(weeks.map(week => [week.id, week.week_number]));
+
+  const overlaidWeeks = weeks.map(week => {
+    const plan = courseByWeek.get(week.week_number);
+    return plan ? { ...week, module: plan.module, title: plan.title } : week;
+  });
+
+  const overlaidTopics = topics
+    .filter(topic => {
+      const plan = courseByWeek.get(weekNumberById.get(topic.week_id));
+      return !plan || topic.topic_order <= plan.days.length;
+    })
+    .map(topic => {
+      const plan = courseByWeek.get(weekNumberById.get(topic.week_id));
+      const day = plan?.days[topic.topic_order - 1];
+      return day
+        ? { ...topic, name: `${day.day} ${day.name} (${day.hours}h)` }
+        : topic;
+    });
+
+  return { weeks: overlaidWeeks, topics: overlaidTopics };
+}
 
 // ===== "今天"计算 =====
 function parseLocalDate(isoDate) {
@@ -704,8 +728,9 @@ async function loadData() {
   const { data: weeks } = await sb.from('weeks').select('*').order('week_number');
   const { data: topics } = await sb.from('topics').select('*');
   const { data: notes } = await sb.from('notes').select('*');
-  allWeeks = weeks || [];
-  allTopics = topics || [];
+  const localPlan = applyLocalCoursePlan(weeks || [], topics || []);
+  allWeeks = localPlan.weeks;
+  allTopics = localPlan.topics;
   allNotes = notes || [];
 
   const todayWeek = getTodayWeekNumber();

@@ -4,7 +4,7 @@
 2026年6月8日 - 6月13日
 
 ## 学习目标
-理解大模型原理，掌握Prompt工程，完成Prompt体系搭建
+历史阶段已完成大模型与提示词工程核心内容。提示词资产在正式作品集中按业务需要沉淀，不建立脱离项目的通用提示词库。
 
 ---
 
@@ -18,7 +18,7 @@
 | 周四 | Few-shot/CoT/防御Prompt注入 | 2小时 | ✅ 完成 |
 | 周五 | Structured Output+稳定JSON | 2小时 | ✅ 完成 |
 | 周六 | 幻觉控制+Temperature+System Prompt | 6小时 | ✅ 完成 |
-| 周日 | Prompt库整理+项目集成 | 6小时 | ⏳ 待学习 |
+| 阶段收口 | 提示词资产并入作品集 | 0小时 | ✅ 已合并，不再单独补课 |
 
 ---
 
@@ -242,7 +242,7 @@ week2/
 - [x] 完成周四 Few-shot/CoT/防御Prompt注入
 - [x] 完成周五 Structured Output+稳定JSON
 - [x] 完成周六 幻觉控制+Temperature+System Prompt
-- [ ] 完成周日 Prompt库整理+项目集成
+- [x] 原周日提示词库任务已并入正式作品集，不再单独补课
 
 ---
 
