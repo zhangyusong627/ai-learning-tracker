@@ -1,10 +1,14 @@
 # AGENTS.md
 
-This file provides guidance to Codex (Codex.ai/code) when working with code in this repository.
+This file provides guidance to Codex when working with code in this repository.
 
 ## Project Overview
 
-AI 学习计划追踪 (AI Learning Tracker) — a standalone single-page web app that tracks a 90-day AI learning curriculum (12 weeks, 4 modules). Built with vanilla HTML/CSS/JS, no build tools or framework.
+AI 学习计划追踪 (AI Learning Tracker) — a standalone single-page web app that tracks a 12-stage AI learning and career sprint curriculum. Built with vanilla HTML/CSS/JS, no build tools or framework.
+
+The app was originally a 90-day learning tracker and has been extended through 2026-09-15. The local `COURSE_DATA`, weekly plans, and Supabase curriculum records are currently synchronized; Supabase additionally stores checkbox progress and notes.
+
+The repository now primarily serves as a learning journal, job-hunting evidence hub, and portfolio verification link store.
 
 ## Architecture
 
@@ -30,11 +34,21 @@ All course notes, practice code, sample inputs, and per-week dependency files li
 
 ```text
 learning/
-├── README.md       # Learning-material index and structure rules
-├── week1-python/   # Legacy Week 1 name retained to avoid unnecessary churn
+├── README.md                              # Learning-material index and structure rules
+├── FULL_TIME_AI_CAREER_SPRINT.md          # Full sprint plan (7.27–9.15)
+├── LEARNING_WORKFLOW.md                   # Nine-stage learning workflow
+├── week1-python/                          # Legacy name retained
 ├── week2/
 ├── week3/
-└── week4/
+├── week4/
+├── week5/                                 # RAG engineering base (completed)
+├── week6/                                 # Skill minimum vertical slice (current)
+├── week7/                                 # Skill V0.1
+├── week8/                                 # Skill V1
+├── week9/                                 # Guardian V0.1
+├── week10/                                # Guardian V1
+├── week11/                                # Java + AI interview sprint
+└── week12/                                # Offer finalization
 ```
 
 Rules:
@@ -42,8 +56,23 @@ Rules:
 - New weekly material must be created under `learning/weekN/`; do not create new `week*` directories at repository root.
 - Keep source code, Markdown notes, safe `.env.example` files, dependency manifests, and small reproducible fixtures in Git.
 - Never commit virtual environments, `.env` files, API keys, caches, chat histories, local vector databases, or generated runtime data.
-- A day directory should contain `notes.md` plus its practice source/files. Generated output belongs in an ignored runtime directory.
+- A day directory should contain `notes.md` plus its practice source files. Generated output belongs in an ignored runtime directory.
 - When moving learning material, update commands and cross-links that assume repository-root `week*` paths.
+- Portfolio code lives in separate repositories (`financial-institution-integration-skill/`, `ai-guardian-agent/`). This repo stores links, commit hashes, verification commands, and evidence, not source code.
+
+## Current Weekly Focus (Week 6: 7.27–8.2)
+
+| Day | Focus |
+|-----|-------|
+| 7.27 Mon | Day 36 RAG full-pipeline integration ✅ Done |
+| 7.28 Tue | Audit the existing Skill scaffold and freeze V0.1 acceptance |
+| 7.29 Wed | Create synthetic PDF, Word, and Excel institution documents |
+| 7.30 Thu | Unified parser + ParseResult states |
+| 7.31 Fri | Standard document blocks + data quality gates |
+| 8.1 Sat | Structured extraction contract and evidence states |
+| 8.2 Sun | Minimum vertical slice + automated tests |
+
+RAG delayed review is limited to the daily 0.5-hour review slot. Do not recreate full-day “end-to-end retrieval” or Day 31–33 review courses.
 
 ## Mandatory Learning Workflow
 
@@ -64,33 +93,37 @@ Core requirements:
 
 ## Key Code Sections in index.html
 
-- `initDatabase()` (line ~655) — Seeds Supabase if empty, using `COURSE_DATA`
-- `loadData()` (line ~696) — Fetches weeks/topics/notes from Supabase
+- `initDatabase()` — Seeds Supabase only when the database is empty, using `COURSE_DATA`
+- `applyLocalCoursePlan()` — Overlays local curriculum names while preserving database IDs and progress
+- `loadData()` — Fetches weeks/topics/notes from Supabase and applies the local curriculum overlay
 - `renderModuleTabs()` / `renderTimeline()` — UI rendering
-- `renderWeekDetail()` (line ~823) — Expanded week view with topic checkboxes and note editors
-- `renderNoteEditor()` (line ~893) — Markdown editor with toolbar, tags, image upload, auto-save (500ms debounce)
+- `renderWeekDetail()` — Expanded week view with topic checkboxes and note editors
+- `renderNoteEditor()` — Markdown editor with toolbar, tags, image upload, auto-save (500ms debounce)
 - `toggleTopic()` / `updateWeekStatus()` — Checkbox logic that cascades week status (pending→active→done)
-- `getTodayWeekNumber()` (line ~686) — Calculates which week the current date falls in, based on `PLAN_START = 2026-06-01`
-- `testNotification()` — 测试发送通知
+- `getTodayWeekNumber()` — Matches today's date against each `COURSE_DATA` start/end range
 
 ## Development
 
 To run locally, open `index.html` in a browser (or use a static server like `python -m http.server`). No build step required.
 
-To reset the database, run `seed.sql` against the Supabase SQL editor.
+`seed.sql` is destructive: it truncates weeks, topics, and notes before recreating the curriculum. Use it only for an explicitly approved full reset, never for routine curriculum synchronization.
 
-To change the curriculum, edit the `COURSE_DATA` array in `index.html` and run `seed.sql` to resync the database.
+To change the curriculum, update `COURSE_DATA`, the matching weekly README files, and the reset snapshot in `seed.sql`. Synchronize an existing database with a separate data migration that preserves IDs, completion state, and note relationships.
 
 提醒功能已于 2026-07-27 停用。`supabase/setup.sql`、`supabase/cron-setup.sql` 和相关 Edge Functions 仅作为遗留实现保留，不得重新部署或执行。
 
 Learning examples use project-local Python virtual environments. Recreate them from the relevant dependency manifest; never commit the environment directory itself.
 
+**Data sync boundary**: Without explicit user approval, only update local course definitions and documentation. Supabase schema changes, data migrations, destructive resets, and production deployments require separate approval and post-change verification.
+
 ## Conventions
 
 - All UI text is in Chinese (zh-CN).
-- Date range header: `2026.6.1 – 9.15`（基于实际进度延长到求职收口）。
-- Four modules: `python-llm`, `rag`, `agent`, `deploy`.
+- Date range header: `2026.6.1 – 9.15`.
+- Five modules: `python-llm`, `rag`, `skill`, `guardian`, `career`.
 - Status values: `pending`, `active`, `done`.
 - Notes use Markdown with preset tags: 重点, 待复习, 已掌握, 疑问.
 - Images are uploaded to Supabase Storage bucket `note-images` and inserted as Markdown `![](url)`.
 - 提醒入口与前端逻辑已移除；数据库规则、通知渠道和 `check-reminders` Cron 均已停用。
+- API keys and secrets never committed to code, commits, or logs.
+- Interview preparation runs 1.5h daily from 7.28; do not compress it for project scope.
