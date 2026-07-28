@@ -65,10 +65,10 @@ Rules:
 | Day | Focus |
 |-----|-------|
 | 7.27 Mon | Day 36 RAG full-pipeline integration ✅ Done |
-| 7.28 Tue | Audit the existing Skill scaffold and freeze V0.1 acceptance |
-| 7.29 Wed | Create synthetic PDF, Word, and Excel institution documents |
-| 7.30 Thu | Unified parser + ParseResult states |
-| 7.31 Fri | Standard document blocks + data quality gates |
+| 7.28 Tue | Audit the existing Skill scaffold and freeze V0.1 acceptance ✅ Done |
+| 7.29 Wed | Create synthetic PDF, Word, and Excel institution documents ✅ Done |
+| 7.30 Thu | Unified parser + ParseResult states ✅ Done |
+| 7.31 Fri | Standard document blocks + quality gates + validation ✅ Done |
 | 8.1 Sat | Structured extraction contract and evidence states |
 | 8.2 Sun | Minimum vertical slice + automated tests |
 
