@@ -69,8 +69,8 @@ Rules:
 | 7.29 Wed | Create synthetic PDF, Word, and Excel institution documents ✅ Done |
 | 7.30 Thu | Unified parser + ParseResult states ✅ Done |
 | 7.31 Fri | Standard document blocks + quality gates + validation ✅ Done |
-| 8.1 Sat | Structured extraction contract and evidence states |
-| 8.2 Sun | Minimum vertical slice + automated tests |
+| 8.1 Sat | Structured extraction contract and evidence states ✅ Done |
+| 8.2 Sun | Minimum vertical slice + automated tests ✅ Done |
 
 RAG delayed review is limited to the daily 0.5-hour review slot. Do not recreate full-day “end-to-end retrieval” or Day 31–33 review courses.
 
