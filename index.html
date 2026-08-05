@@ -558,7 +558,7 @@ const COURSE_DATA = [
     ]
   },
   {
-    week: 7, module: 'skill', title: '金融机构接入Skill V0.1',
+    week: 7, module: 'skill', title: '金融机构接入Skill：三模式AI直写闭环',
     dateRange: '8.3–8.9', startDate: '2026-08-03', endDate: '2026-08-09',
     objective: '在最小解析闭环上实现字段映射、差异识别、检索证据、人工确认、Java骨架生成和确定性验证',
     days: [
@@ -661,7 +661,7 @@ async function initDatabase() {
       week_number: item.week,
       module: item.module,
       title: item.title,
-      status: item.week <= 5 ? 'done' : item.week === 6 ? 'active' : 'pending'
+      status: item.week <= 7 ? 'done' : item.week === 8 ? 'active' : 'pending'
     }).select().single();
 
     for (let i = 0; i < item.days.length; i++) {
@@ -669,7 +669,7 @@ async function initDatabase() {
       await sb.from('topics').insert({
         week_id: week.id,
         name: `${d.day} ${d.name} (${d.hours}h)`,
-        completed: item.week <= 5 || (item.week === 6 && i === 0),
+        completed: item.week <= 7,
         topic_order: i + 1
       });
     }
