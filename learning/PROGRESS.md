@@ -36,7 +36,8 @@
 - **M3 完成**：云腾（断直连）10 操作 + 衡丰（混合）11 操作 AI 直写 PASS（commit 62e830b → 0d752f0）；golden 评估三家全绿——恒誉 18 / 云腾 14 / 衡丰 16 测试（`evals/run_golden_codegen_eval.py`）。
 - **M3 收尾**：skill 安装说明（docs/安装与使用说明.md）、人工复核清单（workflow.md 三层）、golden 评估、Codex 交接文档（docs/交接文档-给Codex.md，commit 617dcb1 + bc25078）。
 - **追溯增强**：commit `fb19ea9` 已推送；Java 方法绑定 Evidence、Mapping、稳定 chunk ID、文档定位和源码 hash，6 个追溯/派生单测通过。
-- **当前缺口**：RAG 仍缺 query golden set 和 Hit@K/MRR/Recall@K/证据精度/无答案拒答率量化；OCR、混合检索、线上审批身份审计和统一端到端 runner 属于后续增强。
+- **RAG 评估提前落地**：15 条 query golden set、Hit@K/Precision@K/Recall@K、MRR、可采纳证据精度与召回率、无答案拒答率和机构范围过滤指标已实现；840 个 chunk 的机构元数据完整，`unknown=0`。当前 Chroma 基线未通过：Hit@5 50%、Recall@5 50%、无答案拒答率 0%，单一全局距离阈值无法兼顾召回与拒答。
+- **当前缺口**：优先修复精确字段/阶段依赖召回和无答案伪相关，候选方向为向量 + 关键词混合召回、合并排序和证据支持校验；OCR、线上审批身份审计和统一端到端 runner 属于后续增强。
 
 ### 作品集二：AI 智能守护（funding-gateway-ai-guardian）
 
@@ -44,7 +45,7 @@
 
 ## 下一步（按优先级）
 
-1. **RAG 评估体系**（Week 8 收尾）：query golden set、Hit@K/MRR/Recall@K、证据精度和无答案拒答率。
+1. **RAG Bad Case 修复**（Week 8 提前项）：基于现有 15 条黄金集补精确字段关键词召回、合并排序和证据支持校验，再用同一评测集复测，不靠修改标注或挑选单条查询制造 PASS。
 2. **数据库事实**（2026-08-05 只读核验）：Supabase week 6/7 为 done 且各 7/7 topics 完成，week 8 为 active 且 0/7；Week 7 数据库旧标题仍由 `applyLocalCoursePlan()` 本地覆盖，未执行额外数据更新。
 3. **求职准备**：7.28 起每个工作日 1.5 小时 Java/AI 面试题 + 口述；8.12 启动首批投递；week11 面试题库（38 题）已备好。
 
