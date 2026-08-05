@@ -11,9 +11,19 @@
 - week 9-12 → pending（不变）
 """
 import json
+import os
 import re
 import sys
+import time
 import urllib.request
+
+# 代理只从标准环境变量读取；未配置时使用系统默认网络。
+PROXY = os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy")
+_opener = (
+    urllib.request.build_opener(urllib.request.ProxyHandler({"http": PROXY, "https": PROXY}))
+    if PROXY
+    else urllib.request.build_opener()
+)
 
 # 读 config.js（仓库内配置，含 URL 与 publishable key）
 cfg_src = open("config.js", encoding="utf-8").read()
@@ -28,20 +38,24 @@ SUPABASE_KEY = grab("SUPABASE_KEY")
 BASE = SUPABASE_URL + "/rest/v1"
 
 
-def api(path, method="GET", payload=None):
+def api(path, method="GET", payload=None, retries=3):
     req = urllib.request.Request(BASE + path, method=method, headers={
         "apikey": SUPABASE_KEY,
         "Authorization": "Bearer " + SUPABASE_KEY,
         "Content-Type": "application/json",
     })
     data = json.dumps(payload).encode() if payload is not None else None
-    try:
-        with urllib.request.urlopen(req, data=data, timeout=20) as resp:
-            body = resp.read().decode()
-            return json.loads(body) if body else None
-    except urllib.error.HTTPError as e:
-        print(f"HTTP {e.code}: {e.read().decode()[:300]}")
-        raise
+    last_err = None
+    for attempt in range(retries):
+        try:
+            with _opener.open(req, data=data, timeout=25) as resp:
+                body = resp.read().decode()
+                return json.loads(body) if body else None
+        except Exception as e:
+            last_err = e
+            print(f"  [retry {attempt + 1}/{retries}] {e.__class__.__name__}: {str(e)[:80]}")
+            time.sleep(2)
+    raise RuntimeError(f"Supabase 请求失败: {path}: {last_err}")
 
 
 def main() -> int:

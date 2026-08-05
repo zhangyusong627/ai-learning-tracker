@@ -37,7 +37,7 @@
 
 **掌握程度**：★★★☆☆
 
-**学习笔记**：[day15/notes.md](day15/notes.md)
+**学习笔记**：[Day 15 笔记](day15_LangChain基础+PromptTemplate/notes.md)
 
 ---
 
@@ -53,7 +53,7 @@
 
 **掌握程度**：★★★☆☆
 
-**学习笔记**：[day16/notes.md](day16/notes.md)
+**学习笔记**：[Day 16 笔记](day16_LCEL表达式+Chains/notes.md)
 
 ---
 
@@ -70,7 +70,7 @@
 
 **掌握程度**：★★★★☆
 
-**学习笔记**：[day17/notes.md](day17/notes.md)
+**学习笔记**：[Day 17 笔记](day17_Memory机制/notes.md)
 
 ---
 
@@ -85,7 +85,7 @@
 
 **掌握程度**：★★★★☆
 
-**学习笔记**：[day18/notes.md](day18/notes.md)
+**学习笔记**：[Day 18 笔记](day18_OutputParser+Function-Calling/notes.md)
 
 ---
 
@@ -101,7 +101,7 @@
 
 **掌握程度**：★★★★★
 
-**学习笔记**：[day19/notes.md](day19/notes.md)
+**学习笔记**：[Day 19 笔记](day19_聊天助手增强+持久化/notes.md)
 
 ---
 

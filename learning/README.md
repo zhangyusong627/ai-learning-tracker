@@ -16,7 +16,7 @@
 | Week 4 | Embedding、向量数据库与文档处理基础 | [week4/README.md](week4/README.md) |
 | Week 5 | RAG 工程基础（已完成） | [week5/README.md](week5/README.md) |
 | Week 6 | 金融机构接入 Skill 最小业务闭环 | [week6/README.md](week6/README.md) |
-| Week 7 | 金融机构接入 Skill V0.1 | [week7/README.md](week7/README.md) |
+| Week 7 | 金融机构接入 Skill：三模式 LLM 直写闭环 | [week7/README.md](week7/README.md) |
 | Week 8 | 金融机构接入 Skill V1 发布与首批投递 | [week8/README.md](week8/README.md) |
 | Week 9 | AI 智能守护 V0.1 | [week9/README.md](week9/README.md) |
 | Week 10 | AI 智能守护 V1 | [week10/README.md](week10/README.md) |

@@ -38,10 +38,13 @@ The project has entered a full-time AI career transformation and job-hunting spr
 
 ### Week 6-12 Schedule
 
+Current status is maintained in `learning/PROGRESS.md`; this table is the planned schedule,
+not a live completion snapshot.
+
 | Week | Dates | Primary Delivery |
 |------|-------|-----------------|
 | Week 6 | 7.27–8.2 | Day 36 complete; Skill synthetic documents, unified parsing, structured extraction, minimum vertical slice |
-| Week 7 | 8.3–8.9 | Skill V0.1: mapping, differences, RAG evidence, human approval, Java generation, compile/contract tests |
+| Week 7 | 8.3–8.9 | Skill: three-mode LLM-written Java SPI, human approval, traceability, compile/contract/golden tests |
 | Week 8 | 8.10–8.16 | Skill V1: integration, evaluation, recovery, release materials; start applying 8.12 |
 | Week 9 | 8.17–8.23 | Guardian V0.1: independent repo, metric simulation, event replay, expert rules, safety validation, audit |
 | Week 10 | 8.24–8.30 | Guardian V1: Agent state flow, read-only tools, governance RAG, recommendations, hard gates, approval, rollback |

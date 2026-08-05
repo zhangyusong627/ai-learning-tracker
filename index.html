@@ -560,13 +560,13 @@ const COURSE_DATA = [
   {
     week: 7, module: 'skill', title: '金融机构接入Skill：三模式AI直写闭环',
     dateRange: '8.3–8.9', startDate: '2026-08-03', endDate: '2026-08-09',
-    objective: '在最小解析闭环上实现字段映射、差异识别、检索证据、人工确认、Java骨架生成和确定性验证',
+    objective: '在最小解析闭环上完成字段映射、差异识别、检索证据、人工确认、三模式完整Java SPI生成和确定性验证',
     days: [
       { day: '周一', hours: 7, name: '标准字段映射', materials: [], tasks: '识别公共字段，输出来源字段、转换规则、证据和状态' },
       { day: '周二', hours: 7, name: '差异、冲突与待确认项', materials: [], tasks: '处理缺失字段、枚举差异、流程差异、冲突版本和低置信度结果' },
       { day: '周三', hours: 7, name: '带范围过滤的RAG证据检索', materials: [], tasks: '在Top-K前应用机构、产品、版本和权限过滤，并保留证据定位' },
       { day: '周四', hours: 7, name: '证据编号 + 人工确认状态流', materials: [], tasks: '只有引用合法且人工批准的映射才能进入生成阶段' },
-      { day: '周五', hours: 7, name: 'Java适配器骨架生成', materials: [], tasks: '仅从approved结构化数据生成Java模板，不进行第二次自由生成' },
+      { day: '周五', hours: 7, name: 'LLM直写完整Java SPI', materials: [], tasks: 'approved code_model + 检索证据 + 合成范式驱动生成，并记录方法级证据追溯' },
       { day: '周六', hours: 4, name: 'Maven编译 + 契约测试', materials: [], tasks: '定位输入、模板、编译或契约失败，禁止用绕过方式通过' },
       { day: '周日', hours: 4, name: 'V0.1集成 + 黄金集评估', materials: [], tasks: '跑通映射到验证闭环，建立正常、缺失、冲突和拒绝样例' }
     ]

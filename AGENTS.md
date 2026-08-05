@@ -6,7 +6,11 @@ This file provides guidance to Codex when working with code in this repository.
 
 AI 学习计划追踪 (AI Learning Tracker) — a standalone single-page web app that tracks a 12-stage AI learning and career sprint curriculum. Built with vanilla HTML/CSS/JS, no build tools or framework.
 
-The app was originally a 90-day learning tracker and has been extended through 2026-09-15. The local `COURSE_DATA`, weekly plans, and Supabase curriculum records are currently synchronized; Supabase additionally stores checkbox progress and notes.
+The app was originally a 90-day learning tracker and has been extended through 2026-09-15.
+The local `COURSE_DATA`, weekly plans, and `seed.sql` are synchronized. Supabase stores
+checkbox progress and notes; its Week 7 completion status is current, while the older database
+title is intentionally overlaid by `applyLocalCoursePlan()` until a separately approved data
+update is performed.
 
 The repository now primarily serves as a learning journal, job-hunting evidence hub, and portfolio verification link store.
 
@@ -58,21 +62,18 @@ Rules:
 - Never commit virtual environments, `.env` files, API keys, caches, chat histories, local vector databases, or generated runtime data.
 - A day directory should contain `notes.md` plus its practice source files. Generated output belongs in an ignored runtime directory.
 - When moving learning material, update commands and cross-links that assume repository-root `week*` paths.
-- Portfolio code lives in separate repositories (`financial-institution-integration-skill/`, `ai-guardian-agent/`). This repo stores links, commit hashes, verification commands, and evidence, not source code.
+- Portfolio code lives in separate repositories (`financial-institution-integration-skill/`, `funding-gateway-ai-guardian/`). This repo stores links, commit hashes, verification commands, and evidence, not source code.
 
-## Current Weekly Focus (Week 6: 7.27–8.2)
+## Current Progress Source
 
-| Day | Focus |
-|-----|-------|
-| 7.27 Mon | Day 36 RAG full-pipeline integration ✅ Done |
-| 7.28 Tue | Audit the existing Skill scaffold and freeze V0.1 acceptance ✅ Done |
-| 7.29 Wed | Create synthetic PDF, Word, and Excel institution documents ✅ Done |
-| 7.30 Thu | Unified parser + ParseResult states ✅ Done |
-| 7.31 Fri | Standard document blocks + quality gates + validation ✅ Done |
-| 8.1 Sat | Structured extraction contract and evidence states ✅ Done |
-| 8.2 Sun | Minimum vertical slice + automated tests ✅ Done |
+`learning/PROGRESS.md` is the current progress snapshot. Verify it together with the active
+week README and the latest portfolio repository commit before stating current status.
+Week 6 is complete; Week 7 work has advanced from the original Java-skeleton plan to a
+three-mode LLM-written SPI pipeline with deterministic validation. Historical daily notes
+remain snapshots of what was true at that learning stage and must not override newer evidence.
 
-RAG delayed review is limited to the daily 0.5-hour review slot. Do not recreate full-day “end-to-end retrieval” or Day 31–33 review courses.
+RAG delayed review is limited to the daily 0.5-hour review slot. Do not recreate full-day
+“end-to-end retrieval” or Day 31–33 review courses.
 
 ## Mandatory Learning Workflow
 

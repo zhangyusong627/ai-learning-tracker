@@ -87,7 +87,7 @@ week1-python/
 
 **掌握程度**：★★★★☆
 
-**学习笔记**：[day1/notes.md](day1/notes.md)
+**学习笔记**：[Day 1 笔记](day1_Python核心语法/notes.md)
 
 ---
 
@@ -107,7 +107,7 @@ week1-python/
 
 **掌握程度**：★★★★☆
 
-**学习笔记**：[day2/notes.md](day2/notes.md)
+**学习笔记**：[Day 2 笔记](day2_Python面向对象+异步编程/notes.md)
 
 ---
 
@@ -125,7 +125,7 @@ week1-python/
 
 **掌握程度**：★★★★☆
 
-**学习笔记**：[day3/notes.md](day3/notes.md)
+**学习笔记**：[Day 3 笔记](day3_FastAPI基础/notes.md)
 
 ---
 
@@ -142,7 +142,7 @@ week1-python/
 
 **掌握程度**：★★★★☆
 
-**学习笔记**：[day4/notes.md](day4/notes.md)
+**学习笔记**：[Day 4 笔记](day4_请求响应+流式输出/notes.md)
 
 ---
 
@@ -160,7 +160,7 @@ week1-python/
 
 **掌握程度**：★★★★☆
 
-**学习笔记**：[day5/notes.md](day5/notes.md)
+**学习笔记**：[Day 5 笔记](day5_AI-API调用/notes.md)
 
 ---
 
@@ -176,7 +176,7 @@ week1-python/
 
 **掌握程度**：★★★★☆
 
-**学习笔记**：[day6/notes.md](day6/notes.md)
+**学习笔记**：[Day 6 笔记](day6_FastAPI综合+项目搭建/notes.md)
 
 ---
 

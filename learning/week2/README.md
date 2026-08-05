@@ -61,7 +61,7 @@ week2/
 
 **掌握程度**：★★★☆☆
 
-**学习笔记**：[day8/notes.md](day8/notes.md)
+**学习笔记**：[Day 8 笔记](day8_Token-Embedding-语义向量/notes.md)
 
 ---
 
@@ -162,7 +162,7 @@ week2/
 
 **掌握程度**：★★★☆☆
 
-**学习笔记**：[day9/notes.md](day9/notes.md)
+**学习笔记**：[Day 9 笔记](day9_Transformer+Attention机制/notes.md)
 
 ---
 
@@ -179,7 +179,7 @@ week2/
 
 **掌握程度**：★★★★☆
 
-**学习笔记**：[day10/notes.md](day10/notes.md)
+**学习笔记**：[Day 10 笔记](day10_Prompt基础/notes.md)
 
 ---
 
@@ -196,7 +196,7 @@ week2/
 
 **掌握程度**：★★★★☆
 
-**学习笔记**：[day11/notes.md](day11/notes.md)
+**学习笔记**：[Day 11 笔记](day11_Few-shot-CoT-防御注入/notes.md)
 
 ---
 
@@ -213,7 +213,7 @@ week2/
 
 **掌握程度**：★★★★☆
 
-**学习笔记**：[day12/notes.md](day12/notes.md)
+**学习笔记**：[Day 12 笔记](day12_Structured-Output+JSON/notes.md)
 
 ---
 
@@ -230,7 +230,7 @@ week2/
 
 **掌握程度**：★★★★☆
 
-**学习笔记**：[day13/notes.md](day13/notes.md)
+**学习笔记**：[Day 13 笔记](day13_幻觉控制+Temperature+System-Prompt/notes.md)
 
 ---
 

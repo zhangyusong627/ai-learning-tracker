@@ -1,7 +1,7 @@
-# 作品集一深度拆解：资金网关资方接入 AI 工程 demo
+# 作品集一深度拆解：金融机构接入 AI 工程
 
 > 本文档按"总分总"结构，对 financial-institution-integration-skill 项目全部 7 个核心模块做系统讲解。
-> 不讲代码生成和契约测试，聚焦 RAG 全链路。项目只使用真实 embedding（BAAI/bge-small-zh-v1.5），不含 local-hash 或 mock 回退路径。
+> 以 RAG 全链路为重点，同时保持与当前 LLM 直写、方法级证据追溯和验证边界一致。
 > 配合项目源码 `skill/integrate-financial-institution/scripts/` 和 `evals/` 下的实际文件阅读，效果最佳。
 
 ---
@@ -13,7 +13,7 @@
 本项目解决金融助贷行业中"多资方接入"的两个核心问题：
 
 1. **资方知识库**：将各资方的产品需求文档和 API 文档统一解析、向量化存储，支持按机构/操作/内容类型检索、查询、统计和分析，替代人工翻阅散落的 Word/PDF/Excel。
-2. **辅助生成 Java SPI 骨架代码**：基于知识库检索的证据，由 LLM 抽取结构化接入说明书，经人工审批后自动生成 Java SPI 适配器骨架，减少重复开发。
+2. **生成完整 Java SPI 代码包**：基于知识库检索证据，由 LLM 抽取结构化契约，经离线人工审批后生成完整合成 SPI，并执行追溯、编译、契约和 golden 验证。
 
 ### 技术架构（离线索引 + 在线检索两阶段）
 
@@ -72,11 +72,16 @@
               │  │ pgvector <=> HNSW 索引 → │ │    上下文准备步骤，
               │  │ Top-K → 距离阈值 →       │ │    不是独立的管道层
               │  │ accepted_evidence        │ │
-              │  └──────────────────────────┘ │
-              │              │                │
-              │              ▼                │
+              │  └──────────┬───────────────┘ │
+              │             │                 │
+              │  ┌──────────▼───────────────┐ │
+              │  │ 5a→5b 衔接：             │ │
+              │  │ 证据打包为编号上下文       │ │  ← 检索产物 = LLM 输入
+              │  │ llm_input_context.md     │ │    (accepted_evidence 打包
+              │  └──────────┬───────────────┘ │     成 E1/E2... 编号证据)
+              │             ▼                 │
               │  ┌─ 5b. 拼 prompt + 调 LLM ─┐│
-              │  │ evidence 打包 →           ││  llm_extract_integration_spec.py
+              │  │ --input 该文件 →          ││  llm_extract_integration_spec.py
               │  │ system prompt →           ││  (410行), JSON Schema约束,
               │  │ DeepSeek/OpenAI API →     ││  evidence溯源, temperature=0
               │  │ candidate spec            ││
@@ -85,16 +90,16 @@
                              │ integration_spec_candidate.json
                              ▼
                     ┌──────────────┐
-                    │ 6. 审批闸门   │ validate_mapping.py (257行)
-                    │  人工逐字段核对│ require_approved 硬性开关
+                    │ 6. 审批闸门   │ 离线人工复核
+                    │  人工逐字段核对│ derive + validate code_model
                     │  candidate →  │ 交叉引用一致性校验
                     │  approved     │
                     └──────┬───────┘
                            │ integration_spec_approved.json
                            ▼
                     ┌──────────────┐
-                    │ (下游) Java   │ generate_fund_manager.py
-                    │ 骨架生成      │ JUnit 契约测试
+                    │ (下游) Java   │ code_synth_agent.py
+                    │ 完整SPI生成   │ 追溯 + Maven/契约/golden
                     └──────────────┘
 ```
 
@@ -104,21 +109,38 @@
 
 2. **向量检索不是独立的管道层**，它是 LLM 抽取的上下文准备步骤。在代码中体现为 `prepare_rag_context()` 函数——它先建索引、再检索、返回 `llm_input_context.md`，然后 `llm_extract_integration_spec.py` 以这个文件为输入进行抽取。检索产出的 `accepted_evidence` 的唯一消费者就是 LLM 抽取环节。
 
-3. **项目不含非 RAG 回退路径**。早期版本曾有关键词打分+全量喂入的简化路径（`prepare_input_context`），现已删除。所有 LLM 抽取任务必须经过向量检索获取上下文——这是学习生产级 RAG 的正确做法，不是功能缺失。
+### 核心数据流：从检索到 LLM 输入的完整流转
 
-4. **只使用真实 embedding 模型**（BAAI/bge-small-zh-v1.5，512维），不含 local-hash 或 mock。embedding 是 RAG 系统的核心能力，必须用真实的。
+理解这条数据流转是理解全链路的核心——**检索的产物就是 LLM 的输入，中间通过一份衔接文件 `llm_input_context.md` 连接**：
 
-### 核心数据流的三种数据状态
+```
+向量库返回 Top-K（不管质量）
+        │
+        ▼
+retrieved_candidates（检索候选）── 距离阈值过滤 ──▶ accepted_evidence（可采纳证据）
+        │                                              │
+        │                                              ▼
+        │                               打包为编号证据上下文：llm_input_context.md
+        │                               （每条证据带 E1/E2 编号 + 文档名 + 定位 + 原文）
+        │                                              │
+        │                                              ▼
+        │                               llm_extract_integration_spec.py --input 该文件
+        │                                              │
+        │                                              ▼
+        └──────────────────────────────▶ candidate spec（候选说明书，每条带 evidence 溯源）
+```
 
-理解这三个状态是理解全链路的核心：
+| 阶段 | 产物 | 含义 | 谁消费 |
+|---|---|---|---|
+| 检索后 | **retrieved_candidates**（检索候选） | 向量库返回的 Top-K 个最相似 chunk，不管质量好坏 | 阈值过滤环节 |
+| 阈值过滤后 | **accepted_evidence**（可采纳证据） | 候选里距离 ≤ 阈值的部分，真正可信的证据 | 打包成 llm_input_context.md |
+| 打包后 | **llm_input_context.md**（编号证据上下文） | accepted_evidence 按 E1/E2 编号整理成的 Markdown，带文档名+定位+原文 | **LLM 抽取（--input）** |
+| LLM 输出后 | **candidate spec**（候选说明书） | LLM 基于证据抽取的结构化 JSON，每条带 evidence 溯源 | 审批闸门 |
 
-| 阶段 | 产物 | 含义 |
-|---|---|---|
-| 检索后 | **retrieved_candidates**（检索候选） | 向量库返回的 Top-K 个最相似 chunk，不管质量好坏 |
-| 阈值过滤后 | **accepted_evidence**（可采纳证据） | 候选里距离 ≤ 阈值的部分，是真正给 LLM 看的上下文 |
-| LLM 输出后 | **candidate spec**（候选说明书） | LLM 基于证据抽取的结构化 JSON，每条带 evidence 溯源 |
+**两个关键区分**：
 
-**关键区分**：`retrieved_candidates ≠ accepted_evidence`——这个不等式是整个 RAG 链路质量的核心约束。
+1. `retrieved_candidates ≠ accepted_evidence`——Top-K 返回的候选里，只有距离 ≤ 阈值的才可信。给 LLM 的必须是过滤后的，否则会把不相关的内容当证据。
+2. **LLM 看不到原始文档，只看到 `llm_input_context.md`**——这就是 RAG（检索增强生成）里"增强"的含义：用检索到的真实证据喂给 LLM，而不是让它凭训练数据瞎编。代码上对应 `prepare_rag_context()` 返回该文件、`llm_extract_integration_spec.py --input` 消费它。
 
 ### 输入模型
 
@@ -126,7 +148,7 @@
 
 | 输入类型 | 典型文件 | 提供什么 |
 |---|---|---|
-| **产品需求说明书** | `synthetic_product_requirement.md` | 接入逻辑（事件流、字段映射方向、跨接口依赖、配置项清单） |
+| **产品需求说明书** | `fixtures/*产品接入需求说明书.md` | 接入逻辑（事件流、字段映射方向、跨接口依赖、配置项清单） |
 | **机构 API 文档** | `synthetic_aurora_api_spec.md` 等 | 技术接口细节（URL、字段名、数据类型、认证方式） |
 
 多机构文档共存于同一知识库，通过 metadata filter（`--rag-where '{"institution":"AURORA_DEMO"}'`）限定检索范围。
@@ -235,7 +257,7 @@ cd /Users/zhangyusong/Documents/AICoding/financial-institution-integration-skill
 
 #### 产品需求文档在本环节的角色
 
-文档解析面向的是**所有输入文件**，不分"产品需求"还是"API 文档"。产品需求文档 `synthetic_product_requirement.md` 是纯 Markdown，不需要 DOCX/PDF/XLSX 解析器介入，但会被 `load_text_chunks()` 统一处理，进入相同的切块→向量化→检索流程。这意味着产品需求中关于"事件流必须先 credit_init 再 query_credit"的描述，会和机构 API 文档中的接口字段一起被检索到，LLM 同时看到两者才能正确抽取事件流。
+文档解析面向的是所有输入文件，不分“产品需求”还是“API 文档”。`fixtures/*产品接入需求说明书.md` 是 Markdown，由 `load_text_chunks()` 统一进入切块、向量化和检索；DOCX/XLSX API 文档由统一解析器转成标准块后进入同一链路。
 
 ---
 
@@ -330,7 +352,7 @@ Chunk 太大（2000 字）：上下文完整，但检索精度下降——一块
 
 **3. 产品需求文档的 chunk 特点**
 
-产品需求的 `synthetic_product_requirement.md` 是结构良好的 Markdown——有标题层级、表格、编号列表。当它被 `load_text_chunks()` 按 `#` 标题切分后，每个 chunk 对应一个语义独立的章节（如"2.1 授信阶段"是一块，"3. 字段映射要求"是另一块）。这比 API 文档的固定长度切块质量更高，因为它天然保持了"语义边界"。
+合成产品需求说明书是结构良好的 Markdown——有标题层级、表格和编号列表。`load_text_chunks()` 优先按标题保留章节边界，仅对超长块继续切分；这比无结构的固定长度硬切更能保持语义边界。
 
 ---
 
@@ -341,7 +363,7 @@ Chunk 太大（2000 字）：上下文完整，但检索精度下降——一块
 
 #### 核心原理
 
-**1. 双 Provider 架构**（`embedding_provider.py:25-37`）
+**1. 单一 Provider 架构**（`embedding_provider.py:18-31`，重构后仅保留 sentence-transformers，已删除 hash 回退 / mock 替代）
 
 ```python
 class EmbeddingProvider(Protocol):
@@ -403,7 +425,7 @@ if any(
 |---|---|
 | **换模型 = 必须重建索引** | 不同模型维度不同（bge-small 512、bge-large 1024），向量空间完全不一样 |
 | **归一化开关必须一致** | 开启归一化后距离在 [0,2] 区间；不归一化距离范围不可控 |
-| **embedding 元数据写入每个 chunk** | `embedding_metadata()` 返回的 provider/model/dimension/normalize 四元组写入每个 chunk（`rag_index.py:168-169`），检索时逐条比对 |
+| **embedding 元数据写入每个 chunk** | `embedding_metadata()` 返回的 provider/model/dimension/normalize 四项配置写入每个 chunk（`rag_index.py:168-169`），检索时逐条比对 |
 | **512 维是中文场景的经验值** | 维度太小语义表达能力弱，太大计算和存储都贵。BAAI bge 系列 512/768/1024 三档，512 对 demo 够用 |
 
 #### 官方知识拓展
@@ -541,7 +563,7 @@ pgvector 版本比 Chroma 版本多了完整的**检索审计链**：
 | **IVFFlat** | 先聚类再在最近的几个簇里搜索 | 10 万–100 万 | pgvector 支持 |
 | **HNSW** | 多层可导航小世界图，近似最近邻 | 百万级 | **Chroma 默认 HNSW**，pgvector 也支持 |
 
-Chroma 底层用 HNSW（Hierarchical Navigable Small World），pgvector 默认用 IVFFlat（可通过 `CREATE INDEX ... USING hnsw` 切换）。对于本项目（几千条 chunk），差别不大；但百万级规模时，HNSW 查询快（毫秒级）、建索引慢；IVFFlat 建索引快、查询稍慢于 HNSW。
+Chroma 底层用 HNSW（Hierarchical Navigable Small World）。pgvector 不自动建向量索引——必须显式 `CREATE INDEX ... USING hnsw`（或 `USING ivfflat`）选择算法；不建索引则走精确暴力搜索（本项目几千条 chunk 完全够用）。百万级规模时，HNSW 查询快（毫秒级）、建索引慢；IVFFlat 建索引快、查询稍慢于 HNSW。
 
 **3. 混合检索：向量 + 关键词（BM25）的互补**
 
@@ -670,7 +692,9 @@ export DEEPSEEK_API_KEY="sk-xxx"
 
 ---
 
-### 第六块：审批闸门（validate_mapping.py + apply_review_decisions.py）
+### 第六块：审批闸门（当前契约派生 + 历史 M0 校验器）
+
+> `validate_mapping.py --require-approved` 是历史 M0 结构的闸门示例；当前生成主链路使用候选/批准契约、`derive_code_model.py` 和 `validate_code_model.py`。不要用旧校验器证明当前契约可进入代码生成。
 
 #### 概念
 **审批闸门（approval gate / human-in-the-loop）** 是 LLM 抽取结果进入代码生成之前的**最后一道人工确认环节**。LLM 产出的 candidate spec（候选说明书）不是直接用的——它必须先通过结构校验，再经过人工签字确认每一项的状态，变成 approved spec（已批准说明书），才能进入 Java 代码生成。
@@ -753,7 +777,7 @@ if str(document.get(field)).strip().lower() in UNRESOLVED_ROOT_VALUES:
 .venv/bin/python skill/integrate-financial-institution/scripts/validate_mapping.py \
   generated/v0.1/integration_spec_candidate.json
 
-# 第二步：人工审批（这是当前缺失的步骤！见下文"当前状态"）
+# 第二步：历史 M0 的离线人工审批
 # apply_review_decisions.py 读取 review_decisions.json，
 # 把 status=candidate 的项目改成 approved 或 unresolved
 
@@ -763,15 +787,15 @@ if str(document.get(field)).strip().lower() in UNRESOLVED_ROOT_VALUES:
   --require-approved
 ```
 
-#### 当前状态：审批机制真实，审批动作缺失
+#### 当前状态：已保留离线评审演进，但没有线上审批系统
 
-这是全项目最关键的一个事实，需要如实说明：
+当前事实应分三层说明：
 
-- **闸门机制是真实的**：`--require-approved` 开关是真代码，有专门测试验证（`run_minimal_vertical_slice.py` 断言喂 candidate 会报错）。
-- **审批动作从未真实发生**：当前仓库里的 `integration_spec_approved.json` 审批人是 `demo_reviewer` 占位符，是搭链路时预置的演示数据。该文件末尾自我声明了这一点：
-  > *"This file is synthetic and exists only to demonstrate the human approval gate. In real work, approval must be made by the responsible developer or business reviewer."*
+- **历史 M0 闸门**：`validate_mapping.py --require-approved` 只校验旧结构，作为早期学习样例保留。
+- **当前主链路**：`fixtures/恒誉消金待审核契约.json` 保存完整候选态，`fixtures/恒誉消金已批准契约.json` 保存离线人工修订后的批准态；`derive_code_model.py` 和 `validate_code_model.py` 是当前生成前闸门。
+- **尚未实现**：审批 UI、登录身份、权限、通知和不可抵赖签名，因此不能把离线批准文件描述成完整线上审批系统。
 
-**设计意图**：审批被设计为"离线人工步骤"——人拿到 candidate spec 后，逐字段对照 evidence 中的原文引用核对，确认无误后手动改状态为 approved 并填审批记录。实际执行这一步的人应该是你（张雨松），而不是一个 demo_reviewer。
+**设计意图**：人拿到 candidate 契约后逐字段对照 evidence 原文，确认无误后改为 approved 并记录修订；任何 unresolved 或未批准项都不得派生 `code_model`。
 
 #### 生产级注意事项
 
@@ -811,7 +835,7 @@ if str(document.get(field)).strip().lower() in UNRESOLVED_ROOT_VALUES:
 - 技术闸门：`--require-approved` 开关 + 状态检查 → 阻止未签字的 spec 进入生成
 - 审批流程：审批人拿到 candidate → 逐字段核对 → 填审批意见 → 签字放行
 
-前者是一行 `if status != "approved": raise`，后者涉及界面、通知、权限、审计等一整套系统。当前项目只做了技术闸门，没有做审批流程。面试时被问到"你这个审批具体怎么操作"，诚实回答"技术闸门已实现，但审批流程目前是离线人工步骤，没有 UI 界面"——这才是对自己项目清醒的认知。
+前者是确定性状态校验，后者涉及界面、通知、权限和审计等完整系统。当前项目已保留候选契约到已批准契约的离线人工评审产物，但没有审批 UI、身份认证或不可抵赖签名；不能把离线记录描述成线上审批系统。
 
 ---
 
@@ -823,7 +847,7 @@ if str(document.get(field)).strip().lower() in UNRESOLVED_ROOT_VALUES:
 
 Chroma 的存储是本地文件（`generated/rag/chroma/`），适合单机 demo，但缺乏：
 - **SQL 级别的结构化查询**：无法用 `SELECT institution, COUNT(*) FROM knowledge_chunks GROUP BY institution` 看各机构文档量分布
-- **检索审计**：谁在什么时候查了什么、结果是什么——Chrom 没有内置
+- **检索审计**：谁在什么时候查了什么、结果是什么——Chroma 没有内置
 - **事务一致性**：索引写入和元数据写入不是原子的
 - **权限控制**：PostgreSQL 有完整的 RBAC（基于角色的访问控制）
 - **持久化可靠性**：pgvector 数据在 PostgreSQL WAL（预写日志）的保护下，崩溃可恢复
@@ -846,7 +870,7 @@ CREATE TABLE rag_collections (
 
 这张表是 pgvector 版的"embedding 一致性守卫"——**在数据库层面记录**每个 collection 的 embedding 配置。检索时（`rag_pgvector_retrieve.py:60-71`），先查这张表拿索引时的配置，和查询时的配置逐项比对，不一致直接报错。
 
-这比 Chrima 版本更强：Chroma 的配置校验是在检索时逐 chunk 比对 metadata（`rag_retrieve.py:67-77`），pgvector 版本是先查 collection 注册表做**一次全局校验**，再做逐 chunk 的二次校验。双重保险。
+这比 Chroma 版本更强：Chroma 的配置校验是在检索时逐 chunk 比对 metadata（`rag_retrieve.py:67-77`），pgvector 版本是先查 collection 注册表做**一次全局校验**，再做逐 chunk 的二次校验。双重保险。
 
 #### 2. `knowledge_chunks` —— 核心知识块表
 
@@ -870,7 +894,7 @@ CREATE TABLE knowledge_chunks (
 pgvector 不是 PostgreSQL 的内置功能，而是一个 C 扩展（extension，数据库的功能插件）。它定义了 `vector` 类型，支持专门的距离运算符：
 - `<->`：L2 距离（欧氏距离）
 - `<=>`：余弦距离
-- `<#>`：内积（负值越大越相似）
+- `<#>`：负内积（返回值越小，即越接近 -1，越相似）
 
 安装方式：`CREATE EXTENSION vector;`（需要 DBA 权限，见交接文档第 9 节）。
 
@@ -1026,26 +1050,26 @@ overlap=120 时：
 
 ### 三、实际应用场景题
 
-#### Q7: 假设你要为一家新机构（比如"阳光银行"）接入，你需要提供哪些输入文档？描述从文档到 approved spec 的完整操作步骤。
+#### Q7: 假设你要新增一家合成机构，描述从文档到 approved 契约的完整操作步骤。
 
 <details>
 <summary>参考答案</summary>
 
 **需要的输入文档**：
 1. 产品需求说明书（描述要对接哪些接口：授信/用信/还款/对账）
-2. 阳光银行的 API 接口文档（每个接口的请求/响应字段、URL、认证方式）
+2. 合成 API 接口文档（每个接口的请求/响应字段、URL、认证方式）
 3. 两者可以合并为一个文档，也可以是独立的
 
 **操作步骤**：
-1. 把文档放在 `fixtures/` 下（创建 synthetic_sunlight_*.md/docx）
+1. 把合成文档放在 `fixtures/` 下，并登记 `fixtures/manifest.yaml`
 2. 运行 `rag_index.py` 建索引（切块→embedding→向量入库）
-3. 运行 `rag_retrieve.py` 检索，指定 `--where '{"institution":"阳光银行"}'`，拿到 `accepted_evidence`
+3. 运行 `rag_retrieve.py` 检索，使用与文档元数据一致的机构/产品/版本过滤，拿到 `accepted_evidence`
 4. 运行 `llm_extract_integration_spec.py`，输入 `llm_input_context.md`，产出 `integration_spec_candidate.json`
-5. 运行 `validate_mapping.py`（不带 --require-approved）做结构校验
+5. 对候选契约做结构和证据引用校验
 6. **逐字段核对** candidate spec 里的每个字段映射、必填变量、事件流，对照 evidence.quote 里的原文
 7. 所有确认无误的项状态改为 approved，不确定的标 unresolved，填写 `approval_audit` 审批记录
-8. 运行 `validate_mapping.py --require-approved` 确认所有项都是 approved
-9. approved spec 进入 Java 骨架生成
+8. 运行 `derive_code_model.py` 和 `validate_code_model.py`，确认所有进入生成的项均已批准且引用一致
+9. approved 契约派生并校验 `code_model`，再进入 LLM 直写和方法级追溯验证
 
 </details>
 
@@ -1057,7 +1081,7 @@ overlap=120 时：
 排查清单（按可能性从高到低）：
 
 1. **max_distance 阈值太严格**：用 `rag_retrieve.py` 不带 `--max-distance` 跑一次，看实际距离值分布，调高阈值
-2. **metadata filter 条件错误**：`--where` 里的机构名写错了（如 `"阳光"` vs 库里的 `"阳光银行"`）
+2. **metadata filter 条件错误**：查询里的机构、产品或版本与索引元数据不一致
 3. **embedding 模型不匹配**：索引和检索用了不同的 embedding 模型（如 bge-small vs bge-large）→ 维度不同或向量空间不同，报错或距离不可比
 4. **归一化不一致**：索引归一化了，检索没归一化 → 距离值无意义
 5. **查询文本与文档语言不同**：文档是中文，查询是英文 → embedding 模型的语言理解范围不匹配
@@ -1091,7 +1115,7 @@ overlap=120 时：
 <details>
 <summary>参考答案</summary>
 
-这不一定是 bug——Excele 解析（`unified_parser.py:246-304`）是逐行读取 `ws.iter_rows(values_only=True)`，理论上不会主动丢弃任何列。
+这不一定是 bug——Excel 解析（`unified_parser.py:246-304`）是逐行读取 `ws.iter_rows(values_only=True)`，理论上不会主动丢弃任何列。
 
 但如果"密码"、"密钥"相关的列内容实际为空（Excel 里合并单元格、空行、或格式问题导致 openpyxl 读到的 value 是 None），解释器跳过了空字符串（第 283-284 行 `if not row_text.replace(" | ", "").strip(): continue`），导致整行被丢弃。
 
@@ -1132,7 +1156,7 @@ overlap=120 时：
 <summary>参考框架（不是标准答案，是思路框架）</summary>
 
 **链路概述**（60 秒）：
-这个项目抽象了我在之前工作中遇到的真实问题——多资方接入时文档格式混乱、字段映射容易漏——用 AI 做了一个工具链：文档统一解析 → 文本切块 → 向量化入库 → 检索+过滤 → LLM 结构化抽取 → 人工审批 → Java 骨架生成。整条链路本地可运行、6 项验证全部 PASS。
+这个项目针对金融机构接入时文档格式不一、字段映射易漏的问题，构建了工具链：文档统一解析 → 文本切块 → 向量化入库 → 检索与阈值过滤 → LLM 结构化抽取 → 离线人工审批 → `code_model` 派生 → LLM 直写完整 Java SPI → 方法级证据追溯 → Maven/契约/golden 验证。
 
 **我的角色**（30 秒）：
 我是这个项目的设计者和决策者。我定义了整条链路的架构、每层的数据进出格式、以及关键工程约束（如 metadata filter 必须在前、LLM 不能自我批准、candidate ≠ approved）。所有的 Java 背景（SPI 架构、字段映射方向）直接复用了工作经验。
@@ -1140,7 +1164,7 @@ overlap=120 时：
 **三个工程经验**（90 秒）：
 1. **检索不等于采纳**：向量库返回 Top-K 只是"候选人"，真正给 LLM 的证据必须经过阈值过滤。如果跳过了这一步，LLM 会在不相关的文档片段上"编造"答案。这个不等式是 RAG 工程质量的核心约束。
 2. **human-in-the-loop 必须硬编码**：不能靠"我们流程上规定要审批"——必须把审批闸门写成代码里不可绕过的校验步骤。LLM 可以自信，但人必须签字。
-3. **embedding 的一致性是不可妥协的**：索引用了 bge-small 512 维+归一化，检索阶段换模型或关归一化，向量空间完全不同。这个项目在每个 chunk 的 metadata 里都写了 embedding 四元组，检索时逐条校验，不一致直接报错。
+3. **embedding 的一致性是不可妥协的**：索引用了 bge-small 512 维+归一化，检索阶段换模型或关归一化，向量空间完全不同。这个项目在每个 chunk 的 metadata 里都写了 embedding 配置四项（provider/model/dimension/normalize），检索时逐条校验，不一致直接报错。
 
 </details>
 
@@ -1149,9 +1173,9 @@ overlap=120 时：
 <details>
 <summary>参考框架</summary>
 
-- 硬编码在 `validate_mapping.py:67-71`，`--require-approved` 开关
-- 流程：candidate spec → 结构校验（不带开关）→ 逐条核对 evidence.quote → 改 status → 填审批记录 → 闸门校验（带开关）→ approved spec
-- 当前仓库的 approved 文件是 demo 演示数据，这一环节尚未真正执行过
+- 当前生成闸门在 `derive_code_model.py` 和 `validate_code_model.py`；历史 M0 另有 `validate_mapping.py --require-approved`
+- 流程：candidate 契约 → 逐条核对 evidence → 记录修订和批准元数据 → approved 契约 → 派生并校验 `code_model`
+- 当前仓库保留了合成候选契约和离线人工修订后的 approved 契约；没有审批 UI、认证用户或线上签名
 
 </details>
 
@@ -1162,7 +1186,7 @@ overlap=120 时：
 <details>
 <summary>参考答案</summary>
 
-**产品需求文档**（`synthetic_product_requirement.md`）：提供"接入逻辑"——事件流编排（授信→用信→对账的顺序）、跨接口依赖（applyId 从授信传给用信）、字段映射方向（平台标准→机构个性化）、环境配置项清单。
+**产品需求文档**（`fixtures/*产品接入需求说明书.md`）：提供接入逻辑——事件流编排、跨接口依赖、字段映射方向和环境配置项清单。
 
 **机构 API 文档**（`synthetic_aurora_api_spec.md` 等）：提供"技术接口细节"——接口 URL、请求/响应字段名、数据类型、认证方式。
 
@@ -1182,7 +1206,7 @@ Chroma：本地文件级向量库，pip install 即用，零配置。适用于�
 pgvector：PostgreSQL 扩展，需要安装 PostgreSQL + pgvector 扩展 + 建表。适用于生产环境、需要 SQL 查询（GROUP BY/JOIN）、需要检索审计、需要权限控制的场景。
 
 **同时保留的原因**：
-1. Chroma 跑验证更快（不需要起 PostgreSQL），开发迭代时用 Chrima
+1. Chroma 跑验证更快（不需要起 PostgreSQL），开发迭代时用 Chroma
 2. pgvector 展示生产级能力（审计表、SQL 查询、事务一致性），面试演示时用 pgvector
 3. 验证脚本两种都覆盖（`run_rag_pipeline.py` + `run_pgvector_rag_pipeline.py`），确保两套都工作
 
@@ -1232,19 +1256,18 @@ JSONB 列的优点：灵活（任意结构）、不需要修改表结构就能�
 | 文档解析 | `unified_parser.py` | 429 | ParseState 四状态、交错处理段落/表格 |
 | 数据模型 | `parse_model.py` | 75 | DocumentBlock / DocumentLocator 定位模型 |
 | 文本切块 | `rag_model.py:192-233` | 42 | 滑窗式切分、元数据推断、Chunk ID 确定性 |
-| 向量化 | `embedding_provider.py` | 130 | 双 provider、归一化守卫、维度一致性 |
+| 向量化 | `embedding_provider.py` | 130 | 单一 provider（sentence-transformers）、归一化守卫、维度一致性 |
 | 检索(Chroma) | `rag_retrieve.py` | 167 | metadata filter 顺序、阈值过滤、空证据保护 |
 | 检索(pgvector) | `rag_pgvector_retrieve.py` | 220 | 检索审计表、embedding 配置校验 |
 | pgvector 索引 | `rag_pgvector_index.py` | 189 | ON CONFLICT 幂等性、批量写入 |
 | pgvector 建表 | `infra/pgvector/init.sql` | 77 | 5 张表、索引策略、外键级联 |
 | pgvector 通用 | `pgvector_common.py` | 66 | vector_literal、过滤 SQL 构建 |
 | LLM 抽取 | `llm_extract_integration_spec.py` | 410 | JSON Schema、三层防幻觉、不支持 mock 回退 |
-| 审批闸门 | `validate_mapping.py` | 257 | require_approved 开关、交叉引用校验、forbidden 字段 |
-| 产品需求文档 | `fixtures/synthetic_product_requirement.md` | 64 | 事件流、字段映射方向、配置项清单 |
-| 全链路 | `run_v0_1_pipeline.py` | 529 | 两种模式、RAG 构建+检索+LLM+审批+生成的完整编排 |
+| 生成前闸门 | `derive_code_model.py` + `validate_code_model.py` | — | approved 状态、引用和派生模型一致性 |
+| 生成追溯 | `generation_trace.py` + `validate_generation_trace.py` | — | Java 方法、E/chunk、M 编号和源码 hash 一致性 |
+| 主样例 | `fixtures/恒誉消金产品接入需求说明书.md` 等 | — | 三家合成机构、三种接入模式 |
 
 ---
 
-> 本文档生成时间：2026-07-31
-> 基于项目最新提交 641aa93（2026-07-30）的源码
-> 配套学习材料：项目源码 `financial-institution-integration-skill/` + 交接文档 `docs/workbuddy-handoff-2026-07-30.md`
+> 初稿时间：2026-07-31；最近复核：2026-08-05
+> 当前实现以项目仓库 `README.md`、`docs/交接文档-给Codex.md` 和实际测试脚本为准，不再固定“最新提交”哈希。

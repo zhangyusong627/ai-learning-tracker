@@ -1,6 +1,6 @@
 # Codex to Claude Code Context
 
-更新时间：2026-07-28
+更新时间：2026-08-05
 
 用途：让 Claude Code 读取本文件后，可以接续当前 AI 学习计划、作品集规划和后续代码实现。不要导入 Codex 原始 `jsonl` 聊天记录；原始记录包含工具调用、路径、临时输出和潜在敏感信息，不适合作为跨工具上下文。
 
@@ -35,7 +35,7 @@
 
 ## 3. 当前学习主线
 
-当前主线是从 Java 工程师转向 AI 应用开发，先完成企业知识库 RAG（Retrieval-Augmented Generation，检索增强生成）能力，再进入 Agent（智能体）和 Skill（技能/可复用任务能力）方向。
+当前主线是从 Java 工程师转向 AI 应用开发。Week 6 已完成，Week 7 的金融机构接入 Skill 已完成三模式 LLM 直写闭环；下一阶段优先补 RAG 量化评估，不重新学习已完成的 RAG 基础。
 
 RAG 已经学习和确认过的关键链路：
 
@@ -83,14 +83,16 @@ RAG 已经学习和确认过的关键链路：
 
 ## 4. 当前进度
 
-已经完成或基本完成：
+当前可核验状态：
 
 - Week 1：Python、FastAPI、AI API 基础。
 - Week 2：Prompt、Structured Output（结构化输出）、幻觉控制等。
 - Week 3：LangChain、LCEL、Memory、Function Calling（函数调用/工具调用）等。
-- Week 4：Embedding、Chroma、文本切分、PDF/Word 解析；LoRA 微调实战暂缓。
+- Week 4：Embedding、Chroma、文本切分、PDF/Word 解析；LoRA 微调实战已明确不作为当前待办。
 - Week 5：RAG 总体流程、多格式文档解析、Chunk（文本块）优化与阈值过滤、Embedding 接入、检索拼装 Prompt。
-- Week 6：已进入 RAG 全链路集成和后续 Skill 方向。
+- Week 6：RAG 全链路、合成多格式文档、统一解析、结构化抽取契约和最小纵向闭环均已完成。
+- Week 7：三家合成机构覆盖直连、断直连和混合模式；approved 契约派生 `code_model`，真实 LLM 直写完整 Java SPI，并通过 Maven、契约和 golden 验证。
+- 当前增强：生成方法通过 `Evidence/Mapping` 注释和 `generation_trace.json` 绑定到稳定 `chunk_id`、文档定位、映射编号和源码 hash。
 
 注意：此前课程表曾出现 Day 31、Day 36、Day 37 等编号混乱和部分内容重复。用户已经要求按实际学习进度重排课程，后续继续学习时必须先看项目当前文件，而不是凭聊天记忆推进。
 
@@ -98,20 +100,17 @@ RAG 已经学习和确认过的关键链路：
 
 目前更合理的作品集不是两个割裂项目强行塞进一个仓库，而是围绕用户真实经验做两个独立但有关联的项目：
 
-1. 企业知识库 RAG 项目
-   - 解决多格式机构接入文档的解析、检索、引用、权限、版本和拒答问题。
-   - 适合展示 RAG 全链路、工程化校验、权限过滤、版本发布和可观测性。
+1. `financial-institution-integration-skill`
+   - 已存在的独立作品集仓库。
+   - 输入为公开或自造的机构接入说明、接口协议和业务流程。
+   - 输出为证据目录、已批准契约、`code_model`、完整 Java SPI、追溯清单和验证报告。
+   - RAG 是该 Skill 的证据检索基础，不再作为另一个重复作品集。
 
-2. 机构接入 Skill / Java 骨架生成器
-   - 解决“多家金融机构接入流程相似但差异化适配较多”的开发效率问题。
-   - 输入为脱敏/模拟的机构接入说明、接口协议和业务流程。
-   - 输出为 Java 接入骨架、SPI 模块结构、配置清单、测试样例和人工确认点。
+2. `funding-gateway-ai-guardian`
+   - 第二作品集方向，尚未创建。
+   - 只有在作品集一达到验收线后再启动，避免并行产生两个半成品。
 
-二者关系：
-
-- 企业知识库 RAG 可以作为 Skill 的知识输入和检索基础。
-- Skill 是面向开发者的代码生成与接入流程自动化能力。
-- GitHub 上应做 clean-room（洁净室）版本：使用模拟机构、模拟字段、模拟文档，不使用公司内部文档、代码、截图或数据。
+两个作品集必须保持 clean-room（洁净室）边界，不使用公司内部文档、代码、截图、字段或数据。
 
 ## 6. 资金网关业务背景的脱敏总结
 
@@ -136,21 +135,21 @@ Skill 项目的核心价值：
 
 ## 7. 机构接入 Skill 应生成什么
 
-目标不是生成完整 GFW 平台，也不是直接生成可上线代码，而是生成一个“可编译、可测试、可人工确认”的 Java 接入骨架。
+目标不是生成完整平台，也不是直接生成可上线代码，而是生成一个“可编译、可测试、可追溯、可人工确认”的完整合成 Java SPI 代码包。
 
 建议输出内容：
 
 - 新机构 SPI 模块目录。
 - Maven/Gradle 模块声明和依赖占位。
-- `FundManager` 或类似统一接口的实现骨架。
+- `FundManager` 或类似统一接口的完整合成实现。
 - `META-INF/services` 或等价服务注册文件。
 - 机构元数据配置，例如机构编码、产品编码、支持流程、接口清单。
 - EventFlow（事件流）或流程编排骨架。
 - 请求 DTO、响应 DTO、回调 DTO。
 - HTTP 客户端封装。
-- 签名、验签、加密、解密适配器占位。
+- 签名、验签、加密、解密适配器的合成实现或受控调用。
 - 外部状态码到内部状态码的映射。
-- 异常分类和重试策略占位。
+- 异常分类和重试策略。
 - 单元测试和契约测试样例。
 - 人工确认清单：哪些字段、接口、异常、回调、幂等、资方特殊规则必须人工确认。
 
@@ -175,12 +174,10 @@ Skill 项目的核心价值：
 
 优先级从高到低：
 
-1. 完成 Week 6 当前学习任务：RAG V1 的结构化成功/拒答输出契约、代码实现和端到端验证。
-2. 修正课程表中重复、编号混乱和与实际进度不一致的内容。
-3. 继续推进 Skill 学习，但先围绕“机构接入 Java 骨架生成器”定义输入、输出、边界和验收标准。
-4. 为企业知识库 RAG 项目整理可公开的模拟资料和最小可运行版本。
-5. 为机构接入 Skill 项目设计 clean-room 样例文档、目标代码结构和测试标准。
-6. 后续做简历优化时，把“机构接入代码生成经验”作为重点经历之一，但进行脱敏和归因控制。
+1. 为作品集一补齐 RAG 量化评估：golden queries、Hit@K/Recall@K、MRR、证据精度和无答案拒答率。
+2. 保持 `learning/PROGRESS.md`、Week 7/8 计划、页面 `COURSE_DATA` 和作品集提交证据一致。
+3. 继续 Java/AI 面试训练，但题库只能引用作品集可复现证据；真实工作指标必须由本人确认后另行使用。
+4. 按计划准备 8 月 12 日首批投递。
 
 ## 10. 给 Claude Code 的使用方式
 
@@ -189,8 +186,9 @@ Skill 项目的核心价值：
 ```text
 learning/context/codex-to-claude-context.md
 learning/LEARNING_WORKFLOW.md
-learning/week5/README.md
-learning/week6/README.md
+learning/PROGRESS.md
+learning/week7/README.md
+learning/week8/README.md
 ```
 
 继续学习时，请优先确认：
@@ -206,4 +204,3 @@ learning/week6/README.md
 - 不要把用户提供的原始公司文档放入作品集仓库。
 - 不要把内部截图 OCR（Optical Character Recognition，光学字符识别）出来的字段、配置、地址、密钥、路径写入公开材料。
 - 可以保留业务抽象、架构边界、问题定义和脱敏后的方法论。
-

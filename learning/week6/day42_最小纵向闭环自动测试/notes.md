@@ -18,6 +18,8 @@
 
 ## 最小纵向闭环
 
+> 历史快照：下列内容记录 Week 6 当时的模板原型。相关脚本后来移至作品集仓库 `legacy/`；当前主线已改为 LLM 直写完整 SPI，不应按本节命令作为现行验收。
+
 ```text
 synthetic_mapping.json
 → validate_mapping.py 校验 approved 契约
@@ -38,8 +40,8 @@ synthetic_mapping.json
 
 新增：
 
-- `skill/integrate-financial-institution/scripts/generate_fund_manager.py`
-- `evals/run_minimal_vertical_slice.py`
+- `legacy/scripts/generate_fund_manager.py`
+- `legacy/evals/run_minimal_vertical_slice.py`
 - `fixtures/invalid_candidate_mapping.json`
 - `fixtures/invalid_freeform_code_mapping.json`
 
@@ -48,7 +50,7 @@ synthetic_mapping.json
 ## 验证命令
 
 ```bash
-python3 evals/run_minimal_vertical_slice.py
+python3 legacy/evals/run_minimal_vertical_slice.py
 ```
 
 验证结果：
