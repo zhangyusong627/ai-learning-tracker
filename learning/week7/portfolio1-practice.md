@@ -3,6 +3,8 @@
 > 配套文档：`learning/week7/portfolio1-deep-dive.md`（讲解）+ 项目源码 `financial-institution-integration-skill/`
 > 使用方式：先自己作答（口述或写下来），再点开参考答案对照。答不出的题做标记——**标记的题就是你知识链路的薄弱点**。
 > 难度：🟢 基础（概念复述）｜🟡 进阶（原理分析）｜🔴 深挖（权衡/排查）
+>
+> **2026-08-06 现状说明**：作品集当前只维护 Chroma。题库中涉及其他向量后端的内容仅用于通用选型学习，凡是声称“本项目双链路已实现”的旧答案均已失效，回答项目现状时以 Chroma 混合检索为准。
 
 ## 怎么用这两层
 
@@ -215,7 +217,7 @@ embedding = 把一段文本转成固定维度的浮点数数组。模型在训�
 
 embedding 配置四项（provider / model / dimension / normalize）。如果索引用模型 A（512 维），检索换了模型 B，向量不在同一个空间，距离比较毫无意义——相当于拿"公斤"和"磅"直接比大小。
 
-原则：**配置不匹配宁可报错，不能默默返回垃圾结果**。本项目在 Chroma 和 pgvector 两条链路都做了强制校验（实现见 🟧 6-5）。
+原则：**配置不匹配宁可报错，不能默默返回垃圾结果**。本项目在 Chroma 索引与检索链路中做了强制校验（实现见 🟧 6-5）。
 
 </details>
 
@@ -270,7 +272,7 @@ L2 归一化把向量缩放到单位长度（模长为 1）。归一化后向量
 
 **简化选型**：Demo/原型 → Chroma、LanceDB；已有 PostgreSQL 且量不大 → pgvector；生产大数据量需独立部署 → Milvus、Qdrant；不想管运维 → Pinecone；深度绑定某云 → 对应云服务；要向量+关键词混合 → Weaviate、Qdrant。
 
-本项目走 Chroma（轻量）+ pgvector（扩展）双链路，对应第 4 类与第 2 类，正在做"开发便利 vs 生产治理"的对照验证。
+本项目选择 Chroma 单链路，对应第 4 类。其他类别用于通用选型比较，不代表当前仓库实现。
 
 </details>
 
@@ -409,7 +411,7 @@ temperature 高时：同一份文档抽两次，字段映射可能不同 → 下
 <details>
 <summary>参考答案（口述版）</summary>
 
-"这个项目是金融机构接入代码生成工具，解决多机构接入时文档格式不一、字段映射易漏和生成结果难追溯的问题。**离线索引**把合成产品需求和 API 文档解析、切块、embedding 后持久化；**在线检索与生成**先经元数据过滤和距离阈值形成编号证据，再由 LLM 抽取结构化契约。离线人工批准后派生 `code_model`，LLM 直写完整 Java SPI；方法通过 Evidence/Mapping 注释和 `generation_trace.json` 绑定到 chunk、原文定位和源码 hash。"
+"这个项目是金融机构接入 RAG 工程学习 Demo，解决多格式文档难统一检索、字段证据易遗漏和结果难追溯的问题。**离线索引**把合成产品需求和 API 文档解析、结构化切块、embedding 后写入 Chroma；**在线检索**先做机构等元数据过滤，再用向量 + BM25 召回和 RRF 融合排序，经过距离阈值与事实锚点形成可采纳证据。可选 Java 实验只在已知合成范例工程内逐方法改写 `FundManagerImpl`，不能表述为从零生成完整 SPI。"
 
 </details>
 
@@ -434,7 +436,7 @@ temperature 高时：同一份文档抽两次，字段映射可能不同 → 下
 
 诚实答：**现在已经有量化评估体系，但当前检索质量没有通过**。15 条黄金查询覆盖字段映射、阶段依赖、机构范围隔离和无答案拒答；评测计算前 K 条命中率、查准率、召回率、平均倒数排名、可采纳证据精度/召回率和无答案拒答率。
 
-2026-08-05 的 Chroma 基线为 Hit@5 50%、Recall@5 50%、无答案拒答率 0%。阈值扫描证明单一距离阈值无法同时保证召回与拒答：`0.30` 的无答案拒答率达到 100%，但可采纳证据召回率只剩 25%。下一步是增加精确字段关键词召回、合并排序和证据支持校验，再用同一黄金集复测。
+2026-08-05 的初始 Chroma 基线为 Hit@5 50%、Recall@5 50%、无答案拒答率 0%。阈值扫描证明单一距离阈值无法同时保证召回与拒答：`0.30` 的无答案拒答率达到 100%，但可采纳证据召回率只剩 25%。随后通过多粒度表格切块、BM25、RRF、查询意图排序和事实锚点修复；复测结果为 Hit@5/Recall@5 100%、MRR 0.7389、可采纳证据召回率 91.67%、无答案拒答率 100%。
 
 这组结果证明项目不仅能跑通，还能如实暴露 Bad Case；不能把单条冒烟 PASS 包装成检索准确率合格。
 
@@ -609,7 +611,7 @@ chunk_id = f"chunk_{sha256(chunk_seed)[:24]}"
 5. `derive_code_model.py` 从 approved 契约确定性派生 `code_model`
 6. `validate_code_model.py` 校验操作和映射引用
 7. `assemble_augmented_context.py` 装配证据目录、公共映射和对应模式范例
-8. `code_synth_agent.py` 调用真实 LLM 生成完整 SPI，运行 Maven/契约测试
+8. `[可选实验] code_synth_agent.py` 复制指定的已知合成范例，只逐方法改写 `FundManagerImpl`，再运行 Maven/契约测试
 9. 生成并运行 `generation_trace.json` 校验，再执行 golden 评估和人工复核
 
 </details>
@@ -619,7 +621,7 @@ chunk_id = f"chunk_{sha256(chunk_seed)[:24]}"
 <details>
 <summary>参考答案</summary>
 
-**代码生成**（`code_synth_agent.py`）：读取 approved 契约派生的 `code_model`、编号证据、公共映射和对应模式的合成范例，调用真实 LLM 直写完整 Java SPI 方法体，不使用模板引擎。
+**代码生成实验**（`code_synth_agent.py`）：读取 approved 契约派生的 `code_model`、编号证据、公共映射和对应模式的合成范例，先复制范例工程，再调用真实 LLM 逐个改写 `FundManagerImpl` 方法体。其他 Java 文件来自范例，因此不能称为完整 SPI 生成。
 
 **追溯校验**：每个方法必须包含 `Evidence/Mapping` 注释；`generation_trace.json` 保存方法 hash、E 编号、稳定 chunk ID、文档定位和 M 编号，手工修改代码后 hash 不一致会失败。
 

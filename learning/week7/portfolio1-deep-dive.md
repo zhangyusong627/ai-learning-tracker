@@ -1,8 +1,10 @@
 # 作品集一深度拆解：金融机构接入 AI 工程
 
 > 本文档按"总分总"结构，对 financial-institution-integration-skill 项目全部 7 个核心模块做系统讲解。
-> 以 RAG 全链路为重点，同时保持与当前 LLM 直写、方法级证据追溯和验证边界一致。
+> 以 RAG 全链路为重点，同时说明已知范例的方法体生成实验、证据追溯和验证边界。
 > 配合项目源码 `skill/integrate-financial-institution/scripts/` 和 `evals/` 下的实际文件阅读，效果最佳。
+>
+> **2026-08-06 现状说明**：作品集已经收敛为 Chroma 单链路，并实现向量 + BM25 召回、RRF 融合和事实锚点。本文保留的 pgvector 内容仅是历史选型学习记录，不是当前仓库能力，也不得作为当前实现参加面试陈述；代码生成只复制已知合成范例并改写 `FundManagerImpl` 方法体，不是全新机构完整 SPI 生成。
 
 ---
 
@@ -13,7 +15,7 @@
 本项目解决金融助贷行业中"多资方接入"的两个核心问题：
 
 1. **资方知识库**：将各资方的产品需求文档和 API 文档统一解析、向量化存储，支持按机构/操作/内容类型检索、查询、统计和分析，替代人工翻阅散落的 Word/PDF/Excel。
-2. **生成完整 Java SPI 代码包**：基于知识库检索证据，由 LLM 抽取结构化契约，经离线人工审批后生成完整合成 SPI，并执行追溯、编译、契约和 golden 验证。
+2. **验证可追溯的生成实验**：基于知识库检索证据，由 LLM 抽取结构化契约，经离线人工审批后，在已知合成范例工程中逐方法改写 `FundManagerImpl`，并执行追溯、编译、契约和 golden 回归。
 
 ### 技术架构（离线索引 + 在线检索两阶段）
 
@@ -99,7 +101,7 @@
                            ▼
                     ┌──────────────┐
                     │ (下游) Java   │ code_synth_agent.py
-                    │ 完整SPI生成   │ 追溯 + Maven/契约/golden
+                    │ 方法体生成实验│ 追溯 + Maven/契约/golden
                     └──────────────┘
 ```
 
@@ -452,7 +454,7 @@ if any(
 
 ---
 
-### 第四块：向量检索（rag_retrieve.py + rag_pgvector_retrieve.py）
+### 第四块：向量检索（当前 Chroma 实现 + 历史 pgvector 记录）
 
 #### 概念
 **向量检索** 就是用用户的问题（查询文本）去向量数据库里搜"语义最相近"的文档片段。它不是关键词匹配——"借款申请"能搜到"贷款提交"，这不是字符串匹配能做到的，是因为它们的向量在高维空间里靠得近。
@@ -499,9 +501,9 @@ if args.fail_on_empty and not accepted:
 
 如果阈值过滤后 `accepted_evidence` 为空 → 意味着没有任何证据支持回答这个问题 → **应该阻断，不应该继续调用 LLM**。这是防止 LLM 在无证据的情况下"凭空编造"（幻觉 / hallucination）的最后一道防线。
 
-**4. pgvector 版本的额外能力**（`rag_pgvector_retrieve.py`）
+**4. 历史 pgvector 方案曾设计的额外能力**（对应实现已删除）
 
-pgvector 版本比 Chroma 版本多了完整的**检索审计链**：
+历史 pgvector 版本曾比当时的 Chroma 版本多一条**检索审计链**：
 - `retrieval_runs` 表：记录每次检索的查询文本、过滤条件、embedding 配置（第 87-107 行）
 - `retrieved_candidates` 表：记录每条候选的 chunk_id 和距离（第 123-129 行）
 - `accepted_evidence` 表：记录通过阈值的证据（第 141-147 行）
@@ -522,7 +524,7 @@ pgvector 版本比 Chroma 版本多了完整的**检索审计链**：
   --output-dir generated/retrieve_test \
   --fail-on-empty
 
-# pgvector 检索（需要 PostgreSQL + pgvector 运行中，端口 55432）
+# 历史命令，仅供理解旧方案；当前仓库不可运行
 .venv/bin/python skill/integrate-financial-institution/scripts/rag_pgvector_retrieve.py \
   --database-url "postgresql://fund_demo:fund_demo_password@localhost:55432/fund_integration" \
   --collection fund_integration_main_pgvector_demo \
@@ -541,7 +543,7 @@ pgvector 版本比 Chroma 版本多了完整的**检索审计链**：
 | **filter 顺序必须正确** | metadata filter 在前（限定搜索空间），Top-K 在后（排序）。反过来会导致过滤掉所有结果或引入污染 |
 | **阈值不是固定常数** | 0.85（cosine）适用于 bge-small 归一化后的向量空间。换模型/维度后阈值必须重调 |
 | **fail_on_empty 是安全机制** | 生产上无证据时不应调 LLM；可以改为返回预置的"无法回答"模板 |
-| **Chroma 适合 demo、pgvector 适合生产** | Chroma 是纯文件级向量库，没有 SQL 审计能力；pgvector 的检索审计表是企业级合规的基础 |
+| **向量后端不能按“轻量/生产”一刀切** | 当前选择 Chroma 是为了本地可复现和单链路一致性；真实生产还需按并发、权限、备份、审计和运维约束重新选型 |
 | **Top-K 不是越大越好** | K 越大 → 检索的噪音越多、LLM 上下文越长（可能超限或浪费 token）。一般 8–32 之间调试 |
 
 #### 官方知识拓展
@@ -569,7 +571,7 @@ Chroma 底层用 HNSW（Hierarchical Navigable Small World）。pgvector 不自�
 
 向量检索擅长"语义相近"（"借款"能搜到"贷款"），但会漏掉精确匹配（搜"AURORA_DEMO"可能找不到这个精确的机构编码，因为 embedding 模型把它当成普通文本而非标识符）。关键词检索（BM25，一种基于词频的全文检索算法）擅长精确匹配但不懂语义。
 
-生产级 RAG 常用**混合检索**：同时做向量检索和关键词检索，把两个结果列表按某种策略合并（RRF 融合 / 加权合并）。本项目没有实现，但如果面试被问到"你的项目有什么可以改进的"，这是一个很好的答案。
+当前项目已经实现**混合检索**：同时做向量检索和 BM25 关键词检索，再用 RRF 融合排序。后续改进方向是独立保留测试集、二次排序和更细的证据支持校验，而不是再把“混合检索”列为未实现项。
 
 #### 产品需求文档在检索中的特殊价值
 
@@ -839,9 +841,9 @@ if str(document.get(field)).strip().lower() in UNRESOLVED_ROOT_VALUES:
 
 ---
 
-## 第七块：向量数据库持久化（pgvector 方案）
+## 第七块：历史向量后端选型记录（当前实现已删除）
 
-> 这是之前文档的**重大遗漏**——前面的向量检索章节主要讲了 Chroma（文件级向量库），但项目里还有一套完整的 PostgreSQL + pgvector 持久化方案，包含了 Chroma 不具备的生产级能力：结构化建表、索引优化、检索审计。
+> 本节记录 2026-08-06 之前探索过的数据库向量后端设计，用于理解结构化查询、索引和审计等通用选型因素。对应代码、配置、依赖和验证脚本已从作品集删除，下面的文件名与命令均不可运行，也不代表当前项目能力。
 
 ### 为什么需要 pgvector？
 
@@ -854,7 +856,7 @@ Chroma 的存储是本地文件（`generated/rag/chroma/`），适合单机 demo
 
 ### pgvector 方案的数据表设计
 
-项目通过 `infra/pgvector/init.sql`（77行）定义了 5 张表：
+历史方案曾通过 `infra/pgvector/init.sql` 定义 5 张表；该文件现已删除：
 
 #### 1. `rag_collections` —— 向量集合注册表
 
@@ -1069,11 +1071,11 @@ overlap=120 时：
 6. **逐字段核对** candidate spec 里的每个字段映射、必填变量、事件流，对照 evidence.quote 里的原文
 7. 所有确认无误的项状态改为 approved，不确定的标 unresolved，填写 `approval_audit` 审批记录
 8. 运行 `derive_code_model.py` 和 `validate_code_model.py`，确认所有进入生成的项均已批准且引用一致
-9. approved 契约派生并校验 `code_model`，再进入 LLM 直写和方法级追溯验证
+9. approved 契约派生并校验 `code_model`；如运行可选 Java 实验，则复制已知范例、逐方法改写并执行追溯验证
 
 </details>
 
-#### Q8: 如果 pgvector 检索时 `accepted_evidence` 始终为空，但你知道库里确实有相关文档，可能的原因有哪些？逐一排查。
+#### Q8（历史选型练习）: 如果数据库向量后端检索时 `accepted_evidence` 始终为空，可能有哪些原因？
 
 <details>
 <summary>参考答案</summary>
@@ -1086,7 +1088,7 @@ overlap=120 时：
 4. **归一化不一致**：索引归一化了，检索没归一化 → 距离值无意义
 5. **查询文本与文档语言不同**：文档是中文，查询是英文 → embedding 模型的语言理解范围不匹配
 6. **chunk 切分过碎**：900 字切成 3 块 300 字 → 语义碎片化，距离值普遍偏高
-7. **pgvector extension 未安装或版本不对齐**：`CREATE EXTENSION vector` 失败 → 建库失败但没有明显报错
+7. **数据库扩展未安装或版本不对齐**：这是历史方案的基础设施问题；当前 Chroma 链路不涉及该项
 
 </details>
 
@@ -1156,7 +1158,7 @@ overlap=120 时：
 <summary>参考框架（不是标准答案，是思路框架）</summary>
 
 **链路概述**（60 秒）：
-这个项目针对金融机构接入时文档格式不一、字段映射易漏的问题，构建了工具链：文档统一解析 → 文本切块 → 向量化入库 → 检索与阈值过滤 → LLM 结构化抽取 → 离线人工审批 → `code_model` 派生 → LLM 直写完整 Java SPI → 方法级证据追溯 → Maven/契约/golden 验证。
+这个项目针对金融机构接入时文档格式不一、字段证据易漏的问题，构建了 RAG 工具链：文档统一解析 → 结构化切块 → 向量化写入 Chroma → 元数据过滤 → 向量 + BM25 召回 → RRF 融合 → 阈值与事实锚点 → 可采纳证据 → LLM 结构化抽取或拒答 → 量化评测。可选 Java 实验只在已知范例工程中逐方法改写，并通过追溯、Maven、契约和 golden 回归验证。
 
 **我的角色**（30 秒）：
 我是这个项目的设计者和决策者。我定义了整条链路的架构、每层的数据进出格式、以及关键工程约束（如 metadata filter 必须在前、LLM 不能自我批准、candidate ≠ approved）。所有的 Java 背景（SPI 架构、字段映射方向）直接复用了工作经验。
@@ -1196,7 +1198,7 @@ overlap=120 时：
 
 </details>
 
-#### Q15: Chroma 和 pgvector 分别适用于什么场景？本项目为什么同时保留两套实现？
+#### Q15: Chroma 和数据库向量扩展分别适用于什么场景？本项目为什么最终只保留 Chroma？
 
 <details>
 <summary>参考答案</summary>
@@ -1205,12 +1207,7 @@ Chroma：本地文件级向量库，pip install 即用，零配置。适用于�
 
 pgvector：PostgreSQL 扩展，需要安装 PostgreSQL + pgvector 扩展 + 建表。适用于生产环境、需要 SQL 查询（GROUP BY/JOIN）、需要检索审计、需要权限控制的场景。
 
-**同时保留的原因**：
-1. Chroma 跑验证更快（不需要起 PostgreSQL），开发迭代时用 Chroma
-2. pgvector 展示生产级能力（审计表、SQL 查询、事务一致性），面试演示时用 pgvector
-3. 验证脚本两种都覆盖（`run_rag_pipeline.py` + `run_pgvector_rag_pipeline.py`），确保两套都工作
-
-这不是"做了两个重复的东西"，而是"快速验证用轻量方案，生产演示用重量方案"——和业界"dev 用 SQLite、prod 用 PostgreSQL"同理。
+**最终只保留 Chroma 的原因**：作品集当前要证明的是文档解析、混合排序、证据边界和代码生成追溯；第二条后端没有对齐 BM25、RRF 和事实锚点，会制造维护成本与行为漂移。生产部署仍应根据数据量、多用户、权限、备份和集中审计等约束重新选型，不能把本地 Chroma 直接包装成完整生产方案。
 
 </details>
 
@@ -1258,10 +1255,6 @@ JSONB 列的优点：灵活（任意结构）、不需要修改表结构就能�
 | 文本切块 | `rag_model.py:192-233` | 42 | 滑窗式切分、元数据推断、Chunk ID 确定性 |
 | 向量化 | `embedding_provider.py` | 130 | 单一 provider（sentence-transformers）、归一化守卫、维度一致性 |
 | 检索(Chroma) | `rag_retrieve.py` | 167 | metadata filter 顺序、阈值过滤、空证据保护 |
-| 检索(pgvector) | `rag_pgvector_retrieve.py` | 220 | 检索审计表、embedding 配置校验 |
-| pgvector 索引 | `rag_pgvector_index.py` | 189 | ON CONFLICT 幂等性、批量写入 |
-| pgvector 建表 | `infra/pgvector/init.sql` | 77 | 5 张表、索引策略、外键级联 |
-| pgvector 通用 | `pgvector_common.py` | 66 | vector_literal、过滤 SQL 构建 |
 | LLM 抽取 | `llm_extract_integration_spec.py` | 410 | JSON Schema、三层防幻觉、不支持 mock 回退 |
 | 生成前闸门 | `derive_code_model.py` + `validate_code_model.py` | — | approved 状态、引用和派生模型一致性 |
 | 生成追溯 | `generation_trace.py` + `validate_generation_trace.py` | — | Java 方法、E/chunk、M 编号和源码 hash 一致性 |

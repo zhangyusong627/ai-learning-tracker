@@ -47,8 +47,8 @@ learning/
 ├── week4/
 ├── week5/                                 # RAG engineering base (completed)
 ├── week6/                                 # Skill minimum vertical slice (current)
-├── week7/                                 # Skill V0.1
-├── week8/                                 # Skill V1
+├── week7/                                 # RAG Demo 量化评测与收尾
+├── week8/                                 # Agent 最小闭环 + 首批投递
 ├── week9/                                 # Guardian V0.1
 ├── week10/                                # Guardian V1
 ├── week11/                                # Java + AI interview sprint
@@ -68,8 +68,11 @@ Rules:
 
 `learning/PROGRESS.md` is the current progress snapshot. Verify it together with the active
 week README and the latest portfolio repository commit before stating current status.
-Week 6 is complete; Week 7 work has advanced from the original Java-skeleton plan to a
-three-mode LLM-written SPI pipeline with deterministic validation. Historical daily notes
+Week 6 is complete; Week 7 has closed the portfolio as a RAG engineering Demo with
+multi-format parsing, hybrid retrieval, accepted-evidence gates, quantitative evaluation,
+and traceable generation evidence. The Java generation path is only a known-pattern,
+method-body experiment and must not be described as generic full SPI project generation.
+Week 8 starts the Agent minimum loop and first job applications. Historical daily notes
 remain snapshots of what was true at that learning stage and must not override newer evidence.
 
 RAG delayed review is limited to the daily 0.5-hour review slot. Do not recreate full-day

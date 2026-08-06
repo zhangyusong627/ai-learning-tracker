@@ -1,6 +1,6 @@
 # Codex to Claude Code Context
 
-更新时间：2026-08-05
+更新时间：2026-08-06
 
 用途：让 Claude Code 读取本文件后，可以接续当前 AI 学习计划、作品集规划和后续代码实现。不要导入 Codex 原始 `jsonl` 聊天记录；原始记录包含工具调用、路径、临时输出和潜在敏感信息，不适合作为跨工具上下文。
 
@@ -35,7 +35,7 @@
 
 ## 3. 当前学习主线
 
-当前主线是从 Java 工程师转向 AI 应用开发。Week 6 已完成，Week 7 的金融机构接入 Skill 已完成三模式 LLM 直写闭环；下一阶段优先补 RAG 量化评估，不重新学习已完成的 RAG 基础。
+当前主线是从 Java 工程师转向 AI 应用开发。Week 6 已完成，Week 7 正在把金融机构接入作品集收敛为 RAG 工程学习 Demo；量化评测与 Bad Case 修复已经完成。下一阶段直接学习 Agent 最小闭环并开始投递，不继续投入通用 SPI 代码生成。
 
 RAG 已经学习和确认过的关键链路：
 
@@ -91,8 +91,9 @@ RAG 已经学习和确认过的关键链路：
 - Week 4：Embedding、Chroma、文本切分、PDF/Word 解析；LoRA 微调实战已明确不作为当前待办。
 - Week 5：RAG 总体流程、多格式文档解析、Chunk（文本块）优化与阈值过滤、Embedding 接入、检索拼装 Prompt。
 - Week 6：RAG 全链路、合成多格式文档、统一解析、结构化抽取契约和最小纵向闭环均已完成。
-- Week 7：三家合成机构覆盖直连、断直连和混合模式；approved 契约派生 `code_model`，真实 LLM 直写完整 Java SPI，并通过 Maven、契约和 golden 验证。
-- 当前增强：生成方法通过 `Evidence/Mapping` 注释和 `generation_trace.json` 绑定到稳定 `chunk_id`、文档定位、映射编号和源码 hash。
+- Week 7：多格式解析、Chroma、向量 + BM25 混合召回、RRF 融合、证据准入和量化评测已完成；Hit@5/Recall@5 为 100%，MRR 为 0.7389，可采纳证据召回率为 91.67%，无答案拒答率为 100%。
+- Java 生成边界：脚本复制已知合成范例工程，只逐方法改写 `FundManagerImpl` 实现体；DTO、Constants、Client、异常、枚举、EventFlow 和测试来自范例，不证明全新机构完整 SPI 生成能力。
+- 生成实验通过 `Evidence/Mapping` 注释和 `generation_trace.json` 绑定稳定 `chunk_id`、文档定位、映射编号和源码 hash。
 
 注意：此前课程表曾出现 Day 31、Day 36、Day 37 等编号混乱和部分内容重复。用户已经要求按实际学习进度重排课程，后续继续学习时必须先看项目当前文件，而不是凭聊天记忆推进。
 
@@ -103,7 +104,7 @@ RAG 已经学习和确认过的关键链路：
 1. `financial-institution-integration-skill`
    - 已存在的独立作品集仓库。
    - 输入为公开或自造的机构接入说明、接口协议和业务流程。
-   - 输出为证据目录、已批准契约、`code_model`、完整 Java SPI、追溯清单和验证报告。
+   - 核心输出为证据目录、结构化契约、检索评测和追溯报告；已知范例的方法体生成、编译与契约测试只是可选实验。
    - RAG 是该 Skill 的证据检索基础，不再作为另一个重复作品集。
 
 2. `funding-gateway-ai-guardian`

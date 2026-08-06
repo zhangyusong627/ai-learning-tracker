@@ -24,7 +24,7 @@
 - Day 41 结构化抽取契约：见 `day41_结构化抽取契约/notes.md`，已完成 candidate / approved / unresolved、双向字段映射、阶段依赖、配置变量和人工确认闸门学习。
 - Day 42 最小纵向闭环：见 `day42_最小纵向闭环自动测试/notes.md`，已完成 approved 契约生成 Java 骨架、负向样例拒绝和自动化验证。
 - Skill 产物在独立作品集仓库 `/Users/zhangyusong/Documents/AICoding/financial-institution-integration-skill`；Week 6 当时的证据提交是 `f96617a`，当前主线已推进到 `fb19ea9`。
-- 当前验证入口：`python3 evals/run_rag_pipeline.py`、`python3 evals/run_pgvector_rag_pipeline.py`、`python3 evals/run_golden_codegen_eval.py` 和追溯单测。Week 6 的模板/骨架脚本已移至作品集仓库 `legacy/`，不再作为当前生成路径。
+- 当前验证入口：`python3 evals/run_rag_pipeline.py`、`python3 evals/run_rag_retrieval_eval.py`、`python3 evals/run_golden_codegen_eval.py` 和追溯单测。向量存储统一使用 Chroma；Week 6 的模板/骨架脚本已移至作品集仓库 `legacy/`，不再作为当前生成路径。
 
 状态口径：Week 6 已完成，可以进入 Week 7。后续学习继续时，仍要按 `LEARNING_WORKFLOW.md` 关注用户自己的架构复述、失败路径解释、三层测试和复盘，不能仅凭代码存在判定为掌握。
 

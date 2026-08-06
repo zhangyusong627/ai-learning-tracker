@@ -558,31 +558,31 @@ const COURSE_DATA = [
     ]
   },
   {
-    week: 7, module: 'skill', title: '金融机构接入Skill：三模式AI直写闭环',
+    week: 7, module: 'skill', title: '金融机构接入RAG Demo：量化评测与收尾',
     dateRange: '8.3–8.9', startDate: '2026-08-03', endDate: '2026-08-09',
-    objective: '在最小解析闭环上完成字段映射、差异识别、检索证据、人工确认、三模式完整Java SPI生成和确定性验证',
+    objective: '完成混合检索、证据准入、方法级追溯和量化评测，将作品集如实收敛为RAG工程学习Demo',
     days: [
       { day: '周一', hours: 7, name: '标准字段映射', materials: [], tasks: '识别公共字段，输出来源字段、转换规则、证据和状态' },
       { day: '周二', hours: 7, name: '差异、冲突与待确认项', materials: [], tasks: '处理缺失字段、枚举差异、流程差异、冲突版本和低置信度结果' },
       { day: '周三', hours: 7, name: '带范围过滤的RAG证据检索', materials: [], tasks: '在Top-K前应用机构、产品、版本和权限过滤，并保留证据定位' },
       { day: '周四', hours: 7, name: '证据编号 + 人工确认状态流', materials: [], tasks: '只有引用合法且人工批准的映射才能进入生成阶段' },
-      { day: '周五', hours: 7, name: 'LLM直写完整Java SPI', materials: [], tasks: 'approved code_model + 检索证据 + 合成范式驱动生成，并记录方法级证据追溯' },
-      { day: '周六', hours: 4, name: 'Maven编译 + 契约测试', materials: [], tasks: '定位输入、模板、编译或契约失败，禁止用绕过方式通过' },
-      { day: '周日', hours: 4, name: 'V0.1集成 + 黄金集评估', materials: [], tasks: '跑通映射到验证闭环，建立正常、缺失、冲突和拒绝样例' }
+      { day: '周五', hours: 7, name: '已知范例的方法体生成实验', materials: [], tasks: '复制合成范例工程、逐方法生成实现体并保留证据追溯' },
+      { day: '周六', hours: 4, name: '编译、契约与追溯验证', materials: [], tasks: '定位输入、生成、编译、契约或证据绑定失败' },
+      { day: '周日', hours: 4, name: 'RAG Demo收尾', materials: [], tasks: '统一README、架构、限制和复现命令，剔除过时能力描述' }
     ]
   },
   {
-    week: 8, module: 'skill', title: '金融机构接入Skill V1发布 + 首批投递',
+    week: 8, module: 'skill', title: 'Agent最小闭环 + 首批投递',
     dateRange: '8.10–8.16', startDate: '2026-08-10', endDate: '2026-08-16',
-    objective: '完成作品集一的集成、评估、错误恢复、文档和面试材料；不为展示框架而强行加入Agent，并于8月12日启动首批投递',
+    objective: '学习模型决策、工具调用、显式状态、失败恢复、人工确认和评估，并于8月12日启动首批投递',
     days: [
-      { day: '周一', hours: 7, name: '完整链路集成 + 错误恢复', materials: [], tasks: '覆盖解析失败、证据不足、人工拒绝、生成失败和验证失败路径' },
-      { day: '周二', hours: 7, name: '黄金集 + 量化评估', materials: [], tasks: '评估解析完整性、字段映射、证据引用、拒绝和生成验证' },
-      { day: '周三', hours: 7, name: 'Bad Case修复 + 首批投递', materials: [], tasks: '修复高风险错误，并投递第一批高匹配Java+AI岗位' },
-      { day: '周四', hours: 7, name: 'README + 架构图 + 演示脚本', materials: [], tasks: '讲清业务价值、技术取舍、数据边界、验证证据和已知局限' },
-      { day: '周五', hours: 7, name: 'V1候选版本验收', materials: [], tasks: '执行全量测试，冻结可演示版本和复现命令' },
-      { day: '周六', hours: 4, name: '项目演示 + 简历项目描述', materials: [], tasks: '形成3分钟和10分钟讲法，准备面试追问' },
-      { day: '周日', hours: 4, name: '发布复盘 + 定向投递', materials: [], tasks: '修正材料并继续投递，不扩展低优先级功能' }
+      { day: '周一', hours: 7, name: 'Agent与Workflow + Tool Calling', materials: [], tasks: '判断何时需要Agent，并跑通一次模型选择工具的最小实践' },
+      { day: '周二', hours: 7, name: '显式状态 + 决策循环 + 错误恢复', materials: [], tasks: '定义状态、终止条件、超时和工具失败路径' },
+      { day: '周三', hours: 7, name: '人工参与闭环 + 首批投递', materials: [], tasks: '实现高风险动作审批闸门，并投递第一批高匹配Java+AI岗位' },
+      { day: '周四', hours: 7, name: '最小Agent实现', materials: [], tasks: '使用合成指标完成观察、分析、工具调用、建议和终止闭环' },
+      { day: '周五', hours: 7, name: 'Agent评估 + 审计', materials: [], tasks: '覆盖正常、工具失败、无证据、越权和人工拒绝测试' },
+      { day: '周六', hours: 4, name: 'RAG + Agent项目讲解', materials: [], tasks: '形成3分钟口述、架构取舍和失败案例' },
+      { day: '周日', hours: 4, name: '周复盘 + 定向投递', materials: [], tasks: '记录掌握证据、薄弱点并继续投递' }
     ]
   },
   {

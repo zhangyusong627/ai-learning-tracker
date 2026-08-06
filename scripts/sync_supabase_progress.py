@@ -4,11 +4,14 @@
 
 只 UPDATE 不 TRUNCATE：保留 notes、IDs 和既有关联。幂等，可重复执行。
 
-实际进度（2026-08-05 确认）：
+历史状态快照（2026-08-05 确认；课程标题和主题后来已调整，执行前必须重新审核）：
 - week 6（7.27-8.2 最小业务闭环）→ done，7 个 topics 全 completed
-- week 7（8.3-8.9 三模式AI直写闭环）→ done（M2 恒誉直连 + M3 云腾断直连/衡丰混合 全部 PASS），7 个 topics 全 completed
-- week 8（8.10-8.16 Skill V1发布+首批投递）→ active（RAG 评估体系进行中）
+- week 7（8.3-8.9）→ done，7 个 topics 全 completed
+- week 8（8.10-8.16）→ active，0 个 topics completed
 - week 9-12 → pending（不变）
+
+本脚本会修改远程 Supabase 数据。不得因为本地课程标题调整而直接运行；
+必须先获得用户对数据库更新的单独授权，并核对脚本中的更新范围。
 """
 import json
 import os
