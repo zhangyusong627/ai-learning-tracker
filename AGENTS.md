@@ -8,9 +8,10 @@ AI 学习计划追踪 (AI Learning Tracker) — a standalone single-page web app
 
 The app was originally a 90-day learning tracker and has been extended through 2026-09-15.
 The local `COURSE_DATA`, weekly plans, and `seed.sql` are synchronized. Supabase stores
-checkbox progress and notes; its Week 7 completion status is current, while the older database
-title is intentionally overlaid by `applyLocalCoursePlan()` until a separately approved data
-update is performed.
+checkbox progress and notes; its Week 7 completion status is current, while Week 8's newly
+verified Agent progress is only synchronized in local files until a separately approved data
+update is performed. `applyLocalCoursePlan()` overlays curriculum text but intentionally
+preserves the database's existing checkbox state.
 
 The repository now primarily serves as a learning journal, job-hunting evidence hub, and portfolio verification link store.
 
@@ -46,11 +47,11 @@ learning/
 ├── week3/
 ├── week4/
 ├── week5/                                 # RAG engineering base (completed)
-├── week6/                                 # Skill minimum vertical slice (current)
+├── week6/                                 # Skill minimum vertical slice
 ├── week7/                                 # RAG Demo 量化评测与收尾
-├── week8/                                 # Agent 最小闭环 + 首批投递
-├── week9/                                 # Guardian V0.1
-├── week10/                                # Guardian V1
+├── week8/                                 # Agent 七层学习 + 简历与首批投递
+├── week9/                                 # 投递反馈 + Java/AI 面试强化
+├── week10/                                # 系统设计 + 项目深挖
 ├── week11/                                # Java + AI interview sprint
 └── week12/                                # Offer finalization
 ```
@@ -72,8 +73,11 @@ Week 6 is complete; Week 7 has closed the portfolio as a RAG engineering Demo wi
 multi-format parsing, hybrid retrieval, accepted-evidence gates, quantitative evaluation,
 and traceable generation evidence. The Java generation path is only a known-pattern,
 method-body experiment and must not be described as generic full SPI project generation.
-Week 8 starts the Agent minimum loop and first job applications. Historical daily notes
-remain snapshots of what was true at that learning stage and must not override newer evidence.
+Week 8's seven-layer Agent learning and the separate Guardian portfolio are complete; resume
+fact-checking and the first job applications remain active. The Guardian repository is an
+independent clean-room portfolio and must not be presented as production automation.
+Historical daily notes remain snapshots of what was true at that learning stage and must not
+override newer evidence.
 
 RAG delayed review is limited to the daily 0.5-hour review slot. Do not recreate full-day
 “end-to-end retrieval” or Day 31–33 review courses.

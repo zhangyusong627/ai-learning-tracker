@@ -34,3 +34,15 @@ chroma_data/
 # Local tool state
 .playwright-mcp/
 .workbuddy/
+
+# Local handoff, private job-search drafts, and generated provider responses
+/CODEX_HANDOFF.md
+/learning/context/交接文档-给WorkBuddy.md
+/interview-workbench.html
+/scripts/interview-workbench.template.html
+/scripts/build_workbench.py
+/scripts/extract_qbank.py
+/data/qbank.json
+/面试工作台交接文档.md
+/求职材料/简历评估报告_*.md
+/learning/week8/agent-demos/raw_response_sample.json

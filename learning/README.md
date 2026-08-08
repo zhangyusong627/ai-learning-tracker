@@ -17,9 +17,9 @@
 | Week 5 | RAG 工程基础（已完成） | [week5/README.md](week5/README.md) |
 | Week 6 | 金融机构接入 Skill 最小业务闭环 | [week6/README.md](week6/README.md) |
 | Week 7 | 金融机构接入 RAG Demo：量化评测与收尾 | [week7/README.md](week7/README.md) |
-| Week 8 | Agent 最小闭环与首批投递 | [week8/README.md](week8/README.md) |
-| Week 9 | AI 智能守护 V0.1 | [week9/README.md](week9/README.md) |
-| Week 10 | AI 智能守护 V1 | [week10/README.md](week10/README.md) |
+| Week 8 | Agent 七层学习、简历与首批投递 | [week8/README.md](week8/README.md) |
+| Week 9 | 投递反馈与 Java/AI 面试强化 | [week9/README.md](week9/README.md) |
+| Week 10 | 系统设计与项目深挖 | [week10/README.md](week10/README.md) |
 | Week 11 | Java + AI 面试冲刺 | [week11/README.md](week11/README.md) |
 | Week 12 | 面试反馈与 Offer 冲刺 | [week12/README.md](week12/README.md) |
 

@@ -572,45 +572,45 @@ const COURSE_DATA = [
     ]
   },
   {
-    week: 8, module: 'skill', title: 'Agent最小闭环 + 首批投递',
+    week: 8, module: 'guardian', title: 'Agent七层学习 + 简历与首批投递',
     dateRange: '8.10–8.16', startDate: '2026-08-10', endDate: '2026-08-16',
-    objective: '学习模型决策、工具调用、显式状态、失败恢复、人工确认和评估，并于8月12日启动首批投递',
+    objective: 'Agent七层知识与独立智能守护Demo已完成；完成简历事实核验后启动首批高匹配岗位投递',
     days: [
-      { day: '周一', hours: 7, name: 'Agent与Workflow + Tool Calling', materials: [], tasks: '判断何时需要Agent，并跑通一次模型选择工具的最小实践' },
-      { day: '周二', hours: 7, name: '显式状态 + 决策循环 + 错误恢复', materials: [], tasks: '定义状态、终止条件、超时和工具失败路径' },
-      { day: '周三', hours: 7, name: '人工参与闭环 + 首批投递', materials: [], tasks: '实现高风险动作审批闸门，并投递第一批高匹配Java+AI岗位' },
-      { day: '周四', hours: 7, name: '最小Agent实现', materials: [], tasks: '使用合成指标完成观察、分析、工具调用、建议和终止闭环' },
-      { day: '周五', hours: 7, name: 'Agent评估 + 审计', materials: [], tasks: '覆盖正常、工具失败、无证据、越权和人工拒绝测试' },
-      { day: '周六', hours: 4, name: 'RAG + Agent项目讲解', materials: [], tasks: '形成3分钟口述、架构取舍和失败案例' },
-      { day: '周日', hours: 4, name: '周复盘 + 定向投递', materials: [], tasks: '记录掌握证据、薄弱点并继续投递' }
+      { day: '阶段1', hours: 7, name: 'Agent心智模型与工具调用（已完成）', materials: [], tasks: '理解Agent与Workflow边界，跑通真实模型工具调用' },
+      { day: '阶段2', hours: 7, name: 'Agent范式与显式状态（已完成）', materials: [], tasks: '掌握ReAct、Plan-and-Execute、状态Schema和终止条件' },
+      { day: '阶段3', hours: 7, name: '记忆管理与失败恢复（已完成）', materials: [], tasks: '区分短期和长期记忆，处理超时、重试和异常终止' },
+      { day: '阶段4', hours: 7, name: '工程化护栏（已完成）', materials: [], tasks: '覆盖人工闸门、可观测性、成本控制和审计' },
+      { day: '阶段5', hours: 7, name: '多智能体选型与评估安全（已完成）', materials: [], tasks: '理解多智能体适用边界，并完成评估与安全验证' },
+      { day: '求职1', hours: 4, name: '简历双版本事实核验', materials: [], tasks: '只使用可核验经历与指标，完成Java主投版和AI备投版' },
+      { day: '求职2', hours: 4, name: '首批高匹配岗位投递', materials: [], tasks: '按岗位要求微调简历，建立投递记录和反馈闭环' }
     ]
   },
   {
-    week: 9, module: 'guardian', title: 'AI智能守护 V0.1',
+    week: 9, module: 'career', title: '投递反馈 + Java/AI面试强化',
     dateRange: '8.17–8.23', startDate: '2026-08-17', endDate: '2026-08-23',
-    objective: '创建独立作品集二，用模拟指标、事件回放和专家规则建立无大模型也能运行的确定性治理基线',
+    objective: '根据首批投递反馈补齐Java基础、RAG和Agent项目表达短板，形成持续投递闭环',
     days: [
-      { day: '周一', hours: 7, name: '独立仓库 + 指标决策模型', materials: [], tasks: '先建立AGENTS和目录规范，再定义机构、接口、QPS、延迟、错误率、并发与线程池模型' },
-      { day: '周二', hours: 7, name: '模拟指标 + 事件回放', materials: [], tasks: '构造可复现的正常、突发流量、超时和错误率异常事件' },
-      { day: '周三', hours: 7, name: '专家规则引擎', materials: [], tasks: '实现规则匹配、动作建议和确定性结果' },
-      { day: '周四', hours: 7, name: '优先级、冲突、冷却与防抖', materials: [], tasks: '解决多规则同时命中、频繁调整和状态震荡' },
-      { day: '周五', hours: 7, name: '安全校验 + 审计状态', materials: [], tasks: '记录指标、命中规则、建议、原因、版本和拒绝结果' },
-      { day: '周六', hours: 4, name: '命令行或API演示', materials: [], tasks: '串联事件输入、规则判断、建议输出和审计记录' },
-      { day: '周日', hours: 4, name: '确定性基线评估', materials: [], tasks: '形成V0.1测试、失败样例、架构讲解和面试问答' }
+      { day: '周一', hours: 7, name: '投递漏斗与反馈分类', materials: [], tasks: '记录岗位、匹配度、反馈阶段和主要缺口' },
+      { day: '周二', hours: 7, name: 'Java、JVM与并发口述', materials: [], tasks: '按目标岗位完成口述、追问和参考答案复盘' },
+      { day: '周三', hours: 7, name: 'Spring、数据库与中间件', materials: [], tasks: '补齐Spring、事务、MySQL、Redis和消息队列高频场景题' },
+      { day: '周四', hours: 7, name: 'RAG作品集深挖', materials: [], tasks: '讲清切块、混合检索、证据准入、评测指标和失败案例' },
+      { day: '周五', hours: 7, name: 'Agent作品集深挖', materials: [], tasks: '讲清状态流、工具边界、确定性闸门、人工审批和评估安全' },
+      { day: '周六', hours: 4, name: '综合模拟面试', materials: [], tasks: '围绕真实岗位连续追问并形成缺口清单' },
+      { day: '周日', hours: 4, name: '定向补投与周复盘', materials: [], tasks: '修正简历和表达，只补投高匹配岗位' }
     ]
   },
   {
-    week: 10, module: 'guardian', title: 'AI智能守护 V1',
+    week: 10, module: 'career', title: '系统设计 + 项目深挖',
     dateRange: '8.24–8.30', startDate: '2026-08-24', endDate: '2026-08-30',
-    objective: '在确定性基线上增加治理知识检索和策略建议Agent；模型只分析与建议，硬规则和人工审批掌握最终控制权',
+    objective: '用真实投递和面试反馈强化Java系统设计、资金网关治理、RAG与Agent工程取舍',
     days: [
-      { day: '周一', hours: 7, name: 'Agent边界 + 状态流', materials: [], tasks: '定义观察、分析、建议、校验、审批、模拟执行和终止状态' },
-      { day: '周二', hours: 7, name: '指标、规则与历史事件工具', materials: [], tasks: '实现只读工具契约、参数校验、错误返回和调用审计' },
-      { day: '周三', hours: 7, name: '专家经验RAG知识库', materials: [], tasks: '对规则、案例和边界做可追溯检索，为建议提供证据' },
-      { day: '周四', hours: 7, name: '分析→建议→解释Agent', materials: [], tasks: '输出结构化建议、原因、证据、风险和待确认项' },
-      { day: '周五', hours: 7, name: '硬闸门 + 人工审批 + 回滚', materials: [], tasks: '超限建议直接拒绝，合法建议仍需人工批准，并支持模拟回滚' },
-      { day: '周六', hours: 4, name: '事件回放 + 对比评估', materials: [], tasks: '比较专家规则基线与Agent建议，覆盖正常、冲突、无证据和高风险场景' },
-      { day: '周日', hours: 4, name: 'V1文档、演示与发布', materials: [], tasks: '完成README、架构图、演示、评估报告和已知局限' }
+      { day: '周一', hours: 7, name: '真实反馈分类与优先级', materials: [], tasks: '按知识、代码、项目证据、表达和岗位匹配分类' },
+      { day: '周二', hours: 7, name: '资金网关系统设计', materials: [], tasks: '完成机构接入、事件流、幂等、补偿和隔离设计' },
+      { day: '周三', hours: 7, name: '高并发与稳定性治理', materials: [], tasks: '完成限流、熔断、线程池、积压和降级场景题' },
+      { day: '周四', hours: 7, name: 'AI应用系统设计', materials: [], tasks: '完成RAG与Agent选型、状态、评估、安全和成本设计' },
+      { day: '周五', hours: 7, name: '编码题与故障诊断', materials: [], tasks: '限时完成编码和线上问题定位，记录证据' },
+      { day: '周六', hours: 4, name: '目标岗位模拟面试', materials: [], tasks: '按真实JD进行系统设计和项目压力追问' },
+      { day: '周日', hours: 4, name: '材料修正与定向投递', materials: [], tasks: '只修正真实反馈暴露的问题并继续投递' }
     ]
   },
   {
@@ -646,9 +646,9 @@ const COURSE_DATA = [
 const MODULES = [
   { id: 'python-llm', icon: '🐍', name: 'Python+LLM基础', weeks: [1, 2] },
   { id: 'rag', icon: '📚', name: 'RAG工程基础', weeks: [3, 4, 5] },
-  { id: 'skill', icon: '🧩', name: '机构接入Skill', weeks: [6, 7, 8] },
-  { id: 'guardian', icon: '🛡️', name: 'AI智能守护', weeks: [9, 10] },
-  { id: 'career', icon: '🎯', name: '面试+Offer', weeks: [11, 12] }
+  { id: 'skill', icon: '🧩', name: '机构接入Skill', weeks: [6, 7] },
+  { id: 'guardian', icon: '🛡️', name: 'Agent与智能守护', weeks: [8] },
+  { id: 'career', icon: '🎯', name: '求职冲刺', weeks: [9, 10, 11, 12] }
 ];
 
 // ===== 初始化逻辑 =====
@@ -669,7 +669,7 @@ async function initDatabase() {
       await sb.from('topics').insert({
         week_id: week.id,
         name: `${d.day} ${d.name} (${d.hours}h)`,
-        completed: item.week <= 7,
+        completed: item.week <= 7 || (item.week === 8 && i < 5),
         topic_order: i + 1
       });
     }

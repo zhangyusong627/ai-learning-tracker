@@ -1,0 +1,2 @@
+# Only day1_real_agent_demo.py requires this SDK; the remaining demos use the standard library.
+openai>=1.0,<2.0
